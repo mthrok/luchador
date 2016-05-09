@@ -11,7 +11,7 @@ from fitness import world
 
 _LG = logging.getLogger('fitness')
 _ENVS = sorted([env_spec for env_spec in envs.registry.all()])
-_AGENTS = sorted([obj[1] for obj in inspect.getmembers(
+_AGENTS = sorted([obj[1].__name__ for obj in inspect.getmembers(
     sys.modules['fitness.agent'], inspect.isclass
     ) if issubclass(obj[1], agent._Agent) and not obj[1] == agent._Agent])
 
@@ -20,7 +20,7 @@ def print_env_info(env):
     """Print environment info."""
     def print_space_summary(space):
         if isinstance(space, spaces.Tuple):
-            for sp in spaces:
+            for sp in space.spaces:
                 print_space_summary(sp)
         if isinstance(space, spaces.Discrete):
             _LG.info('      Range: [0, {}]'.format(space.n-1))
@@ -39,7 +39,9 @@ def create_env(arg):
 
 
 def create_agent(arg, env):
-    agent_class = _AGENTS[int(arg)] if arg.isdigit() else arg
+    agent_name = _AGENTS[int(arg)] if arg.isdigit() else arg
+    _LG.info('Making new egent: {}'.format(agent_name))
+    agent_class = getattr(agent, agent_name)
     return agent_class(action_space=env.action_space,
                        observation_space=env.observation_space)
 
@@ -64,7 +66,7 @@ def _agent_help_str():
         'Note: Not all the combination of Env/Agent is possible.\n\n'
     )
     for i, agt in enumerate(_AGENTS):
-        ret += '{:>6d}: {}\n'.format(i, agt.__name__)
+        ret += '{:>6d}: {}\n'.format(i, agt)
     return ret + '\n'
 
 

@@ -11,8 +11,8 @@ class World(object):
         self.timesteps = timesteps
 
     def reset(self):
-        self.agent.reset()
-        return self.env.reset()
+        obs = self.env.reset()
+        self.agent.reset(obs)
 
     def start_monitor(self, outdir, **kwargs):
         self.env.monitor.start(outdir, **kwargs)
@@ -20,20 +20,20 @@ class World(object):
     def close_monitor(self):
         self.env.monitor.close()
 
-    def run_episode(self, timesteps=None, render_mode=True, initial_reward=-1):
+    def run_episode(self, timesteps=None, render_mode=True):
         """Run one episode"""
         timesteps = self.timesteps if not timesteps else timesteps
-        observation = self.reset()
+        self.reset()
 
         if not render_mode == 'noop':
             self.env.render(mode=render_mode)
 
-        reward = initial_reward
         total_rewards = 0
-        done = False
         for t in range(timesteps):
-            action = self.agent.act(observation, reward, done)
+            action = self.agent.act()
             observation, reward, done, info = self.env.step(action)
+            self.agent.observe(action, observation, reward, done, info)
+
             total_rewards += reward
             _LG.debug('... {}: {}, {}'.format(t, reward, observation))
 

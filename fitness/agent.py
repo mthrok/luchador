@@ -14,10 +14,27 @@ class _Agent(object):
         self.action_space = action_space
         self.observation_space = observation_space
 
-    def act(self, observation, reward, done):
-        raise NotImplementedError('act method is not implemented')
+    def observe(self, action, observation, reward, done, info):
+        """Observe the action and it's outcome.
 
-    def reset(self):
+        Args:
+          action: The action that this agent previously took.
+          observation: Observation (of environment) caused by the action.
+          reward: Reward acquired by the action.
+          done (bool): Indicates if a task is complete or not.
+          info (dict): Infomation related to environment.
+
+          observation, reward, done, info are variables returned by
+          environment. See gym.core:Env.step.
+        """
+        pass
+
+    def act(self):
+        """Choose action. Must be implemented in subclass."""
+        raise NotImplementedError('act method is not implemented.')
+
+    def reset(self, observation):
+        """Reset agent with the initial state of the environment."""
         pass
 
 
@@ -26,7 +43,7 @@ class RandomAgent(_Agent):
         super(RandomAgent, self).__init__(
             action_space=action_space, observation_space=observation_space)
 
-    def act(self, observation, reward=None, done=False):
+    def act(self):
         return self.action_space.sample()
 
 
@@ -50,7 +67,7 @@ class ControllerAgent(_Agent):
             raise UnsupportedSpace(
                 'Only Discrete and Tuple spaces are supported now.')
 
-    def act(self, observation, reward, done):
+    def act(self):
         while True:
             try:
                 action = self.parse_action(self.action_space)
@@ -99,39 +116,42 @@ class TabularQAgent(_Agent):
         self.reward_history = []
         self.done = False
 
-    def reset(self):
-        self.state = []
+    def reset(self, observation):
+        self.reset_history()
+        self.observation_history = [observation]
 
     def initial_q_value(self):
         mean, std = self.config['init_mean'], self.config['init_std']
         return mean + std * np.random.randn(self.action_space.n)
 
-    def choose_action(self, observation, eps=None):
-        """Select Action based on Epsilon-greedy policy"""
-        eps = self.config['eps'] if eps is None else eps
-        if np.random.random() > eps:
-            action = np.argmax(self.q[observation])
-        else:
-            action = self.action_space.sample()
-        return action
-
-    def act(self, observation, reward, done):
+    def observe(self, action, observation, reward, done, info):
+        self.action_history.append(action)
         self.observation_history.append(observation)
         self.reward_history.append(reward)
         self.done = done
-        self.learn()
-        action = self.choose_action(observation)
-        self.action_history.append(action)
-        return action
 
     def learn(self):
         if len(self.observation_history) < 2:
             return
 
-        obs2, obs1 = self.observation_history[-2:]
-        act1 = self.action_history[-1]
-        reward1 = self.reward_history[-1]
+        src = self.observation_history[-2]
+        act = self.action_history[-1]
+        rew = self.reward_history[-1]
+        tgt = self.observation_history[-1]
 
-        future = 0.0 if self.done else np.max(self.q[obs1])
+        future = 0.0 if self.done else np.max(self.q[tgt])
         lr, beta = self.config['learning_rate'], self.config['discount']
-        self.q[obs2][act1] -= lr * (self.q[obs2][act1] - reward1 - beta * future)
+        self.q[src][act] -= lr * (self.q[src][act] - rew - beta * future)
+
+    def choose_action(self):
+        last_observation = self.observation_history[-1]
+        if np.random.random() > self.config['eps']:
+            action = np.argmax(self.q[last_observation])
+        else:
+            action = self.action_space.sample()
+        return action
+
+    def act(self):
+        """Select Action based on Epsilon-greedy policy"""
+        self.learn()
+        self.choose_action()
