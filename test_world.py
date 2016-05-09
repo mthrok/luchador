@@ -6,14 +6,14 @@ import gym
 from gym import envs
 from gym import spaces
 
+import fitness
 from fitness import agent
-from fitness import world
 
 _LG = logging.getLogger('fitness')
 _ENVS = sorted([env_spec for env_spec in envs.registry.all()])
 _AGENTS = sorted([obj[1].__name__ for obj in inspect.getmembers(
     sys.modules['fitness.agent'], inspect.isclass
-    ) if issubclass(obj[1], agent._Agent) and not obj[1] == agent._Agent])
+    ) if issubclass(obj[1], fitness.core.Agent)])
 
 
 def print_env_info(env):
@@ -101,7 +101,7 @@ def main():
     init_logging(args.debug)
     env = create_env(args.env)
     agt = create_agent(args.agent, env)
-    wrd = world.World(env, agt, 100)
+    wrd = fitness.World(env, agt, 100)
     print_env_info(env)
     if args.outdir:
         wrd.start_monitor(args.outdir)

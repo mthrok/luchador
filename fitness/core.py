@@ -3,6 +3,35 @@ import logging
 _LG = logging.getLogger(__name__)
 
 
+class Agent(object):
+    def __init__(self, action_space, observation_space):
+        self.action_space = action_space
+        self.observation_space = observation_space
+
+    def observe(self, action, observation, reward, done, info):
+        """Observe the action and it's outcome.
+
+        Args:
+          action: The action that this agent previously took.
+          observation: Observation (of environment) caused by the action.
+          reward: Reward acquired by the action.
+          done (bool): Indicates if a task is complete or not.
+          info (dict): Infomation related to environment.
+
+          observation, reward, done, info are variables returned by
+          environment. See gym.core:Env.step.
+        """
+        pass
+
+    def act(self):
+        """Choose action. Must be implemented in subclass."""
+        raise NotImplementedError('act method is not implemented.')
+
+    def reset(self, observation):
+        """Reset agent with the initial state of the environment."""
+        pass
+
+
 class World(object):
     """Class for runnig episode"""
     def __init__(self, env, agent, timesteps):

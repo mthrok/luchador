@@ -4,41 +4,13 @@ from collections import defaultdict
 import numpy as np
 from gym import spaces
 
+from fitness.core import Agent
 from fitness.error import UnsupportedSpace
 
 _LG = logging.getLogger(__name__)
 
 
-class _Agent(object):
-    def __init__(self, action_space, observation_space):
-        self.action_space = action_space
-        self.observation_space = observation_space
-
-    def observe(self, action, observation, reward, done, info):
-        """Observe the action and it's outcome.
-
-        Args:
-          action: The action that this agent previously took.
-          observation: Observation (of environment) caused by the action.
-          reward: Reward acquired by the action.
-          done (bool): Indicates if a task is complete or not.
-          info (dict): Infomation related to environment.
-
-          observation, reward, done, info are variables returned by
-          environment. See gym.core:Env.step.
-        """
-        pass
-
-    def act(self):
-        """Choose action. Must be implemented in subclass."""
-        raise NotImplementedError('act method is not implemented.')
-
-    def reset(self, observation):
-        """Reset agent with the initial state of the environment."""
-        pass
-
-
-class RandomAgent(_Agent):
+class RandomAgent(Agent):
     def __init__(self, action_space, observation_space=None, **kwargs):
         super(RandomAgent, self).__init__(
             action_space=action_space, observation_space=observation_space)
@@ -47,7 +19,7 @@ class RandomAgent(_Agent):
         return self.action_space.sample()
 
 
-class ControllerAgent(_Agent):
+class ControllerAgent(Agent):
     # TODO: Add game pad controll
     def __init__(self, action_space, observation_space):
         super(ControllerAgent, self).__init__(
@@ -81,7 +53,7 @@ class ControllerAgent(_Agent):
             _LG.debug(action)
 
 
-class TabularQAgent(_Agent):
+class TabularQAgent(Agent):
     """TabularQAgent from gym example"""
     def __init__(self, action_space, observation_space, **userconfig):
         # TODO: Make this work for Tuple(Descrete...) types
@@ -131,6 +103,7 @@ class TabularQAgent(_Agent):
         self.done = done
 
     def learn(self):
+        """Update Q value based on the previous obs->act->rew->obs chain."""
         if len(self.observation_history) < 2:
             return
 
@@ -139,19 +112,20 @@ class TabularQAgent(_Agent):
         rew = self.reward_history[-1]
         tgt = self.observation_history[-1]
 
+        # TODO: Check if this is correct
         future = 0.0 if self.done else np.max(self.q[tgt])
         lr, beta = self.config['learning_rate'], self.config['discount']
         self.q[src][act] -= lr * (self.q[src][act] - rew - beta * future)
 
     def choose_action(self):
-        last_observation = self.observation_history[-1]
+        """Select Action based on Epsilon-greedy policy"""
         if np.random.random() > self.config['eps']:
-            action = np.argmax(self.q[last_observation])
+            last_obs = self.observation_history[-1]
+            action = np.argmax(self.q[last_obs])
         else:
             action = self.action_space.sample()
         return action
 
     def act(self):
-        """Select Action based on Epsilon-greedy policy"""
         self.learn()
         self.choose_action()
