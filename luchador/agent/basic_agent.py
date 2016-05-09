@@ -4,8 +4,10 @@ from collections import defaultdict
 import numpy as np
 from gym import spaces
 
-from fitness.core import Agent
-from fitness.error import UnsupportedSpace
+from luchador.core import Agent
+from luchador.error import UnsupportedSpace
+
+__all__ = ['RandomAgent', 'ControllerAgent', 'TabularQAgent']
 
 _LG = logging.getLogger(__name__)
 

@@ -6,14 +6,14 @@ import gym
 from gym import envs
 from gym import spaces
 
-import fitness
-from fitness import agent
+import luchador
+from luchador import agent
 
-_LG = logging.getLogger('fitness')
+_LG = logging.getLogger('luchador')
 _ENVS = sorted([env_spec for env_spec in envs.registry.all()])
 _AGENTS = sorted([obj[1].__name__ for obj in inspect.getmembers(
-    sys.modules['fitness.agent'], inspect.isclass
-    ) if issubclass(obj[1], fitness.core.Agent)])
+    sys.modules['luchador.agent'], inspect.isclass
+    ) if issubclass(obj[1], luchador.core.Agent)])
 
 
 def print_env_info(env):
@@ -24,12 +24,13 @@ def print_env_info(env):
                 print_space_summary(sp)
         if isinstance(space, spaces.Discrete):
             _LG.info('      Range: [0, {}]'.format(space.n-1))
-        if isinstance(space, spaces.Box):
-            _LG.info('      Range: [{}, {}]'.format(space.low, space.high))
+        # if isinstance(space, spaces.Box):
+        #     _LG.info('      Range: [{}, {}]'.format(space.low, space.high))
     _LG.info('... Action Space: {}'.format(env.action_space))
     print_space_summary(env.action_space)
     _LG.info('... Observation Space: {}'.format(env.observation_space))
     print_space_summary(env.observation_space)
+    _LG.info('... Reward Range: {}'.format(env.reward_range))
     return env
 
 
@@ -93,7 +94,7 @@ def parse_command_line_arguments():
 def init_logging(debug=False):
     level = logging.DEBUG if debug else logging.INFO
     _LG.setLevel(level)
-    logging.getLogger('fitness').setLevel(level)
+    logging.getLogger('gym').setLevel(level)
 
 
 def main():
@@ -101,7 +102,7 @@ def main():
     init_logging(args.debug)
     env = create_env(args.env)
     agt = create_agent(args.agent, env)
-    wrd = fitness.World(env, agt, 100)
+    wrd = luchador.World(env, agt, 100)
     print_env_info(env)
     if args.outdir:
         wrd.start_monitor(args.outdir)
@@ -116,6 +117,3 @@ def main():
             _LG.info('Finished with {} steps. Rewards: {}'.format(t, r))
 
     wrd.close_monitor()
-
-if __name__ == '__main__':
-    main()
