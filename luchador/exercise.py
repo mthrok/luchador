@@ -1,6 +1,8 @@
+import os
 import sys
 import logging
 import inspect
+import datetime
 
 import gym
 from gym import envs
@@ -34,13 +36,15 @@ def print_env_info(env):
     return env
 
 
-def create_env(arg):
-    env_entry = _ENVS[int(arg)].id if arg.isdigit() else arg
-    return gym.make(env_entry)
+def parse_env_name(arg):
+    return _ENVS[int(arg)].id if arg.isdigit() else arg
 
 
-def create_agent(arg, env):
-    agent_name = _AGENTS[int(arg)] if arg.isdigit() else arg
+def parse_agent_name(arg):
+    return _AGENTS[int(arg)] if arg.isdigit() else arg
+
+
+def create_agent(agent_name, env):
     _LG.info('Making new egent: {}'.format(agent_name))
     agent_class = getattr(agent, agent_name)
     return agent_class(action_space=env.action_space,
@@ -81,11 +85,14 @@ def parse_command_line_arguments():
     ap.add_argument('--debug', action='store_true')
     ap.add_argument('env', help=_env_help_str())
     ap.add_argument('agent', help=_agent_help_str())
-    ap.add_argument('--outdir',
+    ap.add_argument('--outdir', '-o',
                     help=('Output directory for monitoring.\n'
                           'Unless given, monitoring is disabled.'))
-    ap.add_argument('--timesteps', type=int, default=100)
-    ap.add_argument('--episodes', type=int, default=5)
+    ap.add_argument('--force', '-f', action='store_true',
+                    help=('If previous monitoring data is presented, in outdir'
+                          ',\n remove them and continue.'))
+    ap.add_argument('--timesteps', '-ts', type=int, default=100)
+    ap.add_argument('--episodes', '-ep', type=int, default=5)
     ap.add_argument('--render-mode', default='human',
                     choices=['noop', 'random', 'static', 'human'])
     return ap.parse_args()
@@ -97,15 +104,26 @@ def init_logging(debug=False):
     logging.getLogger('gym').setLevel(level)
 
 
+def get_current_time():
+    return datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+
+
 def main():
     args = parse_command_line_arguments()
     init_logging(args.debug)
-    env = create_env(args.env)
-    agt = create_agent(args.agent, env)
+    env_name = parse_env_name(args.env)
+    agent_name = parse_agent_name(args.agent)
+
+    env = gym.make(env_name)
+    agt = create_agent(agent_name, env)
     wrd = luchador.World(env, agt, 100)
     print_env_info(env)
+
     if args.outdir:
-        wrd.start_monitor(args.outdir)
+        time_str = get_current_time()
+        outdir = os.path.join(
+            args.outdir, '{}_{}_{}'.format(env_name, agent_name, time_str))
+        wrd.start_monitor(outdir, force=args.force)
 
     for i in range(args.episodes):
         _LG.info('Running an episode {}'.format(i))
