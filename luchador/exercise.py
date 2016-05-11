@@ -26,8 +26,6 @@ def print_env_info(env):
                 print_space_summary(sp)
         if isinstance(space, spaces.Discrete):
             _LG.info('      Range: [0, {}]'.format(space.n-1))
-        # if isinstance(space, spaces.Box):
-        #     _LG.info('      Range: [{}, {}]'.format(space.low, space.high))
     _LG.info('... Action Space: {}'.format(env.action_space))
     print_space_summary(env.action_space)
     _LG.info('... Observation Space: {}'.format(env.observation_space))
@@ -101,9 +99,8 @@ def parse_command_line_arguments():
 
 
 def init_logging(debug=False):
-    level = logging.DEBUG if debug else logging.INFO
-    _LG.setLevel(level)
-    logging.getLogger('gym').setLevel(level)
+    _LG.setLevel(logging.DEBUG if debug else logging.INFO)
+    logging.getLogger('gym').setLevel(logging.INFO)
 
 
 def get_current_time():
