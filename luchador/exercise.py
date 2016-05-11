@@ -85,9 +85,11 @@ def parse_command_line_arguments():
     ap.add_argument('--debug', action='store_true')
     ap.add_argument('env', help=_env_help_str())
     ap.add_argument('agent', help=_agent_help_str())
-    ap.add_argument('--outdir', '-o',
+    ap.add_argument('--outdir', '-o', default='monitoring',
                     help=('Output directory for monitoring.\n'
                           'Unless given, monitoring is disabled.'))
+    ap.add_argument('--no-monitor', action='store_true',
+                    help='Disable monitoring')
     ap.add_argument('--force', '-f', action='store_true',
                     help=('If previous monitoring data is presented, in outdir'
                           ',\n remove them and continue.'))
@@ -119,7 +121,7 @@ def main():
     wrd = luchador.World(env, agt, 100)
     print_env_info(env)
 
-    if args.outdir:
+    if not args.no_monitor:
         time_str = get_current_time()
         outdir = os.path.join(
             args.outdir, '{}_{}_{}'.format(env_name, agent_name, time_str))
