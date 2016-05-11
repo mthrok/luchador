@@ -64,8 +64,6 @@ class World(object):
             self.agent.observe(action, observation, reward, done, info)
 
             total_rewards += reward
-            _LG.debug('... {}: {}, {}'.format(t, reward, observation))
-
             if not render_mode == 'noop':
                 self.env.render(mode=render_mode)
 

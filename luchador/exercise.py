@@ -126,12 +126,12 @@ def main():
         wrd.start_monitor(outdir, force=args.force)
 
     for i in range(args.episodes):
-        _LG.info('Running an episode {}'.format(i))
+        _LG.info('Running episode {}'.format(i))
         t, r = wrd.run_episode(
             timesteps=args.timesteps, render_mode=args.render_mode)
         if t < 0:
-            _LG.info('Did not finish')
+            _LG.info('... Did not finish')
         else:
-            _LG.info('Finished with {} steps. Rewards: {}'.format(t, r))
+            _LG.info('... Finished with {} steps. Rewards: {}'.format(t, r))
 
     wrd.close_monitor()
