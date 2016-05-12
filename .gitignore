@@ -90,3 +90,10 @@ ENV/
 
 # MacOSX
 .DS_Store
+
+# monitoring
+monitoring
+
+#
+Boxfile
+.box
