@@ -1,0 +1,5 @@
+exercise:
+  episodes: 1000
+  timesteps: 1000
+
+agent: {}

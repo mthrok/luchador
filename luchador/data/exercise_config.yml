@@ -1,0 +1,12 @@
+debug: False
+
+monitor:
+  output_dir: 'monitoring'
+  render_mode: 'human'
+  disable: False
+
+exercise:
+  timesteps: 1000
+  episodes: 20000
+
+agent_param: {}

@@ -15,5 +15,9 @@ setup(
     test_suite='tests',
     install_requires=[
         'gym',
+        'pyyaml',
     ],
+    package_data={
+        'luchador': ['data/*'],
+    },
 )

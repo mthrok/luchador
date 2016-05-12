@@ -1,3 +1,5 @@
+import json
+
 import logging
 from collections import defaultdict
 
@@ -13,7 +15,7 @@ _LG = logging.getLogger(__name__)
 
 
 class RandomAgent(Agent):
-    def __init__(self, action_space, observation_space=None, **kwargs):
+    def __init__(self, action_space, observation_space, config):
         super(RandomAgent, self).__init__(
             action_space=action_space, observation_space=observation_space)
 
@@ -23,7 +25,7 @@ class RandomAgent(Agent):
 
 class ControllerAgent(Agent):
     # TODO: Add game pad controll
-    def __init__(self, action_space, observation_space):
+    def __init__(self, action_space, observation_space, config):
         super(ControllerAgent, self).__init__(
             action_space=action_space, observation_space=observation_space)
 
@@ -57,7 +59,7 @@ class ControllerAgent(Agent):
 
 class TabularQAgent(Agent):
     """TabularQAgent from gym example"""
-    def __init__(self, action_space, observation_space, **userconfig):
+    def __init__(self, action_space, observation_space, config):
         # TODO: Make this work for Tuple(Descrete...) types
         # Currently work with Roulette (but the result is not impressive)
         if not isinstance(observation_space, spaces.Discrete):
@@ -80,9 +82,11 @@ class TabularQAgent(Agent):
             'discount': 0.95,
             'n_iter': 10000,        # Number of iterations
         }
-        self.config.update(userconfig)
+        self.config.update(config)
         self.q = defaultdict(lambda: self.initial_q_value())
         self.reset_history()
+        _LG.info('Agent: \n{}'.format(
+            json.dumps(self.config, indent=2, sort_keys=True)))
 
     def reset_history(self):
         self.observation_history = []

@@ -1,9 +1,11 @@
 import os
 import sys
+import json
 import logging
 import inspect
 import datetime
 
+import yaml
 import gym
 from gym import envs
 from gym import spaces
@@ -42,11 +44,11 @@ def parse_agent_name(arg):
     return _AGENTS[int(arg)] if arg.isdigit() else arg
 
 
-def create_agent(agent_name, env):
-    _LG.info('Making new egent: {}'.format(agent_name))
+def create_agent(agent_name, config, env):
+    _LG.info('Making new agent: {}'.format(agent_name))
     agent_class = getattr(agent, agent_name)
     return agent_class(action_space=env.action_space,
-                       observation_space=env.observation_space)
+                       observation_space=env.observation_space, config=config)
 
 
 def _env_help_str():
@@ -73,29 +75,6 @@ def _agent_help_str():
     return ret + '\n'
 
 
-def parse_command_line_arguments():
-    from argparse import RawTextHelpFormatter
-    from argparse import ArgumentParser as AP
-    ap = AP(
-        formatter_class=RawTextHelpFormatter,
-        description='Run environment with agents.',
-    )
-    ap.add_argument('--debug', action='store_true')
-    ap.add_argument('env', help=_env_help_str())
-    ap.add_argument('agent', help=_agent_help_str())
-    ap.add_argument('--outdir', '-o', default='monitoring',
-                    help=('Base output directory for monitoring.\n'
-                          'Actual monitoring data is stored in \n'
-                          'subdirectory with runtime unique name.'))
-    ap.add_argument('--no-monitor', action='store_true',
-                    help='Disable monitoring')
-    ap.add_argument('--timesteps', '-ts', type=int, default=1000)
-    ap.add_argument('--episodes', '-ep', type=int, default=200)
-    ap.add_argument('--render-mode', default='human',
-                    choices=['noop', 'random', 'static', 'human'])
-    return ap.parse_args()
-
-
 def init_logging(debug=False):
     _LG.setLevel(logging.DEBUG if debug else logging.INFO)
     logging.getLogger('gym').setLevel(logging.INFO)
@@ -105,27 +84,82 @@ def get_current_time():
     return datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
 
 
-def main():
-    args = parse_command_line_arguments()
-    init_logging(args.debug)
-    env_name = parse_env_name(args.env)
-    agent_name = parse_agent_name(args.agent)
+def parse_command_line_arguments():
+    default_config = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        'data', 'exercise_config.yml'
+    )
+    import argparse
+    ap = argparse.ArgumentParser(
+        formatter_class=argparse.RawTextHelpFormatter,
+        description='Run environment with agents.',
+    )
+    ap.add_argument('env', help=_env_help_str())
+    ap.add_argument('agent', help=_agent_help_str())
+    ap.add_argument('--episodes', '-ep', type=int, default=200)
+    ap.add_argument('--timesteps', '-ts', type=int, default=1000)
+    ap.add_argument('--debug', action='store_true')
+    ap.add_argument(
+        '--config', '-c', type=argparse.FileType('r'),
+        default=open(default_config, 'r'),
+        help='YAML file containing the configuration.'
+    )
+    ap.add_argument(
+        '--output-dir', '-o',
+        help=('Base output directory for monitoring.\n'
+              'Actual monitoring data is stored in \n'
+              'subdirectory with runtime unique name.\n'
+              'Default: "monitoring"')
+    )
+    ap.add_argument(
+        '--no-monitor', action='store_true', help='Disable monitoring')
+    ap.add_argument(
+        '--render-mode', choices=['noop', 'random', 'static', 'human'])
+    return ap.parse_args()
 
-    env = gym.make(env_name)
-    agt = create_agent(agent_name, env)
+
+def parse_config():
+    args = parse_command_line_arguments()
+    config = yaml.load(args.config)
+    config['env'] = parse_env_name(args.env)
+    config['agent'] = parse_agent_name(args.agent)
+    if args.episodes:
+        config['exercise']['episodes'] = args.episodes
+    if args.timesteps:
+        config['exercise']['timesteps'] = args.timesteps
+    if args.no_monitor:
+        config['monitor']['disable'] = True
+    if args.output_dir:
+        config['monitor']['output_dir'] = args.output_dir
+    if args.render_mode:
+        config['monitor']['render_mode'] = args.render_mode
+    return config
+
+
+def main():
+    config = parse_config()
+    init_logging(config['debug'])
+    _LG.info('Params: \n{}'.format(
+        json.dumps(config, indent=2, sort_keys=True)))
+
+    env = gym.make(config['env'])
+    agt = create_agent(config['agent'], config['agent_param'], env)
     wrd = luchador.World(env, agt, 100)
     print_env_info(env)
 
-    if not args.no_monitor:
-        time_str = get_current_time()
-        outdir = os.path.join(
-            args.outdir, '{}_{}_{}'.format(env_name, agent_name, time_str))
+    monitor = config['monitor']
+    if not monitor['disable']:
+        outdir = '{}_{}_{}'.format(
+            config['env'], config['agent'], get_current_time())
+        outdir = os.path.join(monitor['output_dir'], outdir)
         wrd.start_monitor(outdir)
 
-    for i in range(args.episodes):
+    exercise = config['exercise']
+    for i in range(exercise['episodes']):
         _LG.info('Running episode {}'.format(i))
         t, r = wrd.run_episode(
-            timesteps=args.timesteps, render_mode=args.render_mode)
+            timesteps=exercise['timesteps'],
+            render_mode=monitor['render_mode'])
         if t < 0:
             _LG.info('... Did not finish')
         else:
