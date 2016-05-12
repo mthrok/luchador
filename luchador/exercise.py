@@ -84,15 +84,13 @@ def parse_command_line_arguments():
     ap.add_argument('env', help=_env_help_str())
     ap.add_argument('agent', help=_agent_help_str())
     ap.add_argument('--outdir', '-o', default='monitoring',
-                    help=('Output directory for monitoring.\n'
-                          'Unless given, monitoring is disabled.'))
+                    help=('Base output directory for monitoring.\n'
+                          'Actual monitoring data is stored in \n'
+                          'subdirectory with runtime unique name.'))
     ap.add_argument('--no-monitor', action='store_true',
                     help='Disable monitoring')
-    ap.add_argument('--force', '-f', action='store_true',
-                    help=('If previous monitoring data is presented, in outdir'
-                          ',\n remove them and continue.'))
-    ap.add_argument('--timesteps', '-ts', type=int, default=100)
-    ap.add_argument('--episodes', '-ep', type=int, default=5)
+    ap.add_argument('--timesteps', '-ts', type=int, default=1000)
+    ap.add_argument('--episodes', '-ep', type=int, default=200)
     ap.add_argument('--render-mode', default='human',
                     choices=['noop', 'random', 'static', 'human'])
     return ap.parse_args()
@@ -122,7 +120,7 @@ def main():
         time_str = get_current_time()
         outdir = os.path.join(
             args.outdir, '{}_{}_{}'.format(env_name, agent_name, time_str))
-        wrd.start_monitor(outdir, force=args.force)
+        wrd.start_monitor(outdir)
 
     for i in range(args.episodes):
         _LG.info('Running episode {}'.format(i))
