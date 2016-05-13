@@ -123,6 +123,8 @@ def parse_config():
     config = yaml.load(args.config)
     config['env'] = parse_env_name(args.env)
     config['agent'] = parse_agent_name(args.agent)
+    if args.debug:
+        config['debug'] = True
     if args.episodes:
         config['exercise']['episodes'] = args.episodes
     if args.timesteps:
