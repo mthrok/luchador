@@ -48,7 +48,7 @@ def create_agent(agent_name, config, env):
     _LG.info('Making new agent: {}'.format(agent_name))
     agent_class = getattr(agent, agent_name)
     return agent_class(action_space=env.action_space,
-                       observation_space=env.observation_space, config=config)
+                       observation_space=env.observation_space, **config)
 
 
 def _env_help_str():

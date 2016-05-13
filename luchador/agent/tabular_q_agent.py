@@ -13,7 +13,7 @@ _LG = logging.getLogger(__name__)
 
 class TabularQAgent(Agent):
     """TabularQAgent from gym example"""
-    def __init__(self, action_space, observation_space, config):
+    def __init__(self, action_space, observation_space, **config):
         # TODO: Make this work for Tuple(Descrete...) types
         if not isinstance(observation_space, spaces.Discrete):
             raise UnsupportedSpace(
