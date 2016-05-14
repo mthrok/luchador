@@ -11,9 +11,13 @@ _LG = logging.getLogger(__name__)
 
 
 class RandomAgent(Agent):
-    def __init__(self, action_space, observation_space):
+    def __init__(self,
+                 action_space, observation_space, agent_config, global_config):
         super(RandomAgent, self).__init__(
-            action_space=action_space, observation_space=observation_space)
+            action_space=action_space,
+            observation_space=observation_space,
+            agent_config=agent_config,
+            global_config=global_config)
 
     def act(self):
         return self.action_space.sample()
@@ -21,9 +25,13 @@ class RandomAgent(Agent):
 
 class ControllerAgent(Agent):
     # TODO: Add game pad controll
-    def __init__(self, action_space, observation_space, **config):
+    def __init__(self,
+                 action_space, observation_space, agent_config, global_config):
         super(ControllerAgent, self).__init__(
-            action_space=action_space, observation_space=observation_space)
+            action_space=action_space,
+            observation_space=observation_space,
+            agent_config=agent_config,
+            global_config=global_config)
 
     def parse_action(self, action_space):
         if isinstance(action_space, spaces.Discrete):

@@ -13,7 +13,8 @@ _LG = logging.getLogger(__name__)
 
 class TabularQAgent(Agent):
     """TabularQAgent from gym example"""
-    def __init__(self, action_space, observation_space, **config):
+    def __init__(self,
+                 action_space, observation_space, agent_config, global_config):
         # TODO: Make this work for Tuple(Descrete...) types
         if not isinstance(observation_space, spaces.Discrete):
             raise UnsupportedSpace(
@@ -35,7 +36,7 @@ class TabularQAgent(Agent):
             'discount': 0.95,
             'n_iter': 10000,
         }
-        self.config.update(config)
+        self.config.update(agent_config)
         self.q = defaultdict(lambda: self.initial_q_value())
         self.reset_history()
         _LG.info('Agent: \n{}'.format(

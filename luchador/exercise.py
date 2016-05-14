@@ -44,11 +44,13 @@ def parse_agent_name(arg):
     return _AGENTS[int(arg)] if arg.isdigit() else arg
 
 
-def create_agent(agent_name, config, env):
+def create_agent(agent_name, agent_config, env, global_config):
     _LG.info('Making new agent: {}'.format(agent_name))
     agent_class = getattr(agent, agent_name)
-    return agent_class(action_space=env.action_space,
-                       observation_space=env.observation_space, **config)
+    return agent_class(
+        action_space=env.action_space,
+        observation_space=env.observation_space,
+        agent_config=agent_config, global_config=global_config)
 
 
 def _env_help_str():
@@ -135,6 +137,11 @@ def parse_config():
         config['monitor']['output_dir'] = args.output_dir
     if args.render_mode:
         config['monitor']['render_mode'] = args.render_mode
+
+    monitor = config['monitor']
+    monitor['output_dir'] = os.path.join(
+        monitor['output_dir'],
+        '{}_{}_{}'.format(config['env'], config['agent'], get_current_time()))
     return config
 
 
@@ -145,16 +152,13 @@ def main():
         json.dumps(config, indent=2, sort_keys=True)))
 
     env = gym.make(config['env'])
-    agt = create_agent(config['agent'], config['agent_param'], env)
+    agt = create_agent(config['agent'], config['agent_param'], env, config)
     wrd = luchador.World(env, agt, 100)
     print_env_info(env)
 
     monitor = config['monitor']
     if not monitor['disable']:
-        outdir = '{}_{}_{}'.format(
-            config['env'], config['agent'], get_current_time())
-        outdir = os.path.join(monitor['output_dir'], outdir)
-        wrd.start_monitor(outdir)
+        wrd.start_monitor(monitor['output_dir'])
 
     exercise = config['exercise']
     for i in range(exercise['episodes']):

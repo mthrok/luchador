@@ -4,7 +4,8 @@ _LG = logging.getLogger(__name__)
 
 
 class Agent(object):
-    def __init__(self, action_space, observation_space):
+    def __init__(self,
+                 action_space, observation_space, agent_config, global_config):
         self.action_space = action_space
         self.observation_space = observation_space
 
