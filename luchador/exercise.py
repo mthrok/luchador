@@ -98,8 +98,8 @@ def parse_command_line_arguments():
     )
     ap.add_argument('env', help=_env_help_str())
     ap.add_argument('agent', help=_agent_help_str())
-    ap.add_argument('--episodes', '-ep', type=int, default=200)
-    ap.add_argument('--timesteps', '-ts', type=int, default=1000)
+    ap.add_argument('--episodes', '-ep', type=int)
+    ap.add_argument('--timesteps', '-ts', type=int)
     ap.add_argument('--debug', action='store_true')
     ap.add_argument(
         '--config', '-c', type=argparse.FileType('r'),
