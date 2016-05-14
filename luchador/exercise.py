@@ -53,6 +53,40 @@ def create_agent(agent_name, agent_config, env, global_config):
         agent_config=agent_config, global_config=global_config)
 
 
+def init_logging(debug=False):
+    _LG.setLevel(logging.DEBUG if debug else logging.INFO)
+    logging.getLogger('gym').setLevel(logging.INFO)
+
+
+def main(config):
+    init_logging(config['debug'])
+    _LG.info('Params: \n{}'.format(
+        json.dumps(config, indent=2, sort_keys=True)))
+
+    env = gym.make(config['env'])
+    agt = create_agent(config['agent'], config['agent_param'], env, config)
+    wrd = luchador.World(env, agt, 100)
+    print_env_info(env)
+
+    monitor = config['monitor']
+    if not monitor['disable']:
+        wrd.start_monitor(monitor['output_dir'])
+
+    exercise = config['exercise']
+    for i in range(exercise['episodes']):
+        _LG.info('Running episode {}'.format(i))
+        t, r = wrd.run_episode(
+            timesteps=exercise['timesteps'],
+            render_mode=monitor['render_mode'])
+        if t < 0:
+            _LG.info('... Did not finish')
+        else:
+            _LG.info('... Finished with {} steps. Rewards: {}'.format(t, r))
+
+    wrd.close_monitor()
+
+
+###############################################################################
 def _env_help_str():
     ret = (
         'The followings are the environments installed in this machine.\n'
@@ -75,15 +109,6 @@ def _agent_help_str():
     for i, agt in enumerate(_AGENTS):
         ret += '{:>6d}: {}\n'.format(i, agt)
     return ret + '\n'
-
-
-def init_logging(debug=False):
-    _LG.setLevel(logging.DEBUG if debug else logging.INFO)
-    logging.getLogger('gym').setLevel(logging.INFO)
-
-
-def get_current_time():
-    return datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
 
 
 def parse_command_line_arguments():
@@ -120,6 +145,10 @@ def parse_command_line_arguments():
     return ap.parse_args()
 
 
+def get_current_time():
+    return datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+
+
 def parse_config():
     args = parse_command_line_arguments()
     config = yaml.load(args.config)
@@ -145,30 +174,5 @@ def parse_config():
     return config
 
 
-def main():
-    config = parse_config()
-    init_logging(config['debug'])
-    _LG.info('Params: \n{}'.format(
-        json.dumps(config, indent=2, sort_keys=True)))
-
-    env = gym.make(config['env'])
-    agt = create_agent(config['agent'], config['agent_param'], env, config)
-    wrd = luchador.World(env, agt, 100)
-    print_env_info(env)
-
-    monitor = config['monitor']
-    if not monitor['disable']:
-        wrd.start_monitor(monitor['output_dir'])
-
-    exercise = config['exercise']
-    for i in range(exercise['episodes']):
-        _LG.info('Running episode {}'.format(i))
-        t, r = wrd.run_episode(
-            timesteps=exercise['timesteps'],
-            render_mode=monitor['render_mode'])
-        if t < 0:
-            _LG.info('... Did not finish')
-        else:
-            _LG.info('... Finished with {} steps. Rewards: {}'.format(t, r))
-
-    wrd.close_monitor()
+def entry_point():
+    main(parse_config())

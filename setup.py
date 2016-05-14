@@ -9,7 +9,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'exercise = luchador.exercise:main',
+            'exercise = luchador.exercise:entry_point',
         ]
     },
     test_suite='tests',
