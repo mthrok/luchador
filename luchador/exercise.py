@@ -3,7 +3,6 @@ import sys
 import json
 import logging
 import inspect
-import datetime
 
 import yaml
 import gym
@@ -70,7 +69,7 @@ def main(config):
 
     monitor = config['monitor']
     if monitor['enable']:
-        wrd.start_monitor(monitor['output_dir'])
+        wrd.start_monitor(monitor['output_dir'], force=monitor['force'])
 
     exercise = config['exercise']
     for i in range(exercise['episodes']):
@@ -127,6 +126,10 @@ def parse_command_line_arguments():
     ap.add_argument('--timesteps', '-ts', type=int)
     ap.add_argument('--debug', action='store_true')
     ap.add_argument(
+        '--force', action='store_true',
+        help='Overwrite monitoring data.'
+    )
+    ap.add_argument(
         '--config', '-c', type=argparse.FileType('r'),
         default=open(default_config, 'r'),
         help='YAML file containing the configuration.'
@@ -145,10 +148,6 @@ def parse_command_line_arguments():
     return ap.parse_args()
 
 
-def get_current_time():
-    return datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
-
-
 def parse_config():
     args = parse_command_line_arguments()
     config = yaml.load(args.config)
@@ -160,6 +159,8 @@ def parse_config():
         config['exercise']['episodes'] = args.episodes
     if args.timesteps:
         config['exercise']['timesteps'] = args.timesteps
+    if args.force:
+        config['monitor']['force'] = True
     if args.no_monitor:
         config['monitor']['enable'] = False
     if args.output_dir:
@@ -170,7 +171,7 @@ def parse_config():
     monitor = config['monitor']
     monitor['output_dir'] = os.path.join(
         monitor['output_dir'],
-        '{}_{}_{}'.format(config['env'], config['agent'], get_current_time()))
+        '{}_{}'.format(config['env'], config['agent']))
     return config
 
 

@@ -4,6 +4,7 @@ monitor:
   output_dir: 'monitoring'
   render_mode: 'human'
   enable: True
+  force: False
 
 exercise:
   timesteps: 1000
