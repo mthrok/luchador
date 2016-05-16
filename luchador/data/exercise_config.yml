@@ -3,7 +3,7 @@ debug: False
 monitor:
   output_dir: 'monitoring'
   render_mode: 'human'
-  disable: False
+  enable: True
 
 exercise:
   timesteps: 1000

@@ -69,7 +69,7 @@ def main(config):
     print_env_info(env)
 
     monitor = config['monitor']
-    if not monitor['disable']:
+    if monitor['enable']:
         wrd.start_monitor(monitor['output_dir'])
 
     exercise = config['exercise']
@@ -161,7 +161,7 @@ def parse_config():
     if args.timesteps:
         config['exercise']['timesteps'] = args.timesteps
     if args.no_monitor:
-        config['monitor']['disable'] = True
+        config['monitor']['enable'] = False
     if args.output_dir:
         config['monitor']['output_dir'] = args.output_dir
     if args.render_mode:
