@@ -63,7 +63,7 @@ def main(config):
         json.dumps(config, indent=2, sort_keys=True)))
 
     env = gym.make(config['env'])
-    agt = create_agent(config['agent'], config['agent_param'], env, config)
+    agt = create_agent(config['agent'], config['agent_config'], env, config)
     wrd = luchador.World(env, agt, 100)
     print_env_info(env)
 

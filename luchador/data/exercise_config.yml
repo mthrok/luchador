@@ -10,4 +10,4 @@ exercise:
   timesteps: 1000
   episodes: 20000
 
-agent_param: {}
+agent_config: {}
