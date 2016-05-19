@@ -3,6 +3,7 @@ import sys
 import json
 import logging
 import inspect
+import datetime
 
 import yaml
 import gym
@@ -148,6 +149,10 @@ def parse_command_line_arguments():
     return ap.parse_args()
 
 
+def get_current_time():
+    return datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+
+
 def parse_config():
     args = parse_command_line_arguments()
     config = yaml.load(args.config)
@@ -170,8 +175,8 @@ def parse_config():
 
     monitor = config['monitor']
     monitor['output_dir'] = os.path.join(
-        monitor['output_dir'],
-        '{}_{}'.format(config['env'], config['agent']))
+        monitor['output_dir'], '{}_{}_{}'.format(
+            config['env'], config['agent'], get_current_time()))
     return config
 
 
