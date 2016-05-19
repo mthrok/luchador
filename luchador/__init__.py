@@ -1,1 +1,1 @@
-from core import World
+from core import World  # nopep8
