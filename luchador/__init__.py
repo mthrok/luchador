@@ -1,1 +1,2 @@
-from core import World  # nopep8
+from core import Agent  # nopep8
+from core import EpisodeRunner  # nopep8

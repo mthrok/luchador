@@ -42,9 +42,7 @@ def create_agent(agent_name, agent_config, env, global_config):
     _LG.info('Making new agent: {}'.format(agent_name))
     agent_class = getattr(agent, agent_name)
     return agent_class(
-        action_space=env.action_space,
-        observation_space=env.observation_space,
-        agent_config=agent_config, global_config=global_config)
+        env, agent_config=agent_config, global_config=global_config)
 
 
 def init_logging(debug=False):
@@ -59,24 +57,24 @@ def main(config):
 
     env = gym.make(config['env'])
     agt = create_agent(config['agent'], config['agent_config'], env, config)
-    wrd = luchador.World(env, agt, 100)
+    runner = luchador.EpisodeRunner(env, agt, 100)
     print_env_info(env)
 
     monitor = config['monitor']
     if monitor['enable']:
-        wrd.start_monitor(monitor['output_dir'], force=monitor['force'])
+        runner.start_monitor(monitor['output_dir'], force=monitor['force'])
 
     exercise = config['exercise']
     for i in range(exercise['episodes'] + 1):
         _LG.info('Running episode {}'.format(i))
         t0 = time.time()
-        t, r = wrd.run_episode(
+        t, r = runner.run_episode(
             timesteps=exercise['timesteps'],
             render_mode=monitor['render_mode'])
         dt = time.time() - t0
         _LG.info('... {}, Rewards: {}, Timesteps: {} ({} [sec])'
                  .format('NOT finished' if t < 0 else 'Finished', r, t, dt))
-    wrd.close_monitor()
+    runner.close_monitor()
 
 
 ###############################################################################
