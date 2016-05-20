@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+import time
 import logging
 import inspect
 import datetime
@@ -75,14 +76,14 @@ def main(config):
     exercise = config['exercise']
     for i in range(exercise['episodes']):
         _LG.info('Running episode {}'.format(i))
+        t0 = time.time()
         t, r = wrd.run_episode(
             timesteps=exercise['timesteps'],
             render_mode=monitor['render_mode'])
-        if t < 0:
-            _LG.info('... Did not finish')
-        else:
-            _LG.info('... Finished with {} steps. Rewards: {}'.format(t, r))
-
+        dt = time.time() - t0
+        _LG.info('... {:16} Timesetep: {}, '
+                 'Rewards: {}, Time[sec]: {}'.format(
+                     'Did not finish.' if t < 0 else 'Finished.', t, r, dt))
     wrd.close_monitor()
 
 
