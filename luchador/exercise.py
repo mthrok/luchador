@@ -74,7 +74,7 @@ def main(config):
         wrd.start_monitor(monitor['output_dir'], force=monitor['force'])
 
     exercise = config['exercise']
-    for i in range(exercise['episodes']):
+    for i in range(exercise['episodes'] + 1):
         _LG.info('Running episode {}'.format(i))
         t0 = time.time()
         t, r = wrd.run_episode(
