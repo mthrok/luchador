@@ -21,6 +21,7 @@ _AGENTS = sorted([obj[1].__name__ for obj in inspect.getmembers(
     ) if issubclass(obj[1], luchador.core.Agent)])
 
 
+###############################################################################
 def print_env_info(env):
     """Print environment info."""
     def print_space_summary(space):
@@ -35,14 +36,6 @@ def print_env_info(env):
     print_space_summary(env.observation_space)
     _LG.info('... Reward Range: {}'.format(env.reward_range))
     return env
-
-
-def parse_env_name(arg):
-    return _ENVS[int(arg)].id if arg.isdigit() else arg
-
-
-def parse_agent_name(arg):
-    return _AGENTS[int(arg)] if arg.isdigit() else arg
 
 
 def create_agent(agent_name, agent_config, env, global_config):
@@ -81,9 +74,8 @@ def main(config):
             timesteps=exercise['timesteps'],
             render_mode=monitor['render_mode'])
         dt = time.time() - t0
-        _LG.info('... {:16} Timesetep: {}, '
-                 'Rewards: {}, Time[sec]: {}'.format(
-                     'Did not finish.' if t < 0 else 'Finished.', t, r, dt))
+        _LG.info('... {}, Rewards: {}, Timesteps: {} ({} [sec])'
+                 .format('NOT finished' if t < 0 else 'Finished', r, t, dt))
     wrd.close_monitor()
 
 
@@ -112,7 +104,15 @@ def _agent_help_str():
     return ret + '\n'
 
 
-def parse_command_line_arguments():
+def _parse_env_name(arg):
+    return _ENVS[int(arg)].id if arg.isdigit() else arg
+
+
+def _parse_agent_name(arg):
+    return _AGENTS[int(arg)] if arg.isdigit() else arg
+
+
+def _parse_command_line_arguments():
     default_config = os.path.join(
         os.path.dirname(os.path.abspath(__file__)),
         'data', 'exercise_config.yml'
@@ -150,15 +150,15 @@ def parse_command_line_arguments():
     return ap.parse_args()
 
 
-def get_current_time():
+def _get_current_time():
     return datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
 
 
-def parse_config():
-    args = parse_command_line_arguments()
+def _parse_config():
+    args = _parse_command_line_arguments()
     config = yaml.load(args.config)
-    config['env'] = parse_env_name(args.env)
-    config['agent'] = parse_agent_name(args.agent)
+    config['env'] = _parse_env_name(args.env)
+    config['agent'] = _parse_agent_name(args.agent)
     if args.debug:
         config['debug'] = True
     if args.episodes:
@@ -177,9 +177,9 @@ def parse_config():
     monitor = config['monitor']
     monitor['output_dir'] = os.path.join(
         monitor['output_dir'], '{}_{}_{}'.format(
-            config['env'], config['agent'], get_current_time()))
+            config['env'], config['agent'], _get_current_time()))
     return config
 
 
 def entry_point():
-    main(parse_config())
+    main(_parse_config())
