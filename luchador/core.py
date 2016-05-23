@@ -31,6 +31,10 @@ class Agent(object):
         """Reset agent with the initial state of the environment."""
         raise NotImplementedError('reset method is not implemented.')
 
+    def run_post_episode_task(self):
+        """Perform post episode task"""
+        pass
+
 
 class EpisodeRunner(object):
     """Class for runnig episode"""
@@ -42,6 +46,9 @@ class EpisodeRunner(object):
     def reset(self):
         obs = self.env.reset()
         self.agent.reset(obs)
+
+    def run_post_episode_task(self):
+        self.agent.run_post_episode_task()
 
     def start_monitor(self, outdir, **kwargs):
         self.env.monitor.start(outdir, **kwargs)
@@ -68,5 +75,9 @@ class EpisodeRunner(object):
                 self.env.render(mode=render_mode)
 
             if done:
-                return t+1, total_rewards
-        return -1, total_rewards
+                t = t + 1
+                break
+        else:
+            t = -1
+        self.run_post_episode_task()
+        return t, total_rewards
