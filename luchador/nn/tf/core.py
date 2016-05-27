@@ -47,12 +47,18 @@ class TFModel(BaseModel):
 
 
 class TFLayer(BaseLayer):
-    """Add interface for scoping and summarization and output summarization"""
-    def __init__(self, name, scope, args):
-        super(TFLayer, self).__init__(name)
+    """Add interface for copy, scope and summarization to BaseLayer"""
+    def __init__(self, args):
+        """Initialize attributes required for common TFLayer operations
+
+        Args:
+          args (dict): Arguments used to initialize the subclass instance.
+            This will be used to recreate a subclass instance.
+        """
+        super(TFLayer, self).__init__()
 
         self.args = args
-        self.scope = scope
+        self.scope = args.get('scope')
 
         self.input_tensor = None
         self.output_tensor = None
@@ -63,6 +69,7 @@ class TFLayer(BaseLayer):
 
     ###########################################################################
     def copy(self):
+        """Copy layer configuration"""
         return type(self)(**self.args)
 
     ###########################################################################

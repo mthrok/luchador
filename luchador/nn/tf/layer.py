@@ -14,14 +14,13 @@ __all__ = ['Dense', 'Conv2D', 'ReLU', 'Flatten', 'TrueDiv']
 
 class Dense(TFLayer):
     def __init__(self, n_nodes, scope=None):
-        args = {'n_nodes': n_nodes, 'scope': scope}
-        super(Dense, self).__init__(name='dense', scope=scope, args=args)
+        super(Dense, self).__init__(args={'n_nodes': n_nodes, 'scope': scope})
 
     def build(self, input_tensor):
-        _LG.debug('    Building {}/{}'.format(self.scope, self.name))
-        n_input = input_tensor.get_shape()[1].value
+        _LG.debug('    Building {}'.format(self.scope))
+        n_inputs = input_tensor.get_shape()[1].value
         bias_shape = (self.args['n_nodes'], )
-        weight_shape = (n_input, self.args['n_nodes'])
+        weight_shape = (n_inputs, self.args['n_nodes'])
 
         with tf.variable_scope(self.get_scope()):
             b = tf.get_variable(
@@ -41,8 +40,8 @@ class Dense(TFLayer):
 
 
 class Conv2D(TFLayer):
-    def __init__(self, filter_shape, n_filters, stride,
-                 padding='SAME', scope=None):
+    def __init__(
+            self, filter_shape, n_filters, stride, padding='SAME', scope=None):
         """
         Args:
           filter_shape (tuple): [height, width]
@@ -56,10 +55,10 @@ class Conv2D(TFLayer):
             'padding': padding,
             'scope': scope,
         }
-        super(Conv2D, self).__init__(name='conv2d', scope=scope, args=args)
+        super(Conv2D, self).__init__(args=args)
 
     def build(self, input_tensor):
-        _LG.debug('    Building {}/{}'.format(self.scope, self.name))
+        _LG.debug('    Building {}'.format(self.scope))
         args = self.args
         n_input = input_tensor.get_shape()[-1].value
         b_shape = [args['n_filters']]
@@ -86,11 +85,10 @@ class Conv2D(TFLayer):
 
 class ReLU(TFLayer):
     def __init__(self, scope=None):
-        args = {'scope': scope}
-        super(ReLU, self).__init__(name='relu', scope=scope, args=args)
+        super(ReLU, self).__init__(args={'scope': scope})
 
     def build(self, input_tensor):
-        _LG.debug('    Building {}/{}'.format(self.scope, self.name))
+        _LG.debug('    Building {}'.format(self.scope))
         with tf.variable_scope(self.get_scope()):
             output_tensor = tf.nn.relu(input_tensor, 'ouptut')
 
@@ -101,11 +99,10 @@ class ReLU(TFLayer):
 
 class Flatten(TFLayer):
     def __init__(self, scope=None):
-        args = {'scope': scope}
-        super(Flatten, self).__init__(name='flatten', scope=scope, args=args)
+        super(Flatten, self).__init__(args={'scope': scope})
 
     def build(self, input_tensor):
-        _LG.debug('    Building {}/{}'.format(self.scope, self.name))
+        _LG.debug('    Building {}'.format(self.scope))
         input_shape = input_tensor.get_shape()
         n_nodes = reduce(lambda r, d: r*d.value, input_shape[1:], 1)
         output_shape = (-1, n_nodes)
@@ -120,11 +117,10 @@ class Flatten(TFLayer):
 
 class TrueDiv(TFLayer):
     def __init__(self, denom, scope=None):
-        args = {'denom': denom, 'scope': scope}
-        super(TrueDiv, self).__init__(name='truediv', scope=scope, args=args)
+        super(TrueDiv, self).__init__(args={'denom': denom, 'scope': scope})
 
     def build(self, input_tensor):
-        _LG.debug('    Building {}/{}'.format(self.scope, self.name))
+        _LG.debug('    Building {}'.format(self.scope))
         denom = self.args['denom']
         with tf.variable_scope(self.get_scope()):
             output_tensor = tf.truediv(input_tensor, denom, 'ouptut')

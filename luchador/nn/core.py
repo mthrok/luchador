@@ -1,8 +1,6 @@
 class Layer(object):
-    def __init__(self, name):
+    def __init__(self):
         super(Layer, self).__init__()
-
-        self.name = name
 
     def build(self, input_tensor):
         raise NotImplementedError('build method is not implemented.')
