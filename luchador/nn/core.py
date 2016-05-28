@@ -16,10 +16,11 @@ class Model(object):
 
     def add(self, layer):
         self.layers.append(layer)
+        return self
 
-    def build(self, input_tensor):
+    def __call__(self, input_tensor):
         self.input_tensor = input_tensor
         for layer in self.layers:
             input_tensor = layer.build(input_tensor)
         self.output_tensor = input_tensor
-        return self
+        return self.output_tensor
