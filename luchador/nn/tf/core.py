@@ -1,48 +1,64 @@
 import tensorflow as tf
 
-from ..core import Model as BaseModel
-from ..core import Layer as BaseLayer
 
-
-class TFModel(BaseModel):
+class TFModel(object):
     """Add interface for concatenation and summarization to BaseLayer"""
     def __init__(self):
         super(TFModel, self).__init__()
+        # Layer configurations
+        self.layer_configs = []
+        # I/O tensors of the model
+        self.input_tensor = None
+        self.output_tensor = None
 
-        self.output_summary_ops = None
-        self.parameter_summary_ops = None
+    def add(self, layer, scope=None):
+        """Add layer to model
+
+        Args:
+          layer (TFLayer): Layer to add
+          scope (str): Variable scope, used when instantiating layer.
+        """
+        self.layer_configs.append({
+            'layer': layer,
+            'scope': scope,
+            'input_tensor': None,
+            'output_tensor': None,
+        })
+        return self
 
     def __call__(self, input_tensor):
-        """Build the model on top on input_tensor"""
-        self.layer_outputs = []
-        self.layer_parameters = {}
+        """Build the model on top of input_tensor"""
         self.input_tensor = input_tensor
-        for layer in self.layers:
-            input_tensor = layer(input_tensor)
-            self.layer_outputs.append(input_tensor)
-            for name, var in layer.parameter_variables.items():
-                key = '{}/{}'.format(layer.args['scope'] or '', name)
-                self.layer_parameters[key] = var
-        self.output_tensor = input_tensor
+        tensor = input_tensor
+        for layer_config in self.layer_configs:
+            layer = layer_config['layer']
+            scope = layer_config['scope'] or tf.get_variable_scope()
+
+            layer_config['input_tensor'] = tensor
+            with tf.variable_scope(scope):
+                tensor = layer(tensor)
+            layer_config['output_tensor'] = tensor
+        self.output_tensor = tensor
         return self.output_tensor
 
-    def copy(self):
-        """Create a new TFModel instance with the same configuration"""
-        new_model = TFModel()
-        new_model += self
-        return new_model
-
     def __iadd__(self, other):
-        """Append layers from other model after this model
+        """Append layers from another model after this model
         Args:
           other (TFModel): TFModel to be concatenated
 
         Returns:
           TFModel: Updated model
         """
-        for layer in other.layers:
-            self.add(layer.copy())
+        for layer_config in other.layer_configs:
+            layer, scope = layer_config['layer'], layer_config['scope']
+            self.add(layer=layer, scope=scope)
         return self
+
+    def copy(self):
+        """Create a new TFModel instance with the same configuration"""
+        new_model = TFModel()
+        new_model += self
+        return new_model
 
     def __add__(self, other):
         """Concatenate other model after this model
@@ -57,27 +73,25 @@ class TFModel(BaseModel):
         return new_model
 
     ###########################################################################
-    def _summarize(self, tensor):
-        return tf.histogram_summary(tensor.name, tensor)
+    def get_parameter_variables(self):
+        """Get tf.Variable objects consisting the parameters of this model"""
+        ret = []
+        for layer_config in self.layer_configs:
+            layer = layer_config['layer']
+            for variable in layer.parameter_variables.values():
+                ret.append(variable)
+        return ret
 
-    def get_output_summary_ops(self):
-        if self.output_summary_ops is None:
-            self.output_summary_ops = [
-                self._summarize(layer_output)
-                for layer_output in self.layer_outputs
-            ]
-        return self.output_summary_ops
-
-    def get_parameter_summary_ops(self):
-        if self.parameter_summary_ops is None:
-            self.parameter_summary_ops = [
-                self._summarize(param)
-                for param in self.layer_parameters.values()
-            ]
-        return self.parameter_summary_ops
+    def get_output_tensors(self):
+        """Get tf.Tensor objects which represent the output of each layer"""
+        ret = []
+        for layer_config in self.layer_configs:
+            tensor = layer_config['output_tensor']
+            ret.append(tensor)
+        return ret
 
 
-class TFLayer(BaseLayer):
+class TFLayer(object):
     """Add copying and scoping interface to BaseLayer"""
     def __init__(self, args):
         """Initialize attributes required for common TFLayer operations
@@ -89,15 +103,7 @@ class TFLayer(BaseLayer):
         super(TFLayer, self).__init__()
 
         self.args = args
-        self.scope = args.get('scope')
-
         self.parameter_variables = {}
-
-    ###########################################################################
-    def get_scope(self):
-        if self.scope is None:
-            return tf.get_variable_scope()
-        return self.scope
 
     ###########################################################################
     def copy(self):

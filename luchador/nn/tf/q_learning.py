@@ -8,90 +8,77 @@ _LG = logging.getLogger(__name__)
 
 
 class QLearningInterface(object):
-    def __init__(self, discount_rate, clip_error_norm, clip_grad_norm):
-        self.discount_rate = discount_rate
-        self.clip_error_norm = clip_error_norm
-        self.clip_grad_norm = clip_grad_norm
+    """Class for building ops for Q-learning from TFModel"""
+    def __init__(self, clip_delta_min=None, clip_delta_max=None):
+        self.clip_delta_min = clip_delta_min
+        self.clip_delta_max = clip_delta_max
 
-    def init(self, q_network, session, optimizer):
-        self.session = session
-        self.optimizer = optimizer
-        self._build_training_model(q_network)
+        self.discount_rate = None
+        self.pre_states = None
+        self.actions = None
+        self.rewards = None
+        self.post_states = None
+        self.continuation = None
+        self.error = None
+        self.sync_ops = None
 
-    def _build_training_model(self, q_network):
+    def build(self, q_network):
+        """Build computation graph (error and sync ops) for Q learning
+
+        Args:
+          q_network(TFModel): TFModel which represetns Q network.
+            Model must be pre-built since this function needs shape
+            information.
+        """
         input_shape = q_network.input_tensor.get_shape()
         output_shape = q_network.output_tensor.get_shape()
         n_actions = output_shape[1]
 
-        self.state0 = tf.placeholder(tf.float32, input_shape, 'state0')
-        self.state1 = tf.placeholder(tf.float32, input_shape, 'state1')
-        self.action0 = tf.placeholder(tf.int64, (None,), 'action0')
-        self.reward0 = tf.placeholder(tf.float32, (None,), 'reward0')
+        self.discount_rate = tf.placeholder(tf.float32, None, 'discount_rate')
+        self.pre_states = tf.placeholder(tf.float32, input_shape, 'pre_state')
+        self.actions = tf.placeholder(tf.int64, (None,), 'actions')
+        self.rewards = tf.placeholder(tf.float32, (None,), 'rewards')
+        self.post_states = tf.placeholder(tf.float32, input_shape, 'post_state')
         self.continuation = tf.placeholder(tf.float32, (None,), 'continuation')
 
-        # Create a copy of Q network, sharing Variables
+        pre_q_network = q_network.copy()
+        post_q_network = pre_q_network.copy()
+        # Create a copy of Q network, sharing the original parameter Variables
         with tf.variable_scope(tf.get_variable_scope(), reuse=True):
-            with tf.name_scope('QNetwork0'):
-                self.q_network0 = q_network.copy()
-                q0 = self.q_network0(self.state0)
-        # Duplicate network, without sharing Variables
-        with tf.variable_scope('QNetwork1'):
-            self.q_network1 = self.q_network0.copy()
-            q1 = self.q_network1(self.state1)
-
-        with tf.variable_scope('q0'):
+            with tf.name_scope('pre_action_q_network'):
+                q0 = pre_q_network(self.pre_states)
+        # Duplicate the network, without sharing Variables
+        with tf.variable_scope('post_action_q_network'):
+            q1 = post_q_network(self.post_states)
+        # Compute Q value from pre-action state and action from record
+        with tf.variable_scope('current_q'):
             mask = tf.one_hot(
-                self.action0, n_actions, on_value=1.0, off_value=0.0)
-            q0 = tf.mul(q0, mask, name='q0_masked')
-            q0 = tf.reduce_sum(q0, reduction_indices=1, name='q0_observed')
-
-        with tf.variable_scope('q1'):
-            q1 = tf.reduce_max(q1, reduction_indices=1, name='q1_max')
-            q1 = tf.mul(q1, self.continuation, name='q1_masked')
-
-        with tf.variable_scope('Q'):
-            disc = tf.constant(
-                self.discount_rate, dtype=tf.float32, name='discount_rate')
-            q1 = tf.mul(q1, disc, name='q1_discounted')
-            Q = tf.add(q1, self.reward0, name='Q')
-
+                self.actions, n_actions, on_value=1.0, off_value=0.0)
+            q0 = tf.mul(q0, mask, name='q_masked')
+            q0 = tf.reduce_sum(q0, reduction_indices=1, name='q_observed')
+        # Compute max Q value from post-action state and post_q_network,
+        # and mask with continuation flag
+        with tf.variable_scope('future_q'):
+            q1 = tf.reduce_max(q1, reduction_indices=1, name='q_max')
+            q1 = tf.mul(q1, self.continuation, name='q_masked')
+        with tf.variable_scope('optimal_q'):
+            q1 = tf.mul(q1, self.discount_rate, name='q_discounted')
+            q_opt = tf.add(q1, self.rewards, name='q_optimal')
+        # Compute error between Q value from pre-action state and
+        # optimal Q value from post-action state
         with tf.variable_scope('error'):
-            self.error = tf.reduce_mean(
-                tf.square(q0 - tf.stop_gradient(Q)), name='MSE')
-            if self.clip_error_norm:
-                self.error = tf.clip_by_norm(
-                    self.error, self.clip_error_norm, name='MSE_clipped')
-
-        with tf.variable_scope('training'):
-            grads = self.optimizer.compute_gradients(self.error)
-            if self.clip_grad_norm:
-                for i, (grad, var) in enumerate(grads):
-                    if grad is None:
-                        continue
-                    grad = tf.clip_by_norm(
-                        grad, self.clip_grad_norm, name='gradient_clipped')
-                    grads[i] = (grad, var)
-            self.train = self.optimizer.apply_gradients(grads)
-
+            q_opt = tf.stop_gradient(q_opt)
+            delta = tf.sub(q_opt, q0, name='delta')
+            delta = tf.clip_by_value(delta, self.clip_delta_min,
+                                     self.clip_delta_max, name='clipped_delta')
+            self.error = tf.reduce_mean(tf.square(delta), name='MSE')
+        # Create operations for syncing post-action Q network with
+        # pre-action Q network
         with tf.variable_scope('sync'):
             sync_ops = []
-            params0 = self.q_network0.layer_parameters
-            params1 = self.q_network1.layer_parameters
-            for key in params0.keys():
-                sync_ops.append(params1[key].assign(params0[key]))
+            params0 = pre_q_network.get_parameter_variables()
+            params1 = post_q_network.get_parameter_variables()
+            for var0, var1 in zip(params0, params1):
+                sync_ops.append(var1.assign(var0))
             self.sync_ops = tf.group(*sync_ops)
-
-    def train_network(self, state0, action0, reward0, state1, continuation):
-        return self.session.run(
-            [self.error, self.train],
-            feed_dict={
-                self.state0: state0,
-                self.action0: action0,
-                self.reward0: reward0,
-                self.state1: state1,
-                self.continuation: continuation,
-            }
-        )[0]
-
-    def sync_networks(self):
-        self.session.run(self.sync_ops)
+        return self

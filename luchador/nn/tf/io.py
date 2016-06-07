@@ -1,39 +1,46 @@
 import os
 import logging
+from collections import defaultdict
 
 import tensorflow as tf
 
 _LG = logging.getLogger(__name__)
 
 
+def _get_summary_func(type_):
+    if type_ == 'scalar':
+        return tf.scalar_summary
+    if type_ == 'image':
+        return tf.image_summary
+    return tf.histogram_summary
+
+
 class SummaryWriter(object):
     def __init__(self, output_dir):
+        self.summary_ops = defaultdict(list)
         self.output_dir = output_dir
 
-        # Placeholder and session for arbitrary summary creation
-        self.summary_ops = {}
-        self.placeholder = tf.placeholder(tf.float32, name='summary')
+        self.summary_placeholder = tf.placeholder(dtype=tf.float32)
 
     def init(self, session):
         self.session = session
-        self.writer = tf.train.SummaryWriter(
-            self.output_dir, session.graph)
+        self.writer = tf.train.SummaryWriter(self.output_dir, session.graph)
 
-    def write(self, summary_str, n_trainings):
-        self.writer.add_summary(summary_str, n_trainings)
+    def register(self, key, type_, tensor):
+        func = _get_summary_func(type_)
+        self.summary_ops[key].append(func(key, tensor))
+
+    def register_multi(self, key, type_, tensors):
+        func = _get_summary_func(type_)
+        for tensor in tensors:
+            self.summary_ops[key].append(func(tensor.name, tensor))
+
+    def summarize(self, key, global_step, feed_dict={}):
+        summaries = self.session.run(
+            self.summary_ops[key], feed_dict=feed_dict)
+        for summary in summaries:
+            self.writer.add_summary(summary, global_step)
         self.writer.flush()
-
-    def summarize(self, name, value, type_='scalar'):
-        if name not in self.summary_ops:
-            if type_ == 'histogram':
-                op = tf.histogram_summary(name, self.placeholder)
-            elif type_ == 'image':
-                op = tf.image_summary(name, self.placeholder)
-            else:
-                op = tf.scalar_summary(name, self.placeholder)
-            self.summary_ops[name] = op
-        return self.session.run(
-            self.summary_ops[name], feed_dict={self.placeholder: value})
 
 
 class Saver(object):

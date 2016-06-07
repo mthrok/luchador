@@ -7,4 +7,6 @@ from .layer import *  # nopep8
 from .q_learning import QLearningInterface  # nopep8
 
 from .utils import get_optimizer  # nopep8
-from .model_maker import *  # nopep8
+from .model_factory import make_model  # nopep8
+
+from .optimization import *  # nopep8
