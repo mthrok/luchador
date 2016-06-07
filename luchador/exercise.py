@@ -144,7 +144,8 @@ def _parse_command_line_arguments():
     ap.add_argument(
         '--no-monitor', action='store_true', help='Disable monitoring')
     ap.add_argument(
-        '--render-mode', choices=['noop', 'random', 'static', 'human'])
+        '--render-mode', choices=['noop', 'random', 'static', 'human'],
+        help='Default: "human"')
     return ap.parse_args()
 
 

@@ -56,12 +56,12 @@ class EpisodeRunner(object):
     def close_monitor(self):
         self.env.monitor.close()
 
-    def run_episode(self, timesteps=None, render_mode=True):
+    def run_episode(self, timesteps=None, render_mode=None):
         """Run one episode"""
-        timesteps = self.timesteps if not timesteps else timesteps
+        timesteps = timesteps or self.timesteps
         self.reset()
 
-        if not render_mode == 'noop':
+        if render_mode in ['human', 'static', 'random']:
             self.env.render(mode=render_mode)
 
         total_rewards = 0
@@ -71,7 +71,7 @@ class EpisodeRunner(object):
             self.agent.observe(action, observation, reward, done, info)
 
             total_rewards += reward
-            if not render_mode == 'noop':
+            if render_mode in ['human', 'static', 'random']:
                 self.env.render(mode=render_mode)
 
             if done:
