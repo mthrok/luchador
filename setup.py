@@ -5,7 +5,10 @@ setup(
     version='0.1.0',
     packages=[
         'luchador',
+        'luchador.nn',
+        'luchador.nn.tensorflow',
         'luchador.agent',
+        'luchador.img_proc',
     ],
     entry_points={
         'console_scripts': [
@@ -15,6 +18,7 @@ setup(
     test_suite='tests',
     install_requires=[
         'gym',
+        'Pillow',
         'pyyaml',
     ],
     package_data={
