@@ -1,6 +1,5 @@
 import unittest
 
-import numpy as np
 import tensorflow as tf
 
 from luchador.nn.tf.layer import Dense
@@ -69,41 +68,3 @@ class TestDense(unittest.TestCase):
         except Exception:
             self.fail('It should be ValueError when copied layer tries to '
                       'create node without reuse enabled in variable scope.')
-
-    def test_duplicate(self):
-        """Duplicate creates new layer having the same initial values"""
-        n_nodes = 256
-        input_tensor = create_input(shape=(None, n_nodes))
-        dense1 = Dense(n_nodes)
-        dense1(input_tensor)
-        with tf.variable_scope('duplicated'):
-            dense2 = dense1.duplicate()
-            dense2(input_tensor)
-        self.session.run(tf.initialize_all_variables())
-
-        vars1 = dense1.parameter_variables
-        vars2 = dense2.parameter_variables
-        expected = set(vars1.keys())
-        found = set(vars2.keys())
-        self.assertEqual(
-            expected, found,
-            'Duplicated layer should have the same parameter variables '
-            'as the original layer. Expected: {}, Found: {}'
-            .format(expected, found))
-        for key in vars1.keys():
-            var1, var2 = vars1[key], vars2[key]
-            self.assertTrue(
-                var1 is not var2,
-                'Variable objects in duplicated layer should not be identical '
-                'to those in the original layer. Variable {} is identical.'
-                .format(key)
-            )
-            expected = self.session.run(var1)
-            found = self.session.run(var2)
-            self.assertTrue(
-                np.all(expected == found),
-                'Values in Variable objects in duplicated layer and '
-                'original layer should be same. Variable {} is not same.'
-                'Expected: {}, Found: {}'
-                .format(key, expected, found)
-            )

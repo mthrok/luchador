@@ -21,17 +21,17 @@ def _make_vanilla_dqn(n_actions):
         'weight': tf.random_normal_initializer(mean=0.0, stddev=0.01),
     }
 
-    conv0 = Conv2D(
-        filter_shape=(8, 8), n_filters=32, stride=4, initializers=initializers)
-    conv1 = Conv2D(
-        filter_shape=(4, 4), n_filters=64, stride=2, initializers=initializers)
-    conv2 = Conv2D(
-        filter_shape=(3, 3), n_filters=64, stride=1, initializers=initializers)
-
+    conv0 = Conv2D(filter_shape=(8, 8), n_filters=32, stride=4,
+                   initializers=initializers, padding='SAME')
+    conv1 = Conv2D(filter_shape=(4, 4), n_filters=64, stride=2,
+                   initializers=initializers)
+    conv2 = Conv2D(filter_shape=(3, 3), n_filters=64, stride=1,
+                   initializers=initializers)
     dense0 = Dense(n_nodes=512, initializers=initializers)
     dense1 = Dense(n_nodes=n_actions, initializers=initializers)
 
     model = TFModel()
+    # Note: In original DQN, they have 1 pixel 0 padding for each dimention.
     model.add(conv0, scope='layer0/conv2D')
     model.add(ReLU(), scope='layer0/ReLU')
 

@@ -26,7 +26,8 @@ class SummaryWriter(object):
         self.session = session
         self.writer = tf.train.SummaryWriter(self.output_dir, session.graph)
 
-    def register(self, key, type_, tensor):
+    def register(self, key, type_, tensor=None):
+        tensor = tensor or self.summary_placeholder
         func = _get_summary_func(type_)
         self.summary_ops[key].append(func(key, tensor))
 

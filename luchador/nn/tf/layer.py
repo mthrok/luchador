@@ -17,7 +17,7 @@ class Dense(TFLayer):
     def __init__(self, n_nodes, initializers=None):
         super(Dense, self).__init__(args=get_function_args())
 
-    def init(self, n_inputs):
+    def _instantiate_parameter_variables(self, n_inputs):
         args = self.args
         b_shape = (args['n_nodes'],)
         w_shape = (n_inputs, args['n_nodes'])
@@ -38,15 +38,14 @@ class Dense(TFLayer):
         _LG.debug('    Building {}: {}'.format(type(self).__name__, self.args))
         if not self.parameter_variables:
             n_inputs = input_tensor.get_shape()[1].value
-            self.init(n_inputs)
+            self._instantiate_parameter_variables(n_inputs)
 
-        params = self.parameter_variables
-        prod = tf.matmul(input_tensor, params['weight'])
-        return tf.add(prod, params['bias'], 'output')
+        prod = tf.matmul(input_tensor, self.parameter_variables['weight'])
+        return tf.add(prod, self.parameter_variables['bias'], 'output')
 
 
 class Conv2D(TFLayer):
-    def __init__(self, filter_shape, n_filters, stride, padding='SAME',
+    def __init__(self, filter_shape, n_filters, stride, padding='VALID',
                  initializers=None):
         """
         Args:
@@ -56,7 +55,7 @@ class Conv2D(TFLayer):
         """
         super(Conv2D, self).__init__(args=get_function_args())
 
-    def init(self, n_inputs):
+    def _instantiate_parameter_variables(self, n_inputs):
         args = self.args
         b_shape = [args['n_filters']]
         w_shape = list(args['filter_shape']) + [n_inputs, args['n_filters']]
@@ -76,14 +75,12 @@ class Conv2D(TFLayer):
         _LG.debug('    Building {}: {}'.format(type(self).__name__, self.args))
         if not self.parameter_variables:
             n_inputs = input_tensor.get_shape()[-1].value
-            self.init(n_inputs)
+            self._instantiate_parameter_variables(n_inputs)
 
-        args = self.args
-        params = self.parameter_variables
         stride_shape = [1, self.args['stride'], self.args['stride'], 1]
-        conv = tf.nn.conv2d(input_tensor, params['weight'],
-                            strides=stride_shape, padding=args['padding'])
-        return tf.add(params['bias'], conv, 'output')
+        conv = tf.nn.conv2d(input_tensor, self.parameter_variables['weight'],
+                            strides=stride_shape, padding=self.args['padding'])
+        return tf.add(self.parameter_variables['bias'], conv, 'output')
 
 
 class ReLU(TFLayer):
