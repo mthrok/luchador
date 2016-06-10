@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 import tensorflow as tf
 
 __all__ = ['clip_grad', 'build_train_ops']

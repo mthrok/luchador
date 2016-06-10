@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 from .io import Saver  # nopep8
 from .io import SummaryWriter  # nopep8
 

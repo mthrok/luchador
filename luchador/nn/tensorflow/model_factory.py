@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 import tensorflow as tf
 
 from .core import TFModel
