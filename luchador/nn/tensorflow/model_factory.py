@@ -1,13 +1,14 @@
 from __future__ import absolute_import
 
-import tensorflow as tf
-
 from .model import Model
-from .layer import ReLU
-from .layer import Dense
-from .layer import Conv2D
-from .layer import Flatten
-from .layer import TrueDiv
+from .layer import (
+    ReLU,
+    Dense,
+    Conv2D,
+    Flatten,
+    TrueDiv,
+)
+from .initializer import Normal
 
 
 def _make_image_normalizer(value=255):
@@ -19,8 +20,8 @@ def _make_image_normalizer(value=255):
 def _make_vanilla_dqn(n_actions):
 
     initializers = {
-        'bias': tf.random_normal_initializer(mean=0.0, stddev=0.01),
-        'weight': tf.random_normal_initializer(mean=0.0, stddev=0.01),
+        'bias': Normal(mean=0.0, stddev=0.01),
+        'weight': Normal(mean=0.0, stddev=0.01),
     }
 
     conv0 = Conv2D(filter_shape=(8, 8), n_filters=32, stride=4,
