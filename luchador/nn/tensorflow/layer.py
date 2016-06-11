@@ -6,18 +6,18 @@ import logging
 import tensorflow as tf
 from tensorflow.contrib import layers
 
-from ..core import BaseLayer
-from ..utils import get_function_args
+from ..core import ReLU as BaseReLU
+from ..core import Dense as BaseDense
+from ..core import Conv2D as BaseConv2D
+from ..core import Flatten as BaseFlatten
+from ..core import TrueDiv as BaseTrueDiv
 
 _LG = logging.getLogger(__name__)
 
 __all__ = ['Dense', 'Conv2D', 'ReLU', 'Flatten', 'TrueDiv']
 
 
-class Dense(BaseLayer):
-    def __init__(self, n_nodes, initializers=None):
-        super(Dense, self).__init__(args=get_function_args())
-
+class Dense(BaseDense):
     def _instantiate_parameter_variables(self, n_inputs):
         args = self.args
         b_shape = (args['n_nodes'],)
@@ -45,17 +45,7 @@ class Dense(BaseLayer):
         return tf.add(prod, self.parameter_variables['bias'], 'output')
 
 
-class Conv2D(BaseLayer):
-    def __init__(self, filter_shape, n_filters, stride, padding='VALID',
-                 initializers=None):
-        """
-        Args:
-          filter_shape (tuple): [height, width]
-          n_filters (int): #filters == #channels
-          stride (int): stride
-        """
-        super(Conv2D, self).__init__(args=get_function_args())
-
+class Conv2D(BaseConv2D):
     def _instantiate_parameter_variables(self, n_inputs):
         args = self.args
         b_shape = [args['n_filters']]
@@ -84,19 +74,13 @@ class Conv2D(BaseLayer):
         return tf.add(self.parameter_variables['bias'], conv, 'output')
 
 
-class ReLU(BaseLayer):
-    def __init__(self):
-        super(ReLU, self).__init__(args=get_function_args())
-
-    def __call__(self, input_tensor):
+class ReLU(BaseReLU):
+    def build(self, input_tensor):
         _LG.debug('    Building {}: {}'.format(type(self).__name__, self.args))
         return tf.nn.relu(input_tensor, 'ouptut')
 
 
-class Flatten(BaseLayer):
-    def __init__(self):
-        super(Flatten, self).__init__(args=get_function_args())
-
+class Flatten(BaseFlatten):
     def build(self, input_tensor):
         _LG.debug('    Building {}: {}'.format(type(self).__name__, self.args))
         in_shape = input_tensor.get_shape()
@@ -105,10 +89,7 @@ class Flatten(BaseLayer):
         return tf.reshape(input_tensor, out_shape, 'output')
 
 
-class TrueDiv(BaseLayer):
-    def __init__(self, denom):
-        super(TrueDiv, self).__init__(args=get_function_args())
-
+class TrueDiv(BaseTrueDiv):
     def build(self, input_tensor):
         _LG.debug('    Building {}: {}'.format(type(self).__name__, self.args))
         return tf.truediv(input_tensor, self.args['denom'], 'ouptut')

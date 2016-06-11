@@ -2,7 +2,7 @@ from __future__ import absolute_import
 
 import tensorflow as tf
 
-from ..core import Model
+from .model import Model
 from .layer import ReLU
 from .layer import Dense
 from .layer import Conv2D

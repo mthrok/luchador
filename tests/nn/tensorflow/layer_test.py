@@ -67,6 +67,9 @@ class TestDense(unittest.TestCase):
                       'reuse is not enabled in variable scope.')
         except ValueError:
             pass
-        except Exception:
-            self.fail('It should be ValueError when copied layer tries to '
-                      'create node without reuse enabled in variable scope.')
+        except Exception as e:
+            self.fail(
+                'Expected ValueError when copied layer tries to '
+                'create node without reuse enabled in variable scope. '
+                'Found "{}"'.format(e)
+            )
