@@ -2,7 +2,7 @@ from __future__ import absolute_import
 
 import tensorflow as tf
 
-from .core import TFModel
+from .model import Model
 from .layer import ReLU
 from .layer import Dense
 from .layer import Conv2D
@@ -11,7 +11,7 @@ from .layer import TrueDiv
 
 
 def _make_image_normalizer(value=255):
-    model = TFModel()
+    model = Model()
     model.add(TrueDiv(value), scope='preprocessing/image_normalization')
     return model
 
@@ -32,7 +32,7 @@ def _make_vanilla_dqn(n_actions):
     dense0 = Dense(n_nodes=512, initializers=initializers)
     dense1 = Dense(n_nodes=n_actions, initializers=initializers)
 
-    model = TFModel()
+    model = Model()
     # Note: In original DQN, they have 1 pixel 0 padding for each dimention.
     model.add(conv0, scope='layer0/conv2D')
     model.add(ReLU(), scope='layer0/ReLU')
