@@ -7,7 +7,7 @@ import tensorflow as tf
 from tensorflow.contrib import layers
 
 from ..core import BaseLayer
-from .utils import get_function_args
+from ..utils import get_function_args
 
 _LG = logging.getLogger(__name__)
 
