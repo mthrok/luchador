@@ -1,5 +1,7 @@
 from __future__ import absolute_import
 
+from . import scope as scp
+
 
 class BaseLayer(object):
     """Class for holding layer configuratiions"""
@@ -30,9 +32,9 @@ class BaseLayer(object):
         )
 
 
-class BaseModel(object):
+class Model(object):
     def __init__(self):
-        super(BaseModel, self).__init__()
+        super(Model, self).__init__()
         # Layer configurations
         self.layer_configs = []
         # I/O tensors of the model
@@ -88,8 +90,32 @@ class BaseModel(object):
     def __call__(self, input_tensor):
         return self.build(input_tensor)
 
+    """Add interface for concatenation and summarization to BaseLayer"""
     def build(self, input_tensor):
-        raise NotImplementedError(
-            '`build` method is not implemented for class: {}.'
-            .format(type(self).__name__)
-        )
+        """Build the model on top of input_tensor"""
+        self.input_tensor = input_tensor
+        tensor = input_tensor
+        for layer_config in self.layer_configs:
+            layer = layer_config['layer']
+            scope = layer_config['scope'] or scp.get_variable_scope()
+
+            layer_config['input_tensor'] = tensor
+            with scp.variable_scope(scope):
+                tensor = layer(tensor)
+            layer_config['output_tensor'] = tensor
+        self.output_tensor = tensor
+        return self.output_tensor
+
+    ###########################################################################
+    def get_parameter_variables(self):
+        """Get Variable objects consisting the parameters of this model"""
+        ret = []
+        for layer_config in self.layer_configs:
+            layer = layer_config['layer']
+            for variable in layer.parameter_variables.values():
+                ret.append(variable)
+        return ret
+
+    def get_output_tensors(self):
+        """Get Tensor objects which represent the output of each layer"""
+        return [cfg['output_tensor'] for cfg in self.layer_configs]

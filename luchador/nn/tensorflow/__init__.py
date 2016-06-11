@@ -3,7 +3,6 @@ from __future__ import absolute_import
 from .io import Saver  # nopep8
 from .io import SummaryWriter  # nopep8
 
-from .core import Model  # nopep8
 from .layer import *  # nopep8
 
 from .q_learning import QLearningInterface  # nopep8
