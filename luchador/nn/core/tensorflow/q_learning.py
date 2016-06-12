@@ -5,24 +5,12 @@ import logging
 
 import tensorflow as tf
 
+from ..base.q_learning import QLearningInterface as BaseQLI
+
 _LG = logging.getLogger(__name__)
 
 
-class QLearningInterface(object):
-    """Class for building ops for Q-learning from TFModel"""
-    def __init__(self, clip_delta_min=None, clip_delta_max=None):
-        self.clip_delta_min = clip_delta_min
-        self.clip_delta_max = clip_delta_max
-
-        self.discount_rate = None
-        self.pre_states = None
-        self.actions = None
-        self.rewards = None
-        self.post_states = None
-        self.continuation = None
-        self.error = None
-        self.sync_ops = None
-
+class QLearningInterface(BaseQLI):
     def build(self, q_network):
         """Build computation graph (error and sync ops) for Q learning
 

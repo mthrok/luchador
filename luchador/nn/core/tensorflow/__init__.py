@@ -5,6 +5,7 @@ from .layer import *  # nopep8
 from .model import Model  # nopep8
 from .initializer import *  # nopep8
 from .optimization import *  # nopep8
+from .q_learning import QLearningInterface  # nopep8
 
 from .io import Saver  # nopep8
 from .io import SummaryWriter  # nopep8

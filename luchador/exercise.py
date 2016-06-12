@@ -14,13 +14,13 @@ from gym import envs
 from gym import spaces
 
 import luchador
-from luchador import agent
+import luchador.agent
 
 _LG = logging.getLogger('luchador')
 _ENVS = sorted([env_spec for env_spec in envs.registry.all()])
 _AGENTS = sorted([obj[1].__name__ for obj in inspect.getmembers(
     sys.modules['luchador.agent'], inspect.isclass
-    ) if issubclass(obj[1], luchador.core.Agent)])
+    ) if issubclass(obj[1], luchador.Agent)])
 
 
 ###############################################################################
@@ -42,7 +42,7 @@ def print_env_info(env):
 
 def create_agent(agent_name, agent_config, env, global_config):
     _LG.info('Making new agent: {}'.format(agent_name))
-    agent_class = getattr(agent, agent_name)
+    agent_class = getattr(luchador.agent, agent_name)
     return agent_class(
         env, agent_config=agent_config, global_config=global_config)
 
@@ -58,8 +58,8 @@ def main(config):
         json.dumps(config, indent=2, sort_keys=True)))
 
     env = gym.make(config['env'])
-    agt = create_agent(config['agent'], config['agent_config'], env, config)
-    runner = luchador.EpisodeRunner(env, agt, 100)
+    agent = create_agent(config['agent'], config['agent_config'], env, config)
+    runner = luchador.EpisodeRunner(env, agent, 100)
     print_env_info(env)
 
     monitor = config['monitor']
@@ -99,8 +99,8 @@ def _agent_help_str():
         'You can choose environment wither by its name or index.\n'
         'Note: Not all the combination of Env/Agent is possible.\n\n'
     )
-    for i, agt in enumerate(_AGENTS):
-        ret += '{:>6d}: {}\n'.format(i, agt)
+    for i, agent in enumerate(_AGENTS):
+        ret += '{:>6d}: {}\n'.format(i, agent)
     return ret + '\n'
 
 

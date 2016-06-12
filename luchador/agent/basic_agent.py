@@ -4,14 +4,14 @@ import logging
 
 from gym import spaces
 
-from luchador.core import Agent
+from .base import Agent as BaseAgent
 
 __all__ = ['RandomAgent', 'ControllerAgent']
 
 _LG = logging.getLogger(__name__)
 
 
-class RandomAgent(Agent):
+class RandomAgent(BaseAgent):
     def __init__(self, env, agent_config, global_config):
         super(RandomAgent, self).__init__(
             env, agent_config=agent_config, global_config=global_config)
@@ -26,7 +26,7 @@ class RandomAgent(Agent):
         return self.action_space.sample()
 
 
-class ControllerAgent(Agent):
+class ControllerAgent(BaseAgent):
     # TODO: Add game pad controll
     def __init__(self, env, agent_config, global_config):
         if type(env.action_space) not in [spaces.Discrete, spaces.Tuple]:
