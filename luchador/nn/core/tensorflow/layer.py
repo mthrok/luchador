@@ -6,11 +6,11 @@ import logging
 import tensorflow as tf
 from tensorflow.contrib import layers
 
-from ..core import ReLU as BaseReLU
-from ..core import Dense as BaseDense
-from ..core import Conv2D as BaseConv2D
-from ..core import Flatten as BaseFlatten
-from ..core import TrueDiv as BaseTrueDiv
+from ..base import ReLU as BaseReLU
+from ..base import Dense as BaseDense
+from ..base import Conv2D as BaseConv2D
+from ..base import Flatten as BaseFlatten
+from ..base import TrueDiv as BaseTrueDiv
 
 _LG = logging.getLogger(__name__)
 

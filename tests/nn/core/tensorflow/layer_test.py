@@ -4,7 +4,7 @@ import unittest
 
 import tensorflow as tf
 
-from luchador.nn.tensorflow.layer import Dense
+from luchador.nn.core.tensorflow.layer import Dense
 
 
 def create_input(shape):

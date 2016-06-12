@@ -2,7 +2,7 @@ from __future__ import absolute_import
 
 import tensorflow as tf
 
-from ..core import Model as BaseModel
+from ..base import Model as BaseModel
 
 
 class Model(BaseModel):

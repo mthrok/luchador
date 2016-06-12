@@ -1,3 +1,7 @@
 from __future__ import absolute_import
 
-from .tensorflow import *  # nopep8
+from .core import *  # nopep8
+
+from .model import *  # nopep8
+
+from .q_learning import *  # nopep8

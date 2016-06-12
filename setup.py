@@ -6,7 +6,10 @@ setup(
     packages=[
         'luchador',
         'luchador.nn',
-        'luchador.nn.tensorflow',
+        'luchador.nn.core',
+        'luchador.nn.core.tensorflow',
+        'luchador.nn.model',
+        'luchador.nn.q_learning',
         'luchador.agent',
         'luchador.img_proc',
     ],
