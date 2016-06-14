@@ -75,6 +75,7 @@ class Model(object):
         raise NotImplementedError('`build` method is not implemented')
 
     ###########################################################################
+    # Functions for retrieving variables and tensors
     def get_parameter_variables(self):
         """Get Variable objects consisting the parameters of this model"""
         ret = []

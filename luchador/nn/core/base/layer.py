@@ -49,8 +49,8 @@ class Dense(BaseLayer):
 
 
 class Conv2D(BaseLayer):
-    def __init__(self, filter_shape, n_filters, stride, padding='VALID',
-                 initializers=None):
+    def __init__(self, filter_height, filter_width, n_filters, stride,
+                 padding='VALID', initializers=None):
         """
         Args:
           filter_shape (tuple): [height, width]

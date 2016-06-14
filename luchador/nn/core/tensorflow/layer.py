@@ -49,17 +49,15 @@ class Conv2D(BaseConv2D):
     def _instantiate_parameter_variables(self, n_inputs):
         args = self.args
         b_shape = [args['n_filters']]
-        w_shape = list(args['filter_shape']) + [n_inputs, args['n_filters']]
-        if args.get('initializers'):
-            b_initializer = args['initializers']['bias']
-            w_initializer = args['initializers']['weight']
-        else:
-            b_initializer = tf.constant_initializer(0.1)
-            w_initializer = layers.xavier_initializer_conv2d()
-        b = tf.get_variable(
-            name='bias', shape=b_shape, initializer=b_initializer)
-        w = tf.get_variable(
-            name='weight', shape=w_shape, initializer=w_initializer)
+        w_shape = (args['filter_height'], args['filter_width'],
+                   n_inputs, args['n_filters'])
+
+        given = args.get('initializers')
+        b0 = given['bias'] if given else tf.constant_initializer(0.1)
+        w0 = given['weight'] if given else layers.xavier_initializer_conv2d()
+
+        b = tf.get_variable(name='bias', shape=b_shape, initializer=b0)
+        w = tf.get_variable(name='weight', shape=w_shape, initializer=w0)
         self.parameter_variables = {'bias': b, 'weight': w}
 
     def build(self, input_tensor):

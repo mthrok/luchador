@@ -17,11 +17,11 @@ def vanilla_dqn(n_actions):
         'weight': Normal(mean=0.0, stddev=0.01),
     }
 
-    conv0 = Conv2D(filter_shape=(8, 8), n_filters=32, stride=4,
+    conv0 = Conv2D(filter_height=8, filter_width=8, n_filters=32, strides=4,
                    initializers=initializers, padding='SAME')
-    conv1 = Conv2D(filter_shape=(4, 4), n_filters=64, stride=2,
+    conv1 = Conv2D(filter_height=4, filter_width=4, n_filters=64, strides=2,
                    initializers=initializers)
-    conv2 = Conv2D(filter_shape=(3, 3), n_filters=64, stride=1,
+    conv2 = Conv2D(filter_height=3, filter_width=3, n_filters=64, strides=1,
                    initializers=initializers)
     dense0 = Dense(n_nodes=512, initializers=initializers)
     dense1 = Dense(n_nodes=n_actions, initializers=initializers)
