@@ -46,6 +46,53 @@ class Dense(BaseDense):
 
 
 class Conv2D(BaseConv2D):
+    def _validate_padding(padding):
+        if padding not in ['SAME', 'VALID']:
+            raise ValueError('`padding` must be either "SAME" or "VALID"')
+
+    def _validate_strides(strides):
+        if isinstance(strides, int):
+            return
+        try:
+            if (
+                    len(strides) in [2, 4] and
+                    all(map(lambda s: issubclass(s, int), strides))
+            ):
+                return
+        except Exception:
+            pass
+        raise ValueError(
+            '`strides` must be either int, '
+            'tuple of two ints or tuple of four ints'
+        )
+
+    def _validate_data_format(self, data_format):
+        if data_format not in ['NHWC', 'NCHW']:
+            raise ValueError(
+                '`data_format` mut be either "NCHW" or "NHWC".')
+
+    def _validate_args(self, args):
+        self._validate_padding(args['padding'])
+        self._validate_strides(args['strides'])
+        self._validate_data_format(args.get('data_format', 'NHWC'))
+
+    ###########################################################################
+    def _get_strides(self):
+        strides = self.args['strides']
+        data_format = self.args.get('data_format', 'NHWC')
+
+        if data_format == 'NHWC':
+            if isinstance(strides, int):
+                return [1, strides, strides, 1]
+            if len(strides) == 2:
+                return [1, strides[0], strides[1], 1]
+            return strides
+        if isinstance(strides, int):
+            return [1, 1, strides, strides]
+        if len(strides) == 2:
+            return [1, 1, strides[0], strides[1]]
+        return strides
+
     def _instantiate_parameter_variables(self, n_inputs):
         args = self.args
         b_shape = [args['n_filters']]
@@ -66,9 +113,15 @@ class Conv2D(BaseConv2D):
             n_inputs = input_tensor.get_shape()[-1].value
             self._instantiate_parameter_variables(n_inputs)
 
-        stride_shape = [1, self.args['stride'], self.args['stride'], 1]
-        conv = tf.nn.conv2d(input_tensor, self.parameter_variables['weight'],
-                            strides=stride_shape, padding=self.args['padding'])
+        strides = self._get_strides()
+        name = self.args.get('name')
+        cudnn = self.args.get('use_cudnn_on_gpu', True)
+        data_format = self.args.get('use_cudnn_on_gpu', 'NHWC')
+        conv = tf.nn.conv2d(
+            input_tensor, self.parameter_variables['weight'],
+            strides=strides, padding=self.args['padding'],
+            use_cudnn_on_gpu=cudnn, data_format=data_format, name=name
+        )
         return tf.add(self.parameter_variables['bias'], conv, 'output')
 
 
