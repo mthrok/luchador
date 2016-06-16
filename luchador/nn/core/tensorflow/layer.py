@@ -72,6 +72,7 @@ class Conv2D(BaseConv2D):
                 '`data_format` mut be either "NCHW" or "NHWC".')
 
     def _validate_args(self, args):
+        args['padding'] = args['padding'].upper()
         self._validate_padding(args['padding'])
         self._validate_strides(args['strides'])
         self._validate_data_format(args.get('data_format', 'NHWC'))
