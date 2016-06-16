@@ -46,11 +46,11 @@ class Dense(BaseDense):
 
 
 class Conv2D(BaseConv2D):
-    def _validate_padding(padding):
+    def _validate_padding(self, padding):
         if padding not in ['SAME', 'VALID']:
             raise ValueError('`padding` must be either "SAME" or "VALID"')
 
-    def _validate_strides(strides):
+    def _validate_strides(self, strides):
         if isinstance(strides, int):
             return
         try:

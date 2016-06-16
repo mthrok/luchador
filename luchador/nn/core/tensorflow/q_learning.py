@@ -67,7 +67,9 @@ class QLearningInterface(BaseQLI):
             sync_ops = []
             params0 = pre_q_network.get_parameter_variables()
             params1 = post_q_network.get_parameter_variables()
-            for var0, var1 in zip(params0, params1):
+            for key in params0.keys():
+                var0 = params0[key]
+                var1 = params1[key]
                 sync_ops.append(var1.assign(var0))
             self.sync_ops = tf.group(*sync_ops)
         return self
