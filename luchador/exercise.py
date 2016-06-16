@@ -16,7 +16,7 @@ from gym import spaces
 import luchador
 import luchador.agent
 
-_LG = logging.getLogger('luchador')
+_LG = logging.getLogger(__name__)
 _ENVS = sorted([env_spec for env_spec in envs.registry.all()])
 _AGENTS = sorted([obj[1].__name__ for obj in inspect.getmembers(
     sys.modules['luchador.agent'], inspect.isclass
@@ -48,8 +48,12 @@ def create_agent(agent_name, agent_config, env, global_config):
 
 
 def init_logging(debug=False):
-    _LG.setLevel(logging.DEBUG if debug else logging.INFO)
-    logging.getLogger('gym').setLevel(logging.INFO)
+    import gym  # nopep8
+    logging.getLogger().handlers = []
+
+    logging.basicConfig()
+    level = logging.DEBUG if debug else logging.INFO
+    logging.getLogger('luchador').setLevel(level)
 
 
 def main(config):
