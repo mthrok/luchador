@@ -104,6 +104,8 @@ class Conv2D(BaseConv2D):
         b0 = given['bias'] if given else tf.constant_initializer(0.1)
         w0 = given['weight'] if given else layers.xavier_initializer_conv2d()
 
+        # TODO: Add warning if
+        # parts of image are not covered because of stride
         b = tf.get_variable(name='bias', shape=b_shape, initializer=b0)
         w = tf.get_variable(name='weight', shape=w_shape, initializer=w0)
         self.parameter_variables = {'bias': b, 'weight': w}
