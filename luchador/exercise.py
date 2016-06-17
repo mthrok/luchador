@@ -48,12 +48,12 @@ def create_agent(agent_name, agent_config, env, global_config):
 
 
 def init_logging(debug=False):
-    import gym  # nopep8
-    logging.getLogger().handlers = []
-
-    logging.basicConfig()
-    level = logging.DEBUG if debug else logging.INFO
-    logging.getLogger('luchador').setLevel(level)
+    fmt = ('%(pathname)s:%(lineno)d:%(funcName)s: %(message)s' if debug else
+           '%(asctime)s:%(levelname)-8s %(message)s')
+    logging.basicConfig(
+        format=fmt,
+        level=logging.DEBUG if debug else logging.INFO,
+    )
 
 
 def main(config):
