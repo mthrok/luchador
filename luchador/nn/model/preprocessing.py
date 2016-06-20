@@ -4,7 +4,7 @@ from ..core import Model
 from ..core import TrueDiv
 
 
-def image_normalizer(value=255):
+def image_normalizer(value, dtype):
     model = Model()
-    model.add(TrueDiv(value), scope='preprocessing/image_normalization')
+    model.add(TrueDiv(value, dtype), scope='preprocessing/image_normalization')
     return model

@@ -6,14 +6,13 @@ from ..base import Model as BaseModel
 
 
 class Model(BaseModel):
-    def build(self, input_tensor):
+    def build(self, input):
         """Build the model on top of input_tensor"""
-        tensor = input_tensor
-        self.input_tensor = tensor
+        output = self.input = input
         for cfg in self.layer_configs:
-            cfg.input_tensor = tensor
+            cfg.input = output
             with tf.variable_scope(cfg.scope or tf.get_variable_scope()):
-                tensor = cfg.layer(tensor)
-            cfg.output_tensor = tensor
-        self.output_tensor = tensor
-        return self.output_tensor
+                output = cfg.layer(output)
+            cfg.output = output
+        self.output = output
+        return self.output

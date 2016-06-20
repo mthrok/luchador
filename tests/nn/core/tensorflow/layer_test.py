@@ -4,11 +4,8 @@ import unittest
 
 import tensorflow as tf
 
+from luchador.nn.core.tensorflow.tensor import Input
 from luchador.nn.core.tensorflow.layer import Dense
-
-
-def create_input(shape):
-    return tf.placeholder(tf.float32, shape=shape)
 
 
 class TestDense(unittest.TestCase):
@@ -24,18 +21,18 @@ class TestDense(unittest.TestCase):
         """Dense layer does not crash"""
         n_nodes = 256
         dense = Dense(n_nodes)
-        input_tensor = create_input(shape=(None, n_nodes))
-        dense(input_tensor)
+        input = Input(shape=(None, n_nodes), dtype=tf.float32)
+        dense(input())
 
     def test_copy_success_with_reuse(self):
         """Copied layer can create node when reuse=True in variable scope"""
         n_nodes = 256
-        input_tensor = create_input(shape=(None, n_nodes))
+        input = Input(shape=(None, n_nodes))()
         dense1 = Dense(n_nodes)
-        dense1(input_tensor)
+        dense1(input)
         with tf.variable_scope(tf.get_variable_scope(), reuse=True):
             dense2 = dense1.copy()
-            dense2(input_tensor)
+            dense2(input)
 
         vars1 = dense1.parameter_variables
         vars2 = dense2.parameter_variables
@@ -57,12 +54,12 @@ class TestDense(unittest.TestCase):
     def test_copy_fail_without_reuse(self):
         """Copied layer fails to create node when reuse is not True"""
         n_nodes = 256
-        input_tensor = create_input(shape=(None, n_nodes))
+        input = Input(shape=(None, n_nodes))()
         dense1 = Dense(n_nodes)
-        dense1(input_tensor)
+        dense1(input)
         try:
             dense3 = dense1.copy()
-            dense3(input_tensor)
+            dense3(input)
             self.fail('Copied layer should raise ValueError when '
                       'reuse is not enabled in variable scope.')
         except ValueError:

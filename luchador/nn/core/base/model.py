@@ -2,11 +2,11 @@ from __future__ import absolute_import
 
 
 class LayerConfig(object):
-    def __init__(self, layer, scope, input_tensor=None, output_tensor=None):
+    def __init__(self, layer, scope, input=None, output=None):
         self.layer = layer
         self.scope = scope
-        self.input_tensor = input_tensor
-        self.output_tensor = output_tensor
+        self.input = input
+        self.output = output
 
 
 class Model(object):
@@ -15,8 +15,8 @@ class Model(object):
         # Layer configurations
         self.layer_configs = []
         # I/O tensors of the model
-        self.input_tensor = None
-        self.output_tensor = None
+        self.input = None
+        self.output = None
 
     ###########################################################################
     def add(self, layer, scope=None):
@@ -29,8 +29,8 @@ class Model(object):
         self.layer_configs.append(LayerConfig(
             layer=layer,
             scope=scope,
-            input_tensor=None,
-            output_tensor=None,
+            input=None,
+            output=None,
         ))
         return self
 
@@ -91,5 +91,5 @@ class Model(object):
         ret = {}
         for cfg in self.layer_configs:
             name = '{}/output'.format(cfg.scope) if cfg.scope else 'output'
-            ret[name] = cfg.output_tensor
+            ret[name] = cfg.output.tensor
         return ret

@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from .scope import *  # nopep8
 from .layer import *  # nopep8
 from .model import Model  # nopep8
+from .tensor import Tensor, Input  # nopep8
 from .initializer import *  # nopep8
 from .optimization import *  # nopep8
 from .q_learning import QLearningInterface  # nopep8

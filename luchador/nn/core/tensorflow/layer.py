@@ -6,11 +6,14 @@ import logging
 import tensorflow as tf
 from tensorflow.contrib import layers
 
-from ..base import ReLU as BaseReLU
-from ..base import Dense as BaseDense
-from ..base import Conv2D as BaseConv2D
-from ..base import Flatten as BaseFlatten
-from ..base import TrueDiv as BaseTrueDiv
+from ..base import (
+    ReLU as BaseReLU,
+    Dense as BaseDense,
+    Conv2D as BaseConv2D,
+    Flatten as BaseFlatten,
+    TrueDiv as BaseTrueDiv,
+)
+from .tensor import Tensor
 
 _LG = logging.getLogger(__name__)
 
@@ -35,14 +38,15 @@ class Dense(BaseDense):
             name='weight', shape=w_shape, initializer=w_initializer)
         self.parameter_variables = {'bias': b, 'weight': W}
 
-    def build(self, input_tensor):
+    def build(self, input):
         _LG.debug('    Building {}: {}'.format(type(self).__name__, self.args))
         if not self.parameter_variables:
-            n_inputs = input_tensor.get_shape()[1].value
+            n_inputs = input.get_shape()[1]
             self._instantiate_parameter_variables(n_inputs)
 
-        prod = tf.matmul(input_tensor, self.parameter_variables['weight'])
-        return tf.add(prod, self.parameter_variables['bias'], 'output')
+        prod = tf.matmul(input.tensor, self.parameter_variables['weight'])
+        output_tensor = tf.add(prod, self.parameter_variables['bias'], 'output')
+        return Tensor(tensor=output_tensor)
 
 
 class Conv2D(BaseConv2D):
@@ -110,10 +114,10 @@ class Conv2D(BaseConv2D):
         w = tf.get_variable(name='weight', shape=w_shape, initializer=w0)
         self.parameter_variables = {'bias': b, 'weight': w}
 
-    def build(self, input_tensor):
+    def build(self, input):
         _LG.debug('    Building {}: {}'.format(type(self).__name__, self.args))
         if not self.parameter_variables:
-            n_inputs = input_tensor.get_shape()[-1].value
+            n_inputs = input.get_shape()[-1]
             self._instantiate_parameter_variables(n_inputs)
 
         strides = self._get_strides()
@@ -121,29 +125,43 @@ class Conv2D(BaseConv2D):
         cudnn = self.args.get('use_cudnn_on_gpu', True)
         data_format = self.args.get('use_cudnn_on_gpu', 'NHWC')
         conv = tf.nn.conv2d(
-            input_tensor, self.parameter_variables['weight'],
+            input.tensor, self.parameter_variables['weight'],
             strides=strides, padding=self.args['padding'],
             use_cudnn_on_gpu=cudnn, data_format=data_format, name=name
         )
-        return tf.add(self.parameter_variables['bias'], conv, 'output')
+        output_t = tf.add(self.parameter_variables['bias'], conv, 'output')
+        return Tensor(output_t)
 
 
 class ReLU(BaseReLU):
-    def build(self, input_tensor):
+    def build(self, input):
         _LG.debug('    Building {}: {}'.format(type(self).__name__, self.args))
-        return tf.nn.relu(input_tensor, 'ouptut')
+        output_tensor = tf.nn.relu(input.tensor, 'ouptut')
+        return Tensor(output_tensor)
 
 
 class Flatten(BaseFlatten):
-    def build(self, input_tensor):
+    def build(self, input):
         _LG.debug('    Building {}: {}'.format(type(self).__name__, self.args))
-        in_shape = input_tensor.get_shape()
-        n_nodes = reduce(lambda r, d: r*d.value, in_shape[1:], 1)
+        in_shape = input.get_shape()
+        n_nodes = reduce(lambda prod, dim: prod*dim, in_shape[1:], 1)
         out_shape = (-1, n_nodes)
-        return tf.reshape(input_tensor, out_shape, 'output')
+        output_tensor = tf.reshape(input.tensor, out_shape, 'output')
+        return Tensor(output_tensor)
 
 
 class TrueDiv(BaseTrueDiv):
-    def build(self, input_tensor):
+    def __init__(self, denom, dtype):
+        super(TrueDiv, self).__init__(denom=denom)
+        self.args['dtype'] = dtype
+        self.denom = None
+
+    def build(self, input):
         _LG.debug('    Building {}: {}'.format(type(self).__name__, self.args))
-        return tf.truediv(input_tensor, self.args['denom'], 'ouptut')
+        print input
+        print input.tensor
+        if self.denom is None:
+            self.denom = tf.constant(
+                self.args['denom'], dtype=self.args['dtype'], name='denominator')
+        output_tensor = tf.truediv(input.tensor, self.denom, 'ouptut')
+        return Tensor(output_tensor)
