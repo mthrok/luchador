@@ -50,10 +50,12 @@ def create_agent(agent_name, agent_config, env, global_config):
 def init_logging(debug=False):
     fmt = ('%(pathname)s:%(lineno)d:%(funcName)s: %(message)s' if debug else
            '%(asctime)s:%(levelname)-8s %(message)s')
-    logging.basicConfig(
-        format=fmt,
-        level=logging.DEBUG if debug else logging.INFO,
-    )
+    logging.basicConfig(format=fmt, level=logging.INFO)
+    logging.getLogger('tensorflow').propagate = False
+    if debug:
+        logging.getLogger('luchador').setLevel(logging.DEBUG)
+    else:
+        logging.getLogger('tensorflow').setLevel(logging.ERROR)
 
 
 def main(config):
