@@ -55,7 +55,8 @@ class Dense(BaseLayer):
 
 class Conv2D(BaseLayer):
     def __init__(self, filter_height, filter_width, n_filters, strides,
-                 padding='VALID', initializers=None, **kwargs):
+                 padding='VALID', initializers=None, data_format='NHWC',
+                 **kwargs):
         """
         Args:
           filter_height (int): filter height
@@ -73,8 +74,14 @@ class Conv2D(BaseLayer):
           padding:
             - [tensorflow] (str): Either 'SAME' or 'VALID'
             - [theano] (str or int or tuple of two int): See Theano doc
-          kwargs: other optional arguments passed to conv2d functions.
-            - Tensorflow: 'use_cudnn_on_gpu', 'data_format', 'name'
+          data_format:
+            - [tensorflow] (str): `data_format` argument passed to
+              tf.nn.conv2d. For CPU it must be "NHWC" for GPU, either "NCHW"
+              or "NHWC".
+            - [theano] (str): Not used. Theano uses "NCHW".
+          kwargs:
+            - Tensorflow: Arguments passed to tf.nn.conv2d.
+              'use_cudnn_on_gpu' and 'name'
         """
         super(Conv2D, self).__init__(args=get_function_args())
 
