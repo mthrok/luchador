@@ -24,8 +24,6 @@ class Input(Tensor):
 
     def build(self):
         if self.tensor is None:
-            print self.dtype
-            print self.shape
             self.tensor = tf.placeholder(
                 dtype=self.dtype, shape=self.shape, name=self.name)
         return self

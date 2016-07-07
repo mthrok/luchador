@@ -2,6 +2,7 @@ from __future__ import division
 from __future__ import absolute_import
 
 import logging
+from collections import OrderedDict
 
 from .utils import get_function_args
 
@@ -33,7 +34,7 @@ class BaseLayer(CopyMixin, object):
     def __init__(self, args):
         super(BaseLayer, self).__init__()
         self._store_args(args)
-        self.parameter_variables = {}
+        self.parameter_variables = OrderedDict()
 
     def __call__(self, input_tensor):
         """Build layer computation graph on top of the given tensor"""
@@ -91,5 +92,5 @@ class Flatten(BaseLayer):
 
 
 class TrueDiv(BaseLayer):
-    def __init__(self, denom):
+    def __init__(self, denom, dtype=None):
         super(TrueDiv, self).__init__(args=get_function_args())

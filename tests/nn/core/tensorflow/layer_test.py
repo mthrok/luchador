@@ -36,16 +36,17 @@ class TestDense(unittest.TestCase):
 
         vars1 = dense1.parameter_variables
         vars2 = dense2.parameter_variables
-        expected = set(vars1.keys())
-        found = set(vars2.keys())
+        expected = vars1.keys()
+        found = vars2.keys()
         self.assertEqual(
             expected, found,
             'Copied layer should have the same parameter variables '
             'as the original layer. Expected: {}, Found: {}'
             .format(expected, found))
         for key in vars1.keys():
+            expected, found = vars1[key], vars2[key]
             self.assertTrue(
-                vars1[key] is vars2[key],
+                vars1[key].tensor is vars2[key].tensor,
                 'Variable objects in copied layer should be identical '
                 'to those in the original layer. Variable {} is not identical.'
                 .format(key)

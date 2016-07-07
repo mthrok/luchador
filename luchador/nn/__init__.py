@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 
-CNN_FORMAT = 'NCHW'
+CNN_FORMAT = 'NHWC'
 DTYPE = 'float32'
 
 
