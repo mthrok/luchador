@@ -1,5 +1,7 @@
 from __future__ import absolute_import
 
+from collections import OrderedDict
+
 
 class LayerConfig(object):
     def __init__(self, layer, scope, input=None, output=None):
@@ -78,18 +80,15 @@ class Model(object):
     # Functions for retrieving variables and tensors
     def get_parameter_variables(self):
         """Get Variable objects consisting the parameters of this model"""
-        ret = {}
+        ret = OrderedDict()
         for cfg in self.layer_configs:
-            scope = cfg.scope
-            for name, variable in cfg.layer.parameter_variables.items():
-                name = '{}/{}'.format(scope, name) if scope else name
-                ret[name] = variable
+            for var in cfg.layer.parameter_variables.values():
+                ret[var.name] = var
         return ret
 
     def get_output_tensors(self):
         """Get Tensor objects which represent the output of each layer"""
-        ret = {}
+        ret = OrderedDict()
         for cfg in self.layer_configs:
-            name = '{}/output'.format(cfg.scope) if cfg.scope else 'output'
-            ret[name] = cfg.output.tensor
+            ret[cfg.output.name] = cfg.output
         return ret
