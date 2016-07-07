@@ -7,10 +7,10 @@ from ..base.tensor import Tensor as BaseTensor
 
 class Tensor(BaseTensor):
     def __init__(self, tensor, shape=None, name=None):
+        if tensor is not None:
+            name = name or tensor.name
+            shape = shape or tensor.get_shape().as_list()
         super(Tensor, self).__init__(tensor=tensor, shape=shape, name=name)
-
-    def get_shape(self):
-        return self.tensor.get_shape().as_list()
 
 
 class Input(Tensor):
@@ -24,6 +24,8 @@ class Input(Tensor):
 
     def build(self):
         if self.tensor is None:
+            print self.dtype
+            print self.shape
             self.tensor = tf.placeholder(
                 dtype=self.dtype, shape=self.shape, name=self.name)
         return self

@@ -9,4 +9,4 @@ class Tensor(object):
         self.name = name
 
     def get_shape(self):
-        raise NotImplementedError('`get_shape` is not implemented.')
+        return self.shape
