@@ -21,7 +21,7 @@ class Model(object):
         self.output = None
 
     ###########################################################################
-    def add(self, layer, scope=None):
+    def add_layer(self, layer, scope=None):
         """Add layer to model
 
         Args:

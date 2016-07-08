@@ -6,20 +6,22 @@ import logging
 _LG = logging.getLogger(__name__)
 
 
-class QLearningInterface(object):
+class DeepQLearning(object):
     """Build ops for Q-learning on top of the given Model"""
-    def __init__(self, discount_rate, clip_delta_min=None, clip_delta_max=None):
-        self.clip_delta_min = clip_delta_min
-        self.clip_delta_max = clip_delta_max
-
+    def __init__(self, discount_rate, min_reward=None, max_reward=None):
         self.discount_rate = discount_rate
+        self.min_reward = min_reward
+        self.max_reward = max_reward
+
         self.pre_states = None
         self.actions = None
         self.rewards = None
         self.post_states = None
         self.continuations = None
-        self.error = None
-        self.sync_ops = None
+
+        self.pre_trans_model = None
+        self.pre_trans_model = None
+        self.sync_op = None
 
     def build(self, q_network):
         """Build computation graph (error and sync ops) for Q learning
