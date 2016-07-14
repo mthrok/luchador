@@ -2,6 +2,8 @@ from __future__ import absolute_import
 
 from collections import OrderedDict
 
+from .core import scope as scp
+
 
 class LayerConfig(object):
     def __init__(self, layer, scope, input=None, output=None):
@@ -37,7 +39,7 @@ class Model(object):
         return self
 
     ###########################################################################
-    # Functions for model-lavel copy and concatenation
+    # Functions for model-wise copy and concatenation
     def __iadd__(self, other):
         """Append layers from another model after this model
         Args:
@@ -47,7 +49,7 @@ class Model(object):
           TFModel: Updated model
         """
         for cfg in other.layer_configs:
-            self.add(layer=cfg.layer, scope=cfg.scope)
+            self.add_layer(layer=cfg.layer, scope=cfg.scope)
         return self
 
     def copy(self):
@@ -70,11 +72,19 @@ class Model(object):
 
     ###########################################################################
     # Functions for building actual computation graphs
-    def __call__(self, input_tensor):
-        return self.build(input_tensor)
+    def __call__(self, input):
+        return self.build(input)
 
-    def build(self, input_tensor):
-        raise NotImplementedError('`build` method is not implemented')
+    def build(self, input):
+        """Build the model on top of input tensor"""
+        tensor = self.input = input()
+        for cfg in self.layer_configs:
+            cfg.input = tensor
+            with scp.variable_scope(cfg.scope or scp.get_variable_scope()):
+                tensor = cfg.layer(tensor)
+            cfg.output = tensor
+        self.output = tensor
+        return self.output
 
     ###########################################################################
     # Functions for retrieving variables and tensors

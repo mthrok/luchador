@@ -1,10 +1,9 @@
 from __future__ import absolute_import
 
-from .scope import *  # nopep8
+from . import scope  # nopep8
 
 from .tensor import Tensor, Input  # nopep8
 from .layer import *  # nopep8
-from .model import Model  # nopep8
 
 from .initializer import *  # nopep8
 
