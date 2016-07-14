@@ -10,7 +10,7 @@ from ..core import (
 from ..core import Normal
 
 
-def vanilla_dqn(n_actions, data_format):
+def vanilla_dqn(n_actions):
     initializers = {
         'bias': Normal(mean=0.0, stddev=0.01),
         'weight': Normal(mean=0.0, stddev=0.01),
@@ -18,13 +18,13 @@ def vanilla_dqn(n_actions, data_format):
 
     conv0 = Conv2D(
         filter_height=8, filter_width=8, n_filters=32, strides=4,
-        initializers=initializers, padding='valid', data_format=data_format)
+        initializers=initializers, padding='valid')
     conv1 = Conv2D(
         filter_height=4, filter_width=4, n_filters=64, strides=2,
-        initializers=initializers, padding='valid', data_format=data_format)
+        initializers=initializers, padding='valid')
     conv2 = Conv2D(
         filter_height=3, filter_width=3, n_filters=64, strides=1,
-        initializers=initializers, padding='valid', data_format=data_format)
+        initializers=initializers, padding='valid')
     dense0 = Dense(n_nodes=512, initializers=initializers)
     dense1 = Dense(n_nodes=n_actions, initializers=initializers)
 
