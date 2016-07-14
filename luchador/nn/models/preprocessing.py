@@ -8,5 +8,6 @@ from luchador.nn import (
 
 def image_normalizer(value, dtype):
     model = Model()
-    model.add(TrueDiv(value, dtype), scope='preprocessing/image_normalization')
+    model.add_layer(TrueDiv(value, dtype),
+                    scope='preprocessing/image_normalization')
     return model

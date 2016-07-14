@@ -29,19 +29,19 @@ def vanilla_dqn(n_actions):
     dense1 = Dense(n_nodes=n_actions, initializers=initializers)
 
     model = Model()
-    model.add(conv0, scope='layer0/conv2D')
-    model.add(ReLU(), scope='layer0/ReLU')
+    model.add_layer(conv0, scope='layer0/conv2D')
+    model.add_layer(ReLU(), scope='layer0/ReLU')
 
-    model.add(conv1, scope='layer1/conv2D')
-    model.add(ReLU(), scope='layer1/ReLU')
+    model.add_layer(conv1, scope='layer1/conv2D')
+    model.add_layer(ReLU(), scope='layer1/ReLU')
 
-    model.add(conv2, scope='layer2/conv2D')
-    model.add(ReLU(), scope='layer2/ReLU')
+    model.add_layer(conv2, scope='layer2/conv2D')
+    model.add_layer(ReLU(), scope='layer2/ReLU')
 
-    model.add(Flatten(), scope='layer3/flatten')
+    model.add_layer(Flatten(), scope='layer3/flatten')
 
-    model.add(dense0, scope='layer4/dense')
-    model.add(ReLU(), scope='layer4/ReLU')
+    model.add_layer(dense0, scope='layer4/dense')
+    model.add_layer(ReLU(), scope='layer4/ReLU')
 
-    model.add(dense1, scope='layer5/dense')
+    model.add_layer(dense1, scope='layer5/dense')
     return model
