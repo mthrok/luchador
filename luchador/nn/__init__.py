@@ -18,5 +18,3 @@ def set_dtyp(dtype):
 
 ###############################################################################
 from .core import *  # nopep8
-
-from .model import *  # nopep8

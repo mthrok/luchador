@@ -1,7 +1,9 @@
 from __future__ import absolute_import
 
-from ..core import Model
-from ..core import TrueDiv
+from luchador.nn import (
+    Model,
+    TrueDiv,
+)
 
 
 def image_normalizer(value, dtype):

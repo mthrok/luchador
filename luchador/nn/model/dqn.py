@@ -1,13 +1,13 @@
 from __future__ import absolute_import
 
-from ..core import Model
-from ..core import (
+from luchador.nn import (
+    Model,
     ReLU,
     Dense,
     Conv2D,
     Flatten,
+    Normal
 )
-from ..core import Normal
 
 
 def vanilla_dqn(n_actions):
