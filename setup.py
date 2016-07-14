@@ -8,7 +8,7 @@ setup(
         'luchador.nn',
         'luchador.nn.core',
         'luchador.nn.core.tensorflow',
-        'luchador.nn.model',
+        'luchador.nn.models',
         'luchador.agent',
         'luchador.img_proc',
     ],
