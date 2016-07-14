@@ -5,9 +5,8 @@ import logging
 
 import tensorflow as tf
 
-from luchador.nn import DTYPE
-
 from ..base import DeepQLearning as BaseQLI
+from . import config as CFG
 from .tensor import Tensor
 
 _LG = logging.getLogger(__name__)
@@ -38,9 +37,9 @@ class DeepQLearning(BaseQLI):
         actions = tf.placeholder(
             dtype='int32', shape=(None,), name='actions')
         rewards = tf.placeholder(
-            dtype=DTYPE, shape=(None,), name='rewards')
+            dtype=CFG.DTYPE, shape=(None,), name='rewards')
         continuations = tf.placeholder(
-            dtype=DTYPE, shape=(None,), name='continuations')
+            dtype=CFG.DTYPE, shape=(None,), name='continuations')
 
         with tf.name_scope('future_reward'):
             with tf.name_scope('future_q_value'):

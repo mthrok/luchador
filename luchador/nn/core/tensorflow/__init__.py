@@ -1,5 +1,10 @@
 from __future__ import absolute_import
 
+from .config import (  # nopep8
+    set_dtype,
+    set_cnn_format,
+)
+
 from . import scope  # nopep8
 
 from .tensor import Tensor, Input  # nopep8

@@ -7,8 +7,6 @@ import warnings
 import tensorflow as tf
 from tensorflow.contrib import layers
 
-from luchador.nn import CNN_FORMAT, DTYPE
-
 from ..base import (
     ReLU as BaseReLU,
     Dense as BaseDense,
@@ -16,6 +14,7 @@ from ..base import (
     Flatten as BaseFlatten,
     TrueDiv as BaseTrueDiv,
 )
+from . import config as CFG
 from .tensor import Tensor
 
 _LG = logging.getLogger(__name__)
@@ -33,9 +32,9 @@ class Dense(BaseDense):
         w0 = given['weight'] if given else layers.xavier_initializer()
 
         b = tf.get_variable(
-            name='bias', shape=b_shape, initializer=b0, dtype=DTYPE)
+            name='bias', shape=b_shape, initializer=b0, dtype=CFG.DTYPE)
         W = tf.get_variable(
-            name='weight', shape=w_shape, initializer=w0, dtype=DTYPE)
+            name='weight', shape=w_shape, initializer=w0, dtype=CFG.DTYPE)
         self.parameter_variables['weight'] = Tensor(tensor=W)
         self.parameter_variables['bias'] = Tensor(tensor=b)
 
@@ -78,7 +77,7 @@ class Conv2D(BaseConv2D):
 
     ###########################################################################
     def _get_strides(self):
-        s, fmt = self.args['strides'], CNN_FORMAT
+        s, fmt = self.args['strides'], CFG.CNN_FORMAT
         if isinstance(s, int):
             s = [s] * 2
         if len(s) == 2:
@@ -87,14 +86,14 @@ class Conv2D(BaseConv2D):
 
     def _get_weight_shape(self, input_shape):
         n_out = self.args['n_filters']
-        n_in = input_shape[1] if CNN_FORMAT == 'NCHW' else input_shape[3]
+        n_in = input_shape[1] if CFG.CNN_FORMAT == 'NCHW' else input_shape[3]
         height, width = self.args['filter_height'], self.args['filter_width']
         return (height, width, n_in, n_out)
 
     def _check_filter_shape(self, input_shape, filter_shape):
         flt_h, flt_w = filter_shape[0], filter_shape[1]
         strides = self._get_strides()
-        if CNN_FORMAT == 'NCHW':
+        if CFG.CNN_FORMAT == 'NCHW':
             img_h, img_w = input_shape[2], input_shape[3]
             str_h, str_w = strides[2], strides[3]
         else:
@@ -131,9 +130,9 @@ class Conv2D(BaseConv2D):
         w0 = given['weight'] if given else layers.xavier_initializer_conv2d()
 
         b = tf.get_variable(
-            name='bias', shape=b_shape, initializer=b0, dtype=DTYPE)
+            name='bias', shape=b_shape, initializer=b0, dtype=CFG.DTYPE)
         w = tf.get_variable(
-            name='weight', shape=w_shape, initializer=w0, dtype=DTYPE)
+            name='weight', shape=w_shape, initializer=w0, dtype=CFG.DTYPE)
         self.parameter_variables['weight'] = Tensor(tensor=w)
         self.parameter_variables['bias'] = Tensor(tensor=b)
 
@@ -149,9 +148,9 @@ class Conv2D(BaseConv2D):
         conv = tf.nn.conv2d(
             input.tensor, params['weight'].tensor, strides=strides,
             padding=self.args['padding'], use_cudnn_on_gpu=cudnn,
-            data_format=CNN_FORMAT, name=name)
-        output = tf.nn.bias_add(
-            conv, params['bias'].tensor, data_format=CNN_FORMAT, name='output')
+            data_format=CFG.CNN_FORMAT, name=name)
+        output = tf.nn.bias_add(conv, params['bias'].tensor,
+                                data_format=CFG.CNN_FORMAT, name='output')
         return Tensor(output)
 
 
@@ -174,7 +173,7 @@ class Flatten(BaseFlatten):
 
 class TrueDiv(BaseTrueDiv):
     def _instantiate_denominator(self):
-        dtype = self.args['dtype'] or DTYPE
+        dtype = self.args['dtype'] or CFG.DTYPE
         self.denom = tf.constant(
             self.args['denom'], dtype=dtype, name='denominator')
 
