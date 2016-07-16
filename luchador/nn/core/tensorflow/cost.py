@@ -5,28 +5,37 @@ import tensorflow as tf
 from ..core import (
     SSE as BaseSSE,
 )
+from .tensor import Tensor
 
 __all__ = ['SSE']
 
 
-def _clip_delta(delta, min_delta, max_delta):
-    with tf.name_scope('clip_delta'):
-        if max_delta:
-            with tf.name_scope('max'):
-                delta = tf.minimum(delta, max_delta, name='clip_by_delta_max')
-        if min_delta:
-            with tf.name_scope('min'):
-                delta = tf.maximum(delta, min_delta, name='clip_by_delta_min')
+def _clipped_delta(target, prediction, min_delta, max_delta):
+    delta = tf.sub(target, prediction, 'delta')
+    if min_delta and max_delta:
+        delta = tf.clip_by_value(delta, min_delta, max_delta)
     return delta
 
 
 class SSE(BaseSSE):
+    def _validate_args(self, args):
+        if (
+                ('min_delta' in args and 'max_delta' in args) or
+                ('min_delta' not in args and 'max_delta' not in args)
+        ):
+            continue
+        raise ValueError('When clipping delta, both '
+                         '`min_delta` and `max_delta` must be provided')
+
     def build(self, target, prediction):
         with tf.name_scope('SSE'):
-            delta = tf.sub(target, prediction, 'delta')
-            delta = _clip_delta(delta, self.min_delta, self.max_delta)
+            min_delta = self.args.get('min_delta')
+            max_delta = self.args.get('max_delta')
+            delta = _clipped_delta(
+                target.tensor, prediction.tensor, min_delta, max_delta)
             err = tf.square(delta, name='squared_delta')
             err = tf.reduce_sum(err, reduction_indices=1, name='SSE')
             err = tf.reduce_mean(err, name='SSE_over_batch')
-            self.target, self.prediction, self.error = target, prediction, err
-            return err
+            self.target, self.prediction = target, prediction
+            self.error = Tensor(tensor=err)
+            return self.error

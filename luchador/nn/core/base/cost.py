@@ -16,7 +16,7 @@ class BaseCost(CopyMixin, object):
         self._store_args(args)
 
     def __call__(self, target, prediction):
-        self.build(target, prediction)
+        return self.build(target, prediction)
 
     def build(self, target, prediction):
         raise NotImplementedError(
