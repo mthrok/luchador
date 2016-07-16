@@ -3,6 +3,7 @@ from __future__ import absolute_import
 import tensorflow as tf
 
 from ..base.tensor import Tensor as BaseTensor
+from . import config as CFG
 
 __all__ = ['Tensor', 'Input']
 
@@ -16,7 +17,7 @@ class Tensor(BaseTensor):
 
 
 class Input(Tensor):
-    def __init__(self, dtype=tf.float32, shape=None, name=None):
+    def __init__(self, dtype=CFG.DTYPE, shape=None, name=None):
         super(Input, self).__init__(tensor=None, shape=shape, name=name)
 
         self.dtype = dtype
