@@ -7,7 +7,7 @@ import tensorflow as tf
 
 from ..base import DeepQLearning as BaseQLI
 from . import config as CFG
-from .tensor import Tensor
+from .tensor import Tensor, Input
 
 __all__ = ['DeepQLearning']
 
@@ -36,13 +36,14 @@ class DeepQLearning(BaseQLI):
         return self
 
     def _build_target_q_value(self):
-        actions = tf.placeholder(
-            dtype='int32', shape=(None,), name='actions')
-        rewards = tf.placeholder(
-            dtype=CFG.DTYPE, shape=(None,), name='rewards')
-        continuations = tf.placeholder(
+        self.actions = Input(dtype='int32', shape=(None,), name='actions')
+        self.rewards = Input(dtype=CFG.DTYPE, shape=(None,), name='rewards')
+        self.continuations = Input(
             dtype=CFG.DTYPE, shape=(None,), name='continuations')
 
+        actions = self.actions().tensor
+        rewards = self.rewards().tensor
+        continuations = self.continuations().tensor
         with tf.name_scope('future_reward'):
             with tf.name_scope('future_q_value'):
                 post_q = self.post_trans_model.output.tensor
@@ -77,10 +78,6 @@ class DeepQLearning(BaseQLI):
                 future = future * mask_on
 
             target_q = tf.add(current, future, name='target_q')
-
-        self.actions = Tensor(tensor=actions)
-        self.rewards = Tensor(tensor=rewards)
-        self.continuations = Tensor(tensor=continuations)
         self.target_q = Tensor(tensor=target_q)
 
     def _build_sync_ops(self):
