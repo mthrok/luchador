@@ -4,6 +4,8 @@ import tensorflow as tf
 
 from ..base.tensor import Tensor as BaseTensor
 
+__all__ = ['Tensor', 'Input']
+
 
 class Tensor(BaseTensor):
     def __init__(self, tensor, shape=None, name=None):

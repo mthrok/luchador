@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 import logging
 
+__all__ = ['DeepQLearning']
 
 _LG = logging.getLogger(__name__)
 

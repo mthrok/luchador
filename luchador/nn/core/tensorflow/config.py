@@ -1,6 +1,8 @@
 CNN_FORMAT = 'NCHW'
 DTYPE = 'float32'
 
+__all__ = ['set_cnn_format', 'set_dtype']
+
 
 def set_cnn_format(cnn_format):
     if cnn_format not in ['NCHW', 'NHWC']:

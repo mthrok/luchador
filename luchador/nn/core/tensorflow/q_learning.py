@@ -9,6 +9,8 @@ from ..base import DeepQLearning as BaseQLI
 from . import config as CFG
 from .tensor import Tensor
 
+__all__ = ['DeepQLearning']
+
 _LG = logging.getLogger(__name__)
 
 
