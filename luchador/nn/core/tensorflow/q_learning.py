@@ -54,11 +54,10 @@ class DeepQLearning(BaseQLI):
                 post_q = tf.mul(
                     post_q, continuations, name='masked_max_post_q')
 
-            with tf.name_scope('clipped_reward'):
-                if self.min_reward:
-                    rewards = tf.max(rewards, self.min_reward)
-                if self.max_reward:
-                    rewards = tf.min(rewards, self.max_reward)
+            if self.min_reward and self.max_reward:
+                with tf.name_scope('clipped_reward'):
+                    rewards = tf.clip_by_value(
+                        rewards, self.min_reward, self.max_reward)
 
             future = tf.add(rewards, post_q, name='future_reward')
 
