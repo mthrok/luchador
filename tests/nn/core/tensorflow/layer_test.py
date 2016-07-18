@@ -21,13 +21,13 @@ class TestDense(unittest.TestCase):
         """Dense layer does not crash"""
         n_nodes = 256
         dense = Dense(n_nodes)
-        input = Input(shape=(None, n_nodes), dtype=tf.float32)
+        input = Input(shape=(None, n_nodes), name='foo', dtype=tf.float32)
         dense(input())
 
     def test_copy_success_with_reuse(self):
         """Copied layer can create node when reuse=True in variable scope"""
         n_nodes = 256
-        input = Input(shape=(None, n_nodes))()
+        input = Input(shape=(None, n_nodes), name='foo')()
         dense1 = Dense(n_nodes)
         dense1(input)
         with tf.variable_scope(tf.get_variable_scope(), reuse=True):
@@ -55,7 +55,7 @@ class TestDense(unittest.TestCase):
     def test_copy_fail_without_reuse(self):
         """Copied layer fails to create node when reuse is not True"""
         n_nodes = 256
-        input = Input(shape=(None, n_nodes))()
+        input = Input(shape=(None, n_nodes), name='foo')()
         dense1 = Dense(n_nodes)
         dense1(input)
         try:
