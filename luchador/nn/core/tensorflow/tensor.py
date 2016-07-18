@@ -9,18 +9,19 @@ __all__ = ['Tensor', 'Input']
 
 
 class Tensor(BaseTensor):
-    def __init__(self, tensor, shape=None, name=None):
+    def __init__(self, tensor, shape=None, name=None, dtype=None):
         if tensor is not None:
             name = name or tensor.name
             shape = shape or tensor.get_shape().as_list()
-        super(Tensor, self).__init__(tensor=tensor, shape=shape, name=name)
+            dtype = dtype or tensor.dtype
+        super(Tensor, self).__init__(
+            tensor=tensor, shape=shape, name=name, dtype=dtype)
 
 
 class Input(Tensor):
-    def __init__(self, dtype=CFG.DTYPE, shape=None, name=None):
-        super(Input, self).__init__(tensor=None, shape=shape, name=name)
-
-        self.dtype = dtype
+    def __init__(self, shape, name, dtype=CFG.DTYPE):
+        super(Input, self).__init__(
+            tensor=None, shape=shape, name=name, dtype=dtype)
 
     def __call__(self):
         return self.build()
