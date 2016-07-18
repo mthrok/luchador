@@ -2,7 +2,7 @@ from __future__ import absolute_import
 
 import tensorflow as tf
 
-from ..core import (
+from ..base import (
     SSE as BaseSSE,
 )
 from .tensor import Tensor
@@ -23,7 +23,7 @@ class SSE(BaseSSE):
                 ('min_delta' in args and 'max_delta' in args) or
                 ('min_delta' not in args and 'max_delta' not in args)
         ):
-            continue
+            return
         raise ValueError('When clipping delta, both '
                          '`min_delta` and `max_delta` must be provided')
 
@@ -36,6 +36,4 @@ class SSE(BaseSSE):
             err = tf.square(delta, name='squared_delta')
             err = tf.reduce_sum(err, reduction_indices=1, name='SSE')
             err = tf.reduce_mean(err, name='SSE_over_batch')
-            self.target, self.prediction = target, prediction
-            self.error = Tensor(tensor=err)
-            return self.error
+            return Tensor(err)
