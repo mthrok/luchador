@@ -5,7 +5,7 @@ import tensorflow as tf
 from ..base.tensor import Tensor as BaseTensor
 from . import config as CFG
 
-__all__ = ['Tensor', 'Input']
+__all__ = ['Tensor', 'Input', 'Operation']
 
 
 class Tensor(BaseTensor):
@@ -31,3 +31,9 @@ class Input(Tensor):
             self.tensor = tf.placeholder(
                 dtype=self.dtype, shape=self.shape, name=self.name)
         return self
+
+
+class Operation(BaseTensor):
+    def __init__(self, op):
+        super(Operation, self).__init__(
+            tensor=op, shape=None, name=op.name, dtype=None)

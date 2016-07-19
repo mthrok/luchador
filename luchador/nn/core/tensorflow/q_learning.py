@@ -7,7 +7,7 @@ import tensorflow as tf
 
 from ..base import DeepQLearning as BaseQLI
 from . import config as CFG
-from .tensor import Tensor, Input
+from .tensor import Tensor, Input, Operation
 
 __all__ = ['DeepQLearning']
 
@@ -84,4 +84,5 @@ class DeepQLearning(BaseQLI):
         tgt_vars = self.post_trans_model.get_parameter_variables().values()
         ops = [tgt.tensor.assign(src.tensor)
                for src, tgt in zip(src_vars, tgt_vars)]
-        self.sync_op = tf.group(*ops, name='sync')
+        self.sync_op = Operation(op=tf.group(*ops, name='sync'))
+        return self.sync_op
