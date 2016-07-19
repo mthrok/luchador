@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 from .config import *  # nopep8
 
+from .session import *  # nopep8
 from . import scope  # nopep8
 from .initializer import *  # nopep8
 
