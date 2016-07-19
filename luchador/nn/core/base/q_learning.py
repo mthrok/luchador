@@ -41,6 +41,6 @@ class DeepQLearning(object):
             information.
         """
         raise NotImplementedError(
-            '`build` method is not implemnted for {} class'
-            .format(type(self).__name__)
+            '`build` method is not implemented for {}.{}.'
+            .format(type(self).__module__, type(self).__name__)
         )
