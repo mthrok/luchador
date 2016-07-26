@@ -19,7 +19,7 @@ class Tensor(BaseTensor):
 
 
 class Input(Tensor):
-    def __init__(self, shape, name, dtype=CFG.DTYPE):
+    def __init__(self, shape, name=None, dtype=CFG.DTYPE):
         super(Input, self).__init__(
             tensor=None, shape=shape, name=name, dtype=dtype)
 

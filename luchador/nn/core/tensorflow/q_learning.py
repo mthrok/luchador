@@ -32,7 +32,7 @@ class DeepQLearning(BaseQLI):
         with tf.variable_scope('target_q_value'):
             self._build_target_q_value()
         with tf.variable_scope('sync'):
-            self._build_sync_ops()
+            self._build_sync_op()
         return self
 
     def _build_target_q_value(self):
@@ -79,7 +79,7 @@ class DeepQLearning(BaseQLI):
             target_q = tf.add(current, future, name='target_q')
         self.target_q = Tensor(tensor=target_q)
 
-    def _build_sync_ops(self):
+    def _build_sync_op(self):
         src_vars = self.pre_trans_model.get_parameter_variables().values()
         tgt_vars = self.post_trans_model.get_parameter_variables().values()
         ops = [tgt.tensor.assign(src.tensor)
