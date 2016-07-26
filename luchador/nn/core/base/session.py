@@ -10,7 +10,7 @@ class Session(object):
             .format(type(self).__module__, type(self).__name__)
         )
 
-    def run(self, inputs, outputs, updates, givens):
+    def run(self, name, inputs, outputs, updates, givens):
         raise NotImplementedError(
             '`run` method is not yet impolemented for {}.{}.'
             .format(type(self).__module__, type(self).__name__)
