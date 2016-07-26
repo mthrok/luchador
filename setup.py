@@ -7,6 +7,7 @@ setup(
         'luchador',
         'luchador.nn',
         'luchador.nn.core',
+        'luchador.nn.core.base',
         'luchador.nn.core.tensorflow',
         'luchador.nn.models',
         'luchador.agent',
