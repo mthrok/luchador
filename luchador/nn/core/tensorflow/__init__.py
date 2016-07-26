@@ -15,5 +15,4 @@ from .optimizer import *  # nopep8
 from .q_learning import *  # nopep8
 
 from .io import Saver  # nopep8
-from .io import SummaryWriter  # nopep8
 from .utils import get_optimizer  # nopep8
