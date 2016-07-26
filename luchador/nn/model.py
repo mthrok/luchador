@@ -91,14 +91,22 @@ class Model(object):
     def get_parameter_variables(self):
         """Get Variable objects consisting the parameters of this model"""
         ret = OrderedDict()
+        base_name = scp.get_variable_scope().name
         for cfg in self.layer_configs:
-            for var in cfg.layer.parameter_variables.values():
-                ret[var.name] = var
+            scope = cfg.scope
+            layer_name = scope if isinstance(scope, str) else scope.name
+            for var_name, var in cfg.layer.parameter_variables.items():
+                name = '{}/{}/{}'.format(base_name, layer_name, var_name)
+                ret[name] = var
         return ret
 
     def get_output_tensors(self):
         """Get Tensor objects which represent the output of each layer"""
         ret = OrderedDict()
+        base_name = scp.get_variable_scope().name
         for cfg in self.layer_configs:
-            ret[cfg.output.name] = cfg.output
+            scope = cfg.scope
+            layer_name = scope if isinstance(scope, str) else scope.name
+            name = '{}/{}/{}'.format(base_name, layer_name, cfg.output.name)
+            ret[name] = cfg.output
         return ret
