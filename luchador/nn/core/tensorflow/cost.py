@@ -31,8 +31,9 @@ class SSE(BaseSSE):
         with tf.name_scope('SSE'):
             min_delta = self.args.get('min_delta')
             max_delta = self.args.get('max_delta')
+            target = tf.stop_gradient(target.tensor)
             delta = _clipped_delta(
-                target.tensor, prediction.tensor, min_delta, max_delta)
+                target, prediction.tensor, min_delta, max_delta)
             err = tf.square(delta, name='squared_delta')
             err = tf.reduce_sum(err, reduction_indices=1, name='SSE')
             err = tf.reduce_mean(err, name='SSE_over_batch')
