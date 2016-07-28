@@ -33,7 +33,6 @@ class Input(Tensor):
         return self
 
 
-class Operation(BaseTensor):
+class Operation(object):
     def __init__(self, op):
-        super(Operation, self).__init__(
-            tensor=op, shape=None, name=op.name, dtype=None)
+        self.op = op
