@@ -7,7 +7,7 @@ from ..base import (
 )
 from .tensor import Tensor
 
-__all__ = ['SSE']
+__all__ = ['SSE2']
 
 
 def _clipped_delta(target, prediction, min_delta, max_delta):
@@ -17,7 +17,7 @@ def _clipped_delta(target, prediction, min_delta, max_delta):
     return delta
 
 
-class SSE(BaseSSE):
+class SSE2(BaseSSE):
     def _validate_args(self, args):
         if (
                 ('min_delta' in args and 'max_delta' in args) or
@@ -35,6 +35,6 @@ class SSE(BaseSSE):
             delta = _clipped_delta(
                 target, prediction.tensor, min_delta, max_delta)
             err = tf.square(delta, name='squared_delta')
-            err = tf.reduce_sum(err, reduction_indices=1, name='SSE')
+            err = tf.reduce_sum(err/2, reduction_indices=1, name='SSE2')
             err = tf.reduce_mean(err, name='SSE_over_batch')
             return Tensor(err)

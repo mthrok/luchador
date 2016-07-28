@@ -15,7 +15,7 @@ def run_integration_test(mode):
     luchador.nn.set_cnn_format(cnn_format)
 
     from luchador.nn import (
-        Session, Input, DeepQLearning, SSE, RMSProp, SummaryWriter)
+        Session, Input, DeepQLearning, SSE2, RMSProp, SummaryWriter)
     from luchador.nn.models import model_factory
 
     discount_rate = 0.99
@@ -36,8 +36,8 @@ def run_integration_test(mode):
     qli.build(model_maker)
 
     print 'Building Error'
-    sse = SSE(min_delta=1.01, max_delta=1.02)
-    error = sse(qli.target_q, qli.pre_trans_model.output)
+    sse2 = SSE2(min_delta=1.01, max_delta=1.02)
+    error = sse2(qli.target_q, qli.pre_trans_model.output)
 
     print 'Building Optimization'
     rmsprop = RMSProp(0.1)
