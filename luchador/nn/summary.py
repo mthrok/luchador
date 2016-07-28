@@ -42,9 +42,9 @@ class SummaryWriter(object):
     def init(self, **kwargs):
         pass
 
-    def add_graph(self, graph=None):
+    def add_graph(self, graph=None, global_step=None):
         if graph:
-            self.writer.add_graph(graph)
+            self.writer.add_graph(graph, global_step=global_step)
 
     def register(self, key, summary_type, tensors):
         self.summary_ops[key] = _SummaryOperations(summary_type, tensors)
