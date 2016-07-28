@@ -38,12 +38,12 @@ class DeepQLearning(BaseQLI):
     def _build_target_q_value(self):
         self.actions = Input(dtype='int32', shape=(None,), name='actions')
         self.rewards = Input(dtype=CFG.DTYPE, shape=(None,), name='rewards')
-        self.continuations = Input(
-            dtype=CFG.DTYPE, shape=(None,), name='continuations')
+        self.terminals = Input(
+            dtype=CFG.DTYPE, shape=(None,), name='terminals')
 
         actions = self.actions().tensor
         rewards = self.rewards().tensor
-        continuations = self.continuations().tensor
+        terminals = self.terminals().tensor
         with tf.name_scope('future_reward'):
             with tf.name_scope('future_q_value'):
                 post_q = self.post_trans_model.output.tensor
@@ -52,7 +52,7 @@ class DeepQLearning(BaseQLI):
                 post_q = tf.mul(
                     post_q, self.discount_rate, name='discounted_max_post_q')
                 post_q = tf.mul(
-                    post_q, continuations, name='masked_max_post_q')
+                    post_q, 1.0 - terminals, name='masked_max_post_q')
 
             if self.min_reward and self.max_reward:
                 with tf.name_scope('clipped_reward'):
@@ -85,4 +85,3 @@ class DeepQLearning(BaseQLI):
         ops = [tgt.tensor.assign(src.tensor)
                for src, tgt in zip(src_vars, tgt_vars)]
         self.sync_op = Operation(op=tf.group(*ops, name='sync'))
-        return self.sync_op

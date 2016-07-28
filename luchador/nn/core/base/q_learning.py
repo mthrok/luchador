@@ -26,7 +26,7 @@ class DeepQLearning(object):
         self.actions = None
         self.rewards = None
         self.post_states = None
-        self.continuations = None
+        self.terminals = None
 
         self.pre_trans_model = None
         self.pre_trans_model = None

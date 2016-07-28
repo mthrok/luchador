@@ -60,7 +60,7 @@ def run_integration_test(mode):
     post_states = np.ones(state_shape, dtype=np.uint8)
     actions = np.random.randint(0, n_actions, (batch,), dtype=np.uint8)
     rewards = np.ones((batch,), dtype=np.float32)
-    continuations = np.ones((batch,), dtype=np.bool)
+    terminals = np.ones((batch,), dtype=np.bool)
 
     sync_time = []
     summary_time = []
@@ -84,12 +84,12 @@ def run_integration_test(mode):
             summary_time.append(time.time() - t0)
 
         t0 = time.time()
-        session.run(name='minibatch', outputs=[qli.target_q], inputs={
+        session.run(name='minibatch', outputs=qli.target_q, inputs={
             qli.pre_states: pre_states,
             qli.actions: actions,
             qli.rewards: rewards,
             qli.post_states: post_states,
-            qli.continuations: continuations,
+            qli.terminals: terminals,
         }, updates=minimize_op)
         run_time.append(time.time() - t0)
 
