@@ -52,8 +52,8 @@ def run_integration_test(mode):
     outputs = qli.pre_trans_model.get_output_tensors()
     writer = SummaryWriter('./monitoring/test_tensorflow')
     writer.add_graph(session.graph)
-    writer.register('pre_trans_network_params', 'histogram', params)
-    writer.register('pre_trans_network_outputs', 'histogram', outputs)
+    writer.register('pre_trans_network_params', 'histogram', params.keys())
+    writer.register('pre_trans_network_outputs', 'histogram', outputs.keys())
 
     print 'Running computation'
     pre_states = np.ones(state_shape, dtype=np.uint8)
