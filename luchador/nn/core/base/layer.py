@@ -94,3 +94,4 @@ class Flatten(BaseLayer):
 class TrueDiv(BaseLayer):
     def __init__(self, denom, dtype=None):
         super(TrueDiv, self).__init__(args=get_function_args())
+        self.denom = None
