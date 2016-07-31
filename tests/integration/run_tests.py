@@ -27,7 +27,10 @@ def run_integration_test(mode):
                    else (batch, channel, height, width))
 
     def model_maker():
-        dqn = model_factory('vanilla_dqn', n_actions=n_actions)
+        dqn = (
+            model_factory('image_normalizer', denom=255) +
+            model_factory('vanilla_dqn', n_actions=n_actions)
+        )
         dqn(Input(shape=state_shape))
         return dqn
 
