@@ -47,8 +47,10 @@ class SummaryWriter(object):
     def summarize(self, key, global_step, values):
         cfg = self.summary_ops[key]
         feed_dict = {pf: value for pf, value in zip(cfg.pfs, values)}
-        with tf.Session() as session:
-            summaries = session.run(cfg.ops, feed_dict=feed_dict)
-            for summary in summaries:
-                self.writer.add_summary(summary, global_step)
-            self.writer.flush()
+
+        with tf.device('/cpu:0'):
+            with tf.Session() as session:
+                summaries = session.run(cfg.ops, feed_dict=feed_dict)
+                for summary in summaries:
+                    self.writer.add_summary(summary, global_step)
+                self.writer.flush()
