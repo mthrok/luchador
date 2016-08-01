@@ -77,6 +77,8 @@ class DeepQLearning(BaseQLI):
                 future = future * mask_on
 
             target_q = tf.add(current, future, name='target_q')
+
+        self.future_reward = Tensor(tensor=future)
         self.target_q = Tensor(tensor=target_q)
 
     def _build_sync_op(self):
