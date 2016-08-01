@@ -19,14 +19,20 @@ _TENSOR_CLASS_STR = _get_full_class(Tensor)
 _OP_CLASS_STR = _get_full_class(Operation)
 
 
-def _parse_outputs(outputs):
-    ret = []
-    if not outputs:
-        return ret
-
+def _is_iteratable(l):
     try:
-        list(outputs)
+        list(l)
+        return True
     except Exception:
+        return False
+
+
+def _parse_outputs(outputs):
+    outputs_ = []
+    if outputs is None:
+        return outputs_
+
+    if not _is_iteratable(outputs):
         outputs = [outputs]
 
     for output in outputs:
@@ -34,8 +40,8 @@ def _parse_outputs(outputs):
             raise ValueError(
                 '`outputs` must be [list of] {}. Given: {}'
                 .format(_TENSOR_CLASS_STR, _get_full_class(type(output))))
-        ret.append(output.tensor)
-    return ret
+        outputs_.append(output.tensor)
+    return outputs_
 
 
 def _parse_updates(updates):
@@ -43,9 +49,7 @@ def _parse_updates(updates):
     if not updates:
         return ret
 
-    try:
-        list(updates)
-    except Exception:
+    if not _is_iteratable(updates):
         updates = [updates]
 
     for update in updates:
@@ -55,6 +59,10 @@ def _parse_updates(updates):
                 .format(_OP_CLASS_STR, _get_full_class(type(update))))
         ret.append(update.op)
     return ret
+
+
+def _construct_fetches(outputs, updates):
+    return _parse_outputs(outputs) + _parse_updates(updates)
 
 
 def _construct_feed_dict(inputs, givens):
@@ -105,12 +113,12 @@ class Session(BaseSession):
           updates (Operation or list of Operations)
           givens (dict):
         """
-        outputs_ = _parse_outputs(outputs)
-        updates_ = _parse_updates(updates)
-        fetches = outputs_ + updates_
+        fetches = _construct_fetches(outputs, updates)
         feed_dict = _construct_feed_dict(inputs, givens)
         values = self.session.run(fetches, feed_dict=feed_dict)
-        return values[:len(outputs_)]
+        if _is_iteratable(outputs):
+            return values[:len(outputs)]
+        return values[0]
 
     def close(self):
         return self.session.close()
