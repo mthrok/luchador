@@ -35,7 +35,7 @@ def run_integration_test(mode):
     discount_rate = 0.99
     height = width = 84
     history = 4
-    batch = 32
+    batch = None
     state_shape = (
         (batch, height, width, history) if cnn_format == 'NHWC' else
         (batch, history, height, width))
@@ -139,7 +139,7 @@ def run_integration_test(mode):
             delta = np.maximum(delta, min_delta)
             manual_error += np.sum((delta ** 2) / 2)
         print 'Error:', e
-        print 'Error:', manual_error / batch
+        print 'Error:', manual_error / len(actions)
         print ''
         """
         run_time.append(time.time() - t0)
