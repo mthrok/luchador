@@ -57,10 +57,6 @@ def _parse_updates(updates):
     return ret
 
 
-def _construct_fetches(outputs, updates):
-    return _parse_outputs(outputs) + _parse_updates(updates)
-
-
 def _construct_feed_dict(inputs, givens):
     feed_dict = {}
     if not inputs:
@@ -109,9 +105,12 @@ class Session(BaseSession):
           updates (Operation or list of Operations)
           givens (dict):
         """
-        fetches = _construct_fetches(outputs, updates)
+        outputs_ = _parse_outputs(outputs)
+        updates_ = _parse_updates(updates)
+        fetches = outputs_ + updates_
         feed_dict = _construct_feed_dict(inputs, givens)
-        return self.session.run(fetches, feed_dict=feed_dict)
+        values = self.session.run(fetches, feed_dict=feed_dict)
+        return values[:len(outputs_)]
 
     def close(self):
         return self.session.close()
