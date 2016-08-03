@@ -1,31 +1,31 @@
 from __future__ import absolute_import
 
-import warnings
-
 import tensorflow as tf  # nopep8
 
 from ..base import Optimizer as BaseOptimizer
 from .tensor import Operation
 
+__all__ = ['RMSProp', 'GravesRMSProp']
+
 
 class TFOptimizer(BaseOptimizer):
     def _parse_kwargs(self, kwargs):
-        keys_and_defs1 = [
+        keys_and_defaults1 = [
             ('gate_gradients', 1),
             ('aggregation_method', None),
             ('colocate_gradients_with_ops', False),
             ('grad_loss', None)
         ]
-        keys_and_defs2 = [
+        keys_and_defaults2 = [
             ('global_step', None),
             ('name', None)
         ]
         kws_compute_gradients = {
             key: kwargs.get(key, default_value)
-            for key, default_value in keys_and_defs1}
+            for key, default_value in keys_and_defaults1}
         kws_apply_gradients = {
             key: kwargs.get(key, default_value)
-            for key, default_value in keys_and_defs2}
+            for key, default_value in keys_and_defaults2}
         return [kws_compute_gradients, kws_apply_gradients]
 
     def minimize(self, loss, wrt=None, **kwargs):
@@ -50,16 +50,57 @@ class TFOptimizer(BaseOptimizer):
 
 class RMSProp(TFOptimizer):
     def __init__(self, learning_rate,
-                 decay1=0.0, decay2=0.95,
+                 decay=0.95, momentum=None,
                  epsilon=1e-2, name='RMSProp', **kwargs):
-        if decay1:
-            warnings.warn(
-                'Non-zero value was given to `decay1` parameter. '
-                'Notice the mplementation difference of RMSProps in '
-                'Theano backend and Tensorflow backend, which may '
-                'cause different results.',
-                RuntimeWarning
-            )
         super(RMSProp, self).__init__(name)
         self.optimizer = tf.train.RMSPropOptimizer(
-            learning_rate, decay=decay2, momentum=decay1, **kwargs)
+            learning_rate, decay=decay, momentum=momentum, **kwargs)
+
+
+class GravesRMSProp(TFOptimizer):
+    def __init__(self, learning_rate,
+                 decay1=0.0, decay2=0.95,
+                 epsilon=1e-2, name='GravesRMSProp', **kwargs):
+        super(GravesRMSProp, self).__init__(name)
+        self.optimizer = tf.train.GradientDescentOptimizer(
+            learning_rate, name=name)
+        self.decay1 = decay1
+        self.decay2 = decay2
+        self.epsilon = epsilon
+
+    def apply_gradient(self, grads_and_vars, **kwargs):
+        # TODO: Add parser once compute_gradients wraps `grads_and_vars`
+        # TODO: Save intermediate Variables in slot
+        mean_grads1, mean_grads1_updates = [], []
+        mean_grads2, mean_grads2_updates = [], []
+        new_grads_and_vars = [], []
+        for grad, var in grads_and_vars:
+            name = '{}_mean'.format(grad.name)
+            mean_grad1 = tf.get_variable(
+                name=name, shape=grad.shape, dtype=grad.dtype,
+                initializer=tf.constatnt_initializer(0))
+
+            name = '{}_squared_mean'.format(grad.name)
+            mean_grad2 = tf.get_variable(
+                name=name, shape=grad.shape, dtype=grad.dtype,
+                initializer=tf.constatnt_initializer(0))
+
+            mean_grad1_update = mean_grad1.assign(
+                self.decay1 * mean_grad1 +
+                (1.0 - self.decay1) * grad)
+
+            mean_grad2_update = mean_grad1.assign(
+                self.decay2 * mean_grad1 +
+                (1.0 - self.decay2) * tf.square(grad))
+
+            rms = tf.sqrt(mean_grad2 - tf.square(mean_grad1) + self.epsilon)
+            new_grad = tf.truediv(grad, rms)
+
+            mean_grads1.append(mean_grad1)
+            mean_grads2.append(mean_grad2)
+            mean_grads1_updates.append(mean_grad1_update)
+            mean_grads2_updates.append(mean_grad2_update)
+            new_grads_and_vars.append((new_grad, var))
+        train_op = self.optimizer.apply_gradients(new_grads_and_vars)
+        updates = mean_grads1_updates + mean_grads2_updates + [train_op]
+        return Operation(tf.group(*updates))
