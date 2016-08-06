@@ -11,3 +11,8 @@ class Tensor(object):
 
     def get_shape(self):
         return self.shape
+
+
+class Operation(object):
+    def __init__(self, op):
+        self.op = op

@@ -2,7 +2,10 @@ from __future__ import absolute_import
 
 import tensorflow as tf
 
-from ..base.tensor import Tensor as BaseTensor
+from ..base.tensor import (
+    Tensor as BaseTensor,
+    Operation,
+)
 from . import config as CFG
 
 __all__ = ['Tensor', 'Input', 'Operation']
@@ -31,8 +34,3 @@ class Input(Tensor):
             self.tensor = tf.placeholder(
                 dtype=self.dtype, shape=self.shape, name=self.name)
         return self
-
-
-class Operation(object):
-    def __init__(self, op):
-        self.op = op

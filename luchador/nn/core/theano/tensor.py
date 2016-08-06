@@ -3,9 +3,12 @@ from __future__ import absolute_import
 import theano
 import theano.tensor as T
 
-from ..base.tensor import Tensor as BaseTensor
+from ..base.tensor import (
+    Tensor as BaseTensor,
+    Operation,
+)
 
-__all__ = ['Tensor', 'Input']
+__all__ = ['Tensor', 'Input', 'Operation']
 
 
 class Tensor(BaseTensor):
@@ -42,8 +45,3 @@ class Input(Tensor):
         else:
             raise ValueError('shape length must be smaller than 5')
         return self
-
-
-class Operation(object):
-    def __init__(self, op):
-        self.op = op
