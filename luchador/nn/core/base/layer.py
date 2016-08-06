@@ -4,8 +4,6 @@ from __future__ import absolute_import
 import logging
 from collections import OrderedDict
 
-from .utils import get_function_args
-
 _LG = logging.getLogger(__name__)
 
 __all__ = ['Dense', 'Conv2D', 'ReLU', 'Flatten', 'TrueDiv']
@@ -33,7 +31,7 @@ class CopyMixin(object):
 
 class BaseLayer(CopyMixin, object):
     """Defines common interface (copy and build methods) for Layer classes"""
-    def __init__(self, args):
+    def __init__(self, **args):
         """Validate and store arguments passed to subclass __init__ method"""
         super(BaseLayer, self).__init__()
         self._store_args(args)
@@ -54,16 +52,18 @@ class BaseLayer(CopyMixin, object):
 ###############################################################################
 class Dense(BaseLayer):
     def __init__(self, n_nodes, initializers=None):
-        """Initialize dense (also called affine, linear or inner product) layer.
-        Activation functio such as ReLU is not included.
+        """Initialize dense layer.
+        Activation function, such as ReLU is not included.
+        Also called fully connected, affine, linear or inner product.
 
         Args:
           n_nodes (int): The number of internal neurons.
         """
-        super(Dense, self).__init__(args=get_function_args())
+        super(Dense, self).__init__(n_nodes=n_nodes, initializers=initializers)
 
 
 class Conv2D(BaseLayer):
+    """Apply convolution to input"""
     def __init__(self, filter_height, filter_width, n_filters, strides,
                  padding='VALID', initializers=None, **kwargs):
         """Initialize 2D convolution layer.
@@ -88,20 +88,26 @@ class Conv2D(BaseLayer):
             - Tensorflow: Arguments passed to tf.nn.conv2d.
               'use_cudnn_on_gpu' and 'name'
         """
-        super(Conv2D, self).__init__(args=get_function_args())
+        super(Conv2D, self).__init__(
+            filter_height=filter_height, filter_width=filter_width,
+            n_filters=n_filters, strides=strides, padding=padding,
+            initializers=initializers, **kwargs)
 
 
 class ReLU(BaseLayer):
+    """Applies Rectified Linear Unit"""
     def __init__(self):
-        super(ReLU, self).__init__(args=get_function_args())
+        super(ReLU, self).__init__()
 
 
 class Flatten(BaseLayer):
+    """Reshape batch into 2D (batch_size, n_features)"""
     def __init__(self):
-        super(Flatten, self).__init__(args=get_function_args())
+        super(Flatten, self).__init__()
 
 
 class TrueDiv(BaseLayer):
+    """Applies element wise division"""
     def __init__(self, denom, dtype=None):
-        super(TrueDiv, self).__init__(args=get_function_args())
+        super(TrueDiv, self).__init__(denom=denom, dtype=None)
         self.denom = None
