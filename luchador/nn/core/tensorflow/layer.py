@@ -143,8 +143,8 @@ class Conv2D(BaseConv2D):
 
         strides = self._get_strides()
         params = self.parameter_variables
-        name = self.args['kwargs'].get('name')
-        cudnn = self.args['kwargs'].get('use_cudnn_on_gpu', True)
+        name = self.args.get('name')
+        cudnn = self.args.get('use_cudnn_on_gpu', True)
         conv = tf.nn.conv2d(
             input.tensor, params['weight'].tensor, strides=strides,
             padding=self.args['padding'], use_cudnn_on_gpu=cudnn,
