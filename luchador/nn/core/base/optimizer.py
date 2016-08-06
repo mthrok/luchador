@@ -4,6 +4,7 @@ __all__ = ['Optimizer']
 
 
 class Optimizer(object):
+    """Defines common interface for gradient computation and application"""
     def __init__(self, name):
         self.name = name
 

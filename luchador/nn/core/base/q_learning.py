@@ -8,7 +8,7 @@ _LG = logging.getLogger(__name__)
 
 
 class DeepQLearning(object):
-    """Build ops for Q-learning on top of the given Model"""
+    """Build Q-learning network and optimization operations"""
     def __init__(self, discount_rate, min_reward=None, max_reward=None):
         if (
                 (min_reward is None and max_reward is not None) or
@@ -33,13 +33,7 @@ class DeepQLearning(object):
         self.sync_op = None
 
     def build(self, q_network):
-        """Build computation graph (error and sync ops) for Q learning
-
-        Args:
-          q_network(TFModel): TFModel which represetns Q network.
-            Model must be pre-built since this function needs shape
-            information.
-        """
+        """Build computation graph (error and sync ops) for Q learning"""
         raise NotImplementedError(
             '`build` method is not implemented for {}.{}.'
             .format(type(self).__module__, type(self).__name__)

@@ -110,4 +110,4 @@ class TrueDiv(BaseLayer):
     """Applies element wise division"""
     def __init__(self, denom, dtype=None):
         super(TrueDiv, self).__init__(denom=denom, dtype=None)
-        self.denom = None
+        self.denom = None  # denominator in Variable expression

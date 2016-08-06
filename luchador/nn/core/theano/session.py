@@ -100,6 +100,9 @@ class Session(BaseSession):
             return values
         return values[0]
 
+    def initialize(self):
+        pass
+
     def close(self):
         warnings.warn('`close` is not yet implemented in Theano.')
         pass

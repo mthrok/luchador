@@ -18,6 +18,7 @@ def _clipped_delta(target, prediction, min_delta, max_delta):
 
 
 class SSE2(BaseSSE):
+    """Compute Sum-Squared-Error / 2.0 for the given target and prediction"""
     def _validate_args(self, args):
         if (
                 ('min_delta' in args and 'max_delta' in args) or
@@ -28,6 +29,9 @@ class SSE2(BaseSSE):
                          '`min_delta` and `max_delta` must be provided')
 
     def build(self, target, prediction):
+        """Build error tensor for target and prediction.
+        TODO: Add Math expression here.
+        """
         with tf.name_scope('SSE'):
             min_delta = self.args.get('min_delta')
             max_delta = self.args.get('max_delta')
@@ -36,5 +40,6 @@ class SSE2(BaseSSE):
                 target, prediction.tensor, min_delta, max_delta)
             err = tf.square(delta, name='squared_delta')
             err = tf.reduce_sum(err/2, reduction_indices=1, name='SSE2')
+            # TODO: Remove this?
             err = tf.reduce_mean(err, name='SSE_over_batch')
             return Tensor(err)

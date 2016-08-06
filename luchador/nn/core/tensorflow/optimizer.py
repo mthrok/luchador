@@ -58,6 +58,7 @@ class RMSProp(TFOptimizer):
 
 
 class GravesRMSProp(TFOptimizer):
+    """Implements """
     def __init__(self, learning_rate,
                  decay1=0.0, decay2=0.95, epsilon=1e-2,
                  name='GravesRMSProp', **kwargs):
