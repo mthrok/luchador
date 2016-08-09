@@ -2,11 +2,11 @@ from __future__ import absolute_import
 
 import tensorflow as tf
 
+from luchador import get_nn_dtype
 from ..base.tensor import (
     Tensor as BaseTensor,
     Operation,
 )
-from . import config as CFG
 
 __all__ = ['Tensor', 'Input', 'Operation']
 
@@ -22,7 +22,8 @@ class Tensor(BaseTensor):
 
 
 class Input(Tensor):
-    def __init__(self, shape, name=None, dtype=CFG.DTYPE):
+    def __init__(self, shape, name=None, dtype=None):
+        dtype = dtype or get_nn_dtype()
         super(Input, self).__init__(
             tensor=None, shape=shape, name=name, dtype=dtype)
 

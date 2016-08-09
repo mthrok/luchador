@@ -14,9 +14,7 @@ def run_integration_test(mode):
 
     import luchador
     luchador.set_nn_backend(mode)
-
-    import luchador.nn
-    luchador.nn.set_cnn_format(cnn_format)
+    luchador.set_nn_conv_format(cnn_format)
 
     from luchador.nn import Session
     from luchador.nn import Input

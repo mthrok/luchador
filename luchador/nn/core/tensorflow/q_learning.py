@@ -5,8 +5,8 @@ import logging
 
 import tensorflow as tf
 
+from luchador import get_nn_dtype
 from ..base import DeepQLearning as BaseQLI
-from . import config as CFG
 from .tensor import Tensor, Input, Operation
 
 __all__ = ['DeepQLearning']
@@ -36,10 +36,10 @@ class DeepQLearning(BaseQLI):
         return self
 
     def _build_target_q_value(self):
+        dtype = get_nn_dtype()
         self.actions = Input(dtype='int32', shape=(None,), name='actions')
-        self.rewards = Input(dtype=CFG.DTYPE, shape=(None,), name='rewards')
-        self.terminals = Input(
-            dtype=CFG.DTYPE, shape=(None,), name='terminals')
+        self.rewards = Input(dtype=dtype, shape=(None,), name='rewards')
+        self.terminals = Input(dtype=dtype, shape=(None,), name='terminals')
 
         actions = self.actions().tensor
         rewards = self.rewards().tensor
