@@ -1,10 +1,11 @@
 from __future__ import absolute_import
 
+import os
 import warnings
 
-_NN_BACKEND = 'tensorflow'
-_NN_CONV_FORMAT = 'NCHW'
-_NN_DTYPE = 'float32'
+_NN_DTYPE = os.environ.get('LUCHADOR_NN_DTYPE', 'float32')
+_NN_BACKEND = os.environ.get('LUCHADOR_NN_BACKEND', 'tensorflow')
+_NN_CONV_FORMAT = os.environ.get('LUCHADOR_NN_CONV_FORMAT', 'NCHW')
 
 __all__ = [
     'set_nn_backend', 'set_nn_conv_format', 'set_nn_dtype',
@@ -24,17 +25,16 @@ def get_nn_backend():
     return _NN_BACKEND
 
 
-def set_nn_conv_format(cnn_format):
-    """Set default convolution data format for Tensorflow"""
+def set_nn_conv_format(conv_format):
+    """Set default convolution data format for Tensorflow backend"""
     if _NN_BACKEND == 'theano':
-        warnings.warn('cnn format only affects Tensorflow backend.')
-        return
+        warnings.warn('conv format is only effective in Tensorflow backend.')
 
-    if cnn_format not in ['NCHW', 'NHWC']:
+    if conv_format not in ['NCHW', 'NHWC']:
         raise ValueError('cnn_format must be either `NCHW` or `NHWC`')
 
     global _NN_CONV_FORMAT
-    _NN_CONV_FORMAT = cnn_format
+    _NN_CONV_FORMAT = conv_format
 
 
 def get_nn_conv_format():

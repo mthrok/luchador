@@ -9,6 +9,6 @@ test:
     - pip install flake8
   override:
     - python setup.py test
-    - python tests/integration/test_theano.py
-    - python tests/integration/test_tensorflow.py
+    - LUCHADOR_NN_BACKEND=theano     LUCHADOR_NN_CONV_FORMAT=NCHW python tests/integration/run_tests.py
+    - LUCHADOR_NN_BACKEND=tensorflow LUCHADOR_NN_CONV_FORMAT=NHWC python tests/integration/run_tests.py
     - flake8 .
