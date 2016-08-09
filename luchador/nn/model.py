@@ -4,6 +4,8 @@ from collections import OrderedDict
 
 from .core import scope as scp
 
+__all__ = ['Model']
+
 
 class LayerConfig(object):
     def __init__(self, layer, scope, input=None, output=None):
