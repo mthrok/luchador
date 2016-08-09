@@ -10,7 +10,7 @@ import datetime
 
 import yaml
 import luchador
-luchador.sane_gym_import()
+luchador.util.sane_gym_import()
 
 import gym  # noqa: F402
 
