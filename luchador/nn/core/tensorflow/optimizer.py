@@ -54,7 +54,7 @@ class RMSProp(TFOptimizer):
                  epsilon=1e-2, name='RMSProp', **kwargs):
         super(RMSProp, self).__init__(name)
         self.optimizer = tf.train.RMSPropOptimizer(
-            learning_rate, decay=decay, momentum=momentum, **kwargs)
+            learning_rate, decay=decay, momentum=momentum, epsilon=epsilon, **kwargs)
 
 
 class GravesRMSProp(TFOptimizer):
