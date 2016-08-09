@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 
 import tensorflow as tf
-from tensorflow import (  # nopep8
+from tensorflow import (  # noqa: F401
     Session as _Session,
     get_default_session,
 )

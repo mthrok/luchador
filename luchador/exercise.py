@@ -12,7 +12,7 @@ import yaml
 import luchador
 luchador.sane_gym_import()
 
-import gym  # nopep8
+import gym  # noqa: F402
 
 _LG = logging.getLogger(__name__)
 _ENVS = sorted([env_spec for env_spec in gym.envs.registry.all()])

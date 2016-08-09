@@ -1,8 +1,8 @@
 from __future__ import absolute_import
 
-from .configure import *  # nopep8
+from .configure import *  # noqa: F401, F403
 
-from .agent import *  # nopep8
-from .episode_runner import *  # nopep8
+from .agent import *  # noqa: F401, F403
+from .episode_runner import *  # noqa: F401, F403
 
-from .util import *  # nopep8
+from .util import *  # noqa: F401, F403

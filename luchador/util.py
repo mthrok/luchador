@@ -10,7 +10,7 @@ def sane_gym_import():
     root_handlers = root_lg.handlers
     root_lg.handlers = []
 
-    import gym  # nopep8
+    import gym  # noqa: F401
     gym_lg = logging.getLogger('gym')
     gym_lg.handlers = root_lg.handlers
     gym_lg.propagate = False
