@@ -223,7 +223,8 @@ class Flatten(BaseFlatten):
 class TrueDiv(BaseTrueDiv):
     def _instantiate_denominator(self):
         dtype = self.args['dtype'] or theano.config.floatX
-        self.denom = T.constant(self.args['denom'], dtype=dtype, name='denominator')
+        self.denom = T.constant(
+            self.args['denom'], dtype=dtype, name='denominator')
 
     def build(self, input):
         _LG.debug('    Building {}: {}'.format(type(self).__name__, self.args))

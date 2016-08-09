@@ -57,7 +57,8 @@ def run_integration_test(mode):
     error = sse2(ql.target_q, ql.pre_trans_model.output)
 
     print 'Building Optimization'
-    rmsprop = GravesRMSProp(learning_rate=learning_rate, decay1=decay1, decay2=decay2)
+    rmsprop = GravesRMSProp(
+        learning_rate=learning_rate, decay1=decay1, decay2=decay2)
     params = ql.pre_trans_model.get_parameter_variables()
     minimize_op = rmsprop.minimize(error, wrt=params.values())
 

@@ -5,7 +5,10 @@ dependencies:
     - pip install --upgrade https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-0.10.0rc0-cp27-none-linux_x86_64.whl
 
 test:
+  pre:
+    - pip install flake8
   override:
     - python setup.py test
     - python tests/integration/test_theano.py
     - python tests/integration/test_tensorflow.py
+    - flake8 .
