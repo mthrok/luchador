@@ -2,8 +2,6 @@ from __future__ import absolute_import
 
 import logging
 
-from gym import spaces
-
 from .base import Agent as BaseAgent
 
 __all__ = ['RandomAgent', 'ControllerAgent']
@@ -29,10 +27,6 @@ class RandomAgent(BaseAgent):
 class ControllerAgent(BaseAgent):
     # TODO: Add game pad controll
     def __init__(self, env, agent_config, global_config):
-        if type(env.action_space) not in [spaces.Discrete, spaces.Tuple]:
-            raise NotImplementedError(
-                'Only Discrete and Tuple spaces are supported now.')
-
         super(ControllerAgent, self).__init__(
             env, agent_config=agent_config, global_config=global_config)
 
@@ -43,15 +37,8 @@ class ControllerAgent(BaseAgent):
         pass
 
     def _parse_action(self, action_space):
-        if isinstance(action_space, spaces.Discrete):
-            _LG.info('Input value: [0, {}]'.format(action_space.n-1))
-            return int(raw_input())
-        else:
-            ret = []
-            _LG.info('Input {} inputs'.format(len(action_space.spaces)))
-            for space in action_space.spaces:
-                ret.append(self._parse_action(space))
-            return ret
+        _LG.info('Input value: [0, {}]'.format(action_space.n-1))
+        return int(raw_input())
 
     def act(self):
         while True:

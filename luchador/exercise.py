@@ -9,15 +9,13 @@ import inspect
 import datetime
 
 import yaml
-import gym
-from gym import envs
-from gym import spaces
-
 import luchador
-import luchador.agent
+luchador.sane_gym_import()
+
+import gym  # nopep8
 
 _LG = logging.getLogger(__name__)
-_ENVS = sorted([env_spec for env_spec in envs.registry.all()])
+_ENVS = sorted([env_spec for env_spec in gym.envs.registry.all()])
 _AGENTS = sorted([obj[1].__name__ for obj in inspect.getmembers(
     sys.modules['luchador.agent'], inspect.isclass
     ) if issubclass(obj[1], luchador.Agent)])
@@ -27,10 +25,10 @@ _AGENTS = sorted([obj[1].__name__ for obj in inspect.getmembers(
 def print_env_info(env):
     """Print environment info."""
     def print_space_summary(space):
-        if isinstance(space, spaces.Tuple):
+        if isinstance(space, gym.spaces.Tuple):
             for sp in space.spaces:
                 print_space_summary(sp)
-        if isinstance(space, spaces.Discrete):
+        if isinstance(space, gym.spaces.Discrete):
             _LG.info('      Range: [0, {}]'.format(space.n-1))
     _LG.info('... Action Space: {}'.format(env.action_space))
     print_space_summary(env.action_space)
@@ -65,7 +63,7 @@ def main(config):
 
     env = gym.make(config['env'])
     agent = create_agent(config['agent'], config['agent_config'], env, config)
-    runner = luchador.EpisodeRunner(env, agent, 100)
+    runner = luchador.GymEpisodeRunner(env, agent, 100)
     print_env_info(env)
 
     monitor = config['monitor']

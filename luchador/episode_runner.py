@@ -5,7 +5,10 @@ import logging
 _LG = logging.getLogger(__name__)
 
 
-class EpisodeRunner(object):
+__all__ = ['GymEpisodeRunner']
+
+
+class GymEpisodeRunner(object):
     """Class for runnig episode"""
     def __init__(self, env, agent, timesteps):
         self.env = env
@@ -16,8 +19,8 @@ class EpisodeRunner(object):
         obs = self.env.reset()
         self.agent.reset(obs)
 
-    def run_post_episode_task(self):
-        self.agent.run_post_episode_task()
+    def perform_post_episode_task(self):
+        self.agent.perform_post_episode_task()
 
     def start_monitor(self, outdir, **kwargs):
         self.env.monitor.start(outdir, **kwargs)
@@ -48,5 +51,5 @@ class EpisodeRunner(object):
                 break
         else:
             t = -1
-        self.run_post_episode_task()
+        self.perform_post_episode_task()
         return t, total_rewards

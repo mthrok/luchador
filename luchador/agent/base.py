@@ -1,3 +1,6 @@
+from __future__ import absolute_import
+
+
 class Agent(object):
     def __init__(self, env, agent_config, global_config):
         self.action_space = env.action_space
@@ -26,6 +29,6 @@ class Agent(object):
         """Reset agent with the initial state of the environment."""
         raise NotImplementedError('reset method is not implemented.')
 
-    def run_post_episode_task(self):
+    def perform_post_episode_task(self):
         """Perform post episode task"""
         pass
