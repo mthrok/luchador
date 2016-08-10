@@ -24,11 +24,11 @@ class DeepQLearning(BaseQLI):
             information.
         """
         with tf.variable_scope('pre_trans'):
-            self.pre_trans_model = model_maker()
-            self.pre_states = self.pre_trans_model.input
+            self.pre_trans_net = model_maker()
+            self.pre_states = self.pre_trans_net.input
         with tf.variable_scope('post_trans'):
-            self.post_trans_model = model_maker()
-            self.post_states = self.post_trans_model.input
+            self.post_trans_net = model_maker()
+            self.post_states = self.post_trans_net.input
         with tf.variable_scope('target_q_value'):
             self._build_target_q_value()
         with tf.variable_scope('sync'):
@@ -46,7 +46,7 @@ class DeepQLearning(BaseQLI):
         terminals = self.terminals().tensor
         with tf.name_scope('future_reward'):
             with tf.name_scope('future_q_value'):
-                post_q = self.post_trans_model.output.tensor
+                post_q = self.post_trans_net.output.tensor
                 post_q = tf.reduce_max(
                     post_q, reduction_indices=1, name='max_post_q')
                 post_q = tf.mul(
@@ -62,11 +62,11 @@ class DeepQLearning(BaseQLI):
             future = tf.add(rewards, post_q, name='future_reward')
 
         with tf.name_scope('target_q_value'):
-            n_actions = self.pre_trans_model.output.get_shape()[1]
+            n_actions = self.pre_trans_net.output.get_shape()[1]
             with tf.name_scope('reshape_current_q_value'):
                 mask_off = tf.one_hot(actions, depth=n_actions, on_value=0.,
                                       off_value=1., name='actions_not_taken')
-                current = tf.identity(self.pre_trans_model.output.tensor)
+                current = tf.identity(self.pre_trans_net.output.tensor)
                 current = current * mask_off
 
             with tf.name_scope('reshape_future_q_value'):
@@ -80,10 +80,11 @@ class DeepQLearning(BaseQLI):
 
         self.future_reward = Tensor(tensor=future)
         self.target_q = Tensor(tensor=target_q)
+        self.predicted_q = self.pre_trans_net.output
 
     def _build_sync_op(self):
-        src_vars = self.pre_trans_model.get_parameter_variables().values()
-        tgt_vars = self.post_trans_model.get_parameter_variables().values()
+        src_vars = self.pre_trans_net.get_parameter_variables().values()
+        tgt_vars = self.post_trans_net.get_parameter_variables().values()
         ops = [tgt.tensor.assign(src.tensor)
                for src, tgt in zip(src_vars, tgt_vars)]
         self.sync_op = Operation(op=tf.group(*ops, name='sync'))

@@ -18,18 +18,26 @@ class DeepQLearning(object):
                 'When clipping reward, both `min_reward` '
                 'and `max_reward` must be provided.')
 
+        # Paramters
         self.discount_rate = discount_rate
         self.min_reward = min_reward
         self.max_reward = max_reward
 
+        # Inputs to the network
         self.pre_states = None
         self.actions = None
         self.rewards = None
         self.post_states = None
         self.terminals = None
 
-        self.pre_trans_model = None
-        self.pre_trans_model = None
+        # Actual NN models
+        self.pre_trans_net = None
+        self.pre_trans_net = None
+
+        # Q values
+        self.predicted_q = None
+        self.target_q = None
+
         self.sync_op = None
 
     def build(self, q_network):

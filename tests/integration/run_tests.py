@@ -48,12 +48,12 @@ ql.build(model_maker)
 
 print 'Building Error'
 sse2 = SSE2(min_delta=min_delta, max_delta=max_delta)
-error = sse2(ql.target_q, ql.pre_trans_model.output)
+error = sse2(ql.target_q, ql.predicted_q)
 
 print 'Building Optimization'
 rmsprop = GravesRMSProp(
     learning_rate=learning_rate, decay1=decay1, decay2=decay2)
-params = ql.pre_trans_model.get_parameter_variables()
+params = ql.pre_trans_net.get_parameter_variables()
 minimize_op = rmsprop.minimize(error, wrt=params.values())
 
 print 'Initializing Session'
@@ -61,7 +61,7 @@ session = Session()
 session.initialize()
 
 print 'Initializing SummaryWriter'
-outputs = ql.pre_trans_model.get_output_tensors()
+outputs = ql.pre_trans_net.get_output_tensors()
 writer = SummaryWriter('./monitoring/test_tensorflow')
 writer.add_graph(session.graph)
 writer.register('pre_trans_network_params', 'histogram', params.keys())
@@ -105,8 +105,8 @@ for i in range(100):
             error,
             ql.target_q,
             ql.future_reward,
-            ql.post_trans_model.output,
-            ql.pre_trans_model.output
+            ql.post_trans_net.output,
+            ql.pre_trans_net.output,
         ],
         inputs={
             ql.pre_states: pre_states,
