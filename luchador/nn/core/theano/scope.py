@@ -83,6 +83,10 @@ def variable_scope(name_or_scope, reuse=None):
     return VariableScope(reuse, scope)
 
 
+def name_scope(name):
+    pass
+
+
 def get_variable_scope():
     """Return the current variable scope"""
     return VariableScope(_get_flag(), _get_scope())
