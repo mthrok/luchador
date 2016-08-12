@@ -12,6 +12,8 @@ from .tensor import Input, Tensor, Operation
 
 _LG = logging.getLogger(__name__)
 
+__all__ = ['DeepQLearning']
+
 
 class DeepQLearning(BaseQLI):
     def build(self, model_maker):

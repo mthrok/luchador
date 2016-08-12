@@ -10,4 +10,4 @@ from .layer import *  # noqa: F401, F403
 from .cost import *  # noqa: F401, F403
 from .optimizer import *  # noqa: F401, F403
 
-from .q_learning import DeepQLearning  # noqa: F401, F403
+from .q_learning import *  # noqa: F401, F403
