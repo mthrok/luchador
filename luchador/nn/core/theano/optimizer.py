@@ -8,7 +8,7 @@ import theano.tensor as T
 from ..base import Optimizer as BaseOptimizer
 from .scope import get_variable, variable_scope
 from .initializer import Constant
-from .tensor import Operation
+from .wrapper import Operation
 
 __all__ = ['SGD', 'RMSProp', 'GravesRMSProp', 'NeonRMSProp']
 

@@ -7,7 +7,7 @@ import tensorflow as tf
 
 from luchador import get_nn_dtype
 from ..base import DeepQLearning as BaseQLI
-from .tensor import Tensor, Input, Operation
+from .wrapper import Tensor, Input, Operation
 
 __all__ = ['DeepQLearning']
 

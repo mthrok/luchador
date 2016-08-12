@@ -5,7 +5,7 @@ import numpy as np
 
 from luchador.nn.core.theano.scope import _reset as reset_scope
 from luchador.nn.core.theano.layer import Conv2D, Flatten
-from luchador.nn.core.theano.tensor import Input
+from luchador.nn.core.theano.wrapper import Input
 
 # import logging
 # logging.getLogger('luchador.nn.core.theano.layer').setLevel(logging.DEBUG)

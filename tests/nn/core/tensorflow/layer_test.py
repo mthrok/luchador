@@ -4,7 +4,7 @@ import unittest
 
 import tensorflow as tf
 
-from luchador.nn.core.tensorflow.tensor import Input
+from luchador.nn.core.tensorflow.wrapper import Input
 from luchador.nn.core.tensorflow.layer import Dense
 
 

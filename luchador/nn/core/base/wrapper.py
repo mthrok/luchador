@@ -1,7 +1,9 @@
 from __future__ import absolute_import
 
+__all__ = ['TensorWrapper', 'OperationWrapper']
 
-class Wrapper(object):
+
+class TensorWrapper(object):
     """Wraps Tensor or Variable object in Theano/Tensorflow
 
     This class was introduced to provide easy shape inference to Theano Tensors
@@ -24,6 +26,6 @@ class Wrapper(object):
         self._tensor = obj
 
 
-class Operation(object):
+class OperationWrapper(object):
     def __init__(self, op):
         self.op = op

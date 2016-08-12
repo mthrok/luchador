@@ -6,7 +6,7 @@ import theano
 from theano import config
 
 from .initializer import Normal
-from .tensor import Variable
+from .wrapper import Variable
 
 _LG = logging.getLogger(__name__)
 

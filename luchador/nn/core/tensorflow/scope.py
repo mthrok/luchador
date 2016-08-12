@@ -6,7 +6,7 @@ from tensorflow import get_variable as _get_variable
 from tensorflow import variable_scope
 from tensorflow import get_variable_scope
 
-from .tensor import Variable
+from .wrapper import Variable
 
 __all__ = [
     'name_scope', 'get_variable', 'variable_scope', 'get_variable_scope']

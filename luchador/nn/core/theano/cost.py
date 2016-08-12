@@ -6,7 +6,7 @@ import theano
 import theano.tensor as T
 
 from ..base import SSE as BaseSSE
-from .tensor import Tensor
+from .wrapper import Tensor
 
 _LG = logging.getLogger(__name__)
 

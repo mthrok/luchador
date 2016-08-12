@@ -3,9 +3,9 @@ from __future__ import absolute_import
 import tensorflow as tf
 
 from luchador import get_nn_dtype
-from ..base.tensor import (
-    Wrapper as BaseWrapper,
-    Operation,
+from ..base import (
+    TensorWrapper as BaseWrapper,
+    OperationWrapper as Operation,
 )
 
 __all__ = ['Tensor', 'Input', 'Operation']

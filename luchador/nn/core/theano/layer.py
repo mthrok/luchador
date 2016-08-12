@@ -14,7 +14,7 @@ from ..base import (
     TrueDiv as BaseTrueDiv,
 )
 from . import scope as scp
-from .tensor import Tensor
+from .wrapper import Tensor
 from .initializer import (
     Constant,
     Xavier,

@@ -15,7 +15,7 @@ from ..base import (
     Flatten as BaseFlatten,
     TrueDiv as BaseTrueDiv,
 )
-from .tensor import Tensor
+from .wrapper import Tensor
 from .scope import get_variable
 
 _LG = logging.getLogger(__name__)

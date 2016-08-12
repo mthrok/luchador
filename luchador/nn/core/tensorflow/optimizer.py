@@ -3,7 +3,7 @@ from __future__ import absolute_import
 import tensorflow as tf  # nopep8
 
 from ..base import Optimizer as BaseOptimizer
-from .tensor import Operation
+from .wrapper import Operation
 
 __all__ = ['RMSProp', 'GravesRMSProp']
 

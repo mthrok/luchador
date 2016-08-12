@@ -4,7 +4,7 @@ from .session import *  # noqa: F401, E403
 from . import scope  # noqa: F401
 from .initializer import *  # noqa: F401, F403
 
-from .tensor import *  # noqa: F401, F403
+from .wrapper import *  # noqa: F401, F403
 from .layer import *  # noqa: F401, F403
 
 from .cost import *  # noqa: F401, F403

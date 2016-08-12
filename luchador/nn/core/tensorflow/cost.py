@@ -5,7 +5,7 @@ import tensorflow as tf
 from ..base import (
     SSE as BaseSSE,
 )
-from .tensor import Tensor
+from .wrapper import Tensor
 
 __all__ = ['SSE2']
 

@@ -5,9 +5,9 @@ from collections import Counter
 import theano
 import theano.tensor as T
 
-from ..base.tensor import (
-    Wrapper as BaseWrapper,
-    Operation,
+from ..base import (
+    TensorWrapper as Wrapper,
+    OperationWrapper as Operation,
 )
 
 __all__ = ['Tensor', 'Input', 'Operation']
@@ -15,7 +15,7 @@ __all__ = ['Tensor', 'Input', 'Operation']
 VARIABLE_COUNTER = Counter()
 
 
-class Variable(BaseWrapper):
+class Variable(Wrapper):
     """Wrapps for SharedVariable objects"""
     def __init__(self, variable):
         val = variable.get_value()
@@ -25,7 +25,7 @@ class Variable(BaseWrapper):
         super(Variable, self).__init__(variable, val.shape, name, val.dtype)
 
 
-class Tensor(BaseWrapper):
+class Tensor(Wrapper):
     """Wrapps Tensor objects"""
     def __init__(self, tensor, shape=None, name=None, dtype=None):
         if tensor is not None:

@@ -6,7 +6,7 @@ from collections import OrderedDict
 import theano
 
 from ..base import Session as BaseSession
-from .tensor import Tensor, Operation
+from .wrapper import Tensor, Operation
 
 
 def _get_full_class(cls):

@@ -8,7 +8,7 @@ import theano.tensor as T
 
 from ..base import DeepQLearning as BaseQLI
 from . import scope as scp
-from .tensor import Input, Tensor, Operation
+from .wrapper import Input, Tensor, Operation
 
 _LG = logging.getLogger(__name__)
 

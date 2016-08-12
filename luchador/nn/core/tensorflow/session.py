@@ -7,7 +7,7 @@ from tensorflow import (  # noqa: F401
 )
 
 from ..base import Session as BaseSession
-from .tensor import Tensor, Variable, Operation
+from .wrapper import Tensor, Variable, Operation
 
 __all__ = ['Session']
 
