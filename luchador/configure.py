@@ -27,7 +27,7 @@ def get_nn_backend():
 
 def set_nn_conv_format(conv_format):
     """Set default convolution data format for Tensorflow backend"""
-    if _NN_BACKEND == 'theano':
+    if _NN_BACKEND == 'theano' and not conv_format == 'NCHW':
         warnings.warn('conv format is only effective in Tensorflow backend.')
 
     if conv_format not in ['NCHW', 'NHWC']:
