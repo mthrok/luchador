@@ -81,8 +81,8 @@ class RMSProp(TheanoOptimizer):
 
 
 class NeonRMSProp(TheanoOptimizer):
-    def __init__(self, learning_rate, decay=0.95,
-                 epsilon=1e-6, name='NeonRMSProp', **kwargs):
+    def __init__(self, learning_rate, decay=0.95, epsilon=1e-6,
+                 name='NeonRMSProp', **kwargs):
         super(NeonRMSProp, self).__init__(name)
         self.learning_rate = learning_rate
         self.decay = decay

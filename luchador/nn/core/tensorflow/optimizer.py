@@ -58,6 +58,41 @@ class RMSProp(TFOptimizer):
             epsilon=epsilon, **kwargs)
 
 
+class NeonRMSProp(TFOptimizer):
+    def __init__(self, learning_rate, decay=0.95, epsilon=1e-6,
+                 name='NeonRMSProp', **kwards):
+        self.optimizer = tf.train.GradientDexcentOptimizer(
+            learning_rate, name=name)
+        self.decay = decay
+        self.epsilon = epsilon
+
+    def apply_gradient(self, grads_and_vars, **kwargs):
+        # TODO: Add parser once compute_gradients wraps `grads_and_vars`
+        # TODO: Save intermediate Variables in slot
+        mean_grads2, mean_grads2_updates = [], []
+        new_grads_and_vars = [], []
+        d2, ep = self.decay2, self.epsilon
+        for grad, var in grads_and_vars:
+            with tf.variable_scope(self.name):
+                name = '{}_squared_mean'.format(grad.name)
+                mean_grad2 = tf.get_variable(
+                    name=name, shape=grad.shape, dtype=grad.dtype,
+                    initializer=tf.constatnt_initializer(0))
+
+                new_mean_grad2 = d2 * mean_grad2 + (1.0 - d2) * tf.square(grad)
+
+                rms = tf.sqrt(new_mean_grad2 + ep) + ep
+                new_grad = tf.truediv(grad, rms)
+
+            mean_grads2.append(mean_grad2)
+
+            mean_grads2_updates.append(mean_grad2.assign(new_mean_grad2))
+            new_grads_and_vars.append((new_grad, var))
+        train_op = self.optimizer.apply_gradients(new_grads_and_vars)
+        updates = mean_grads2_updates + [train_op]
+        return Operation(tf.group(*updates))
+
+
 class GravesRMSProp(TFOptimizer):
     """Implements """
     def __init__(self, learning_rate,
@@ -90,17 +125,17 @@ class GravesRMSProp(TFOptimizer):
                     name=name, shape=grad.shape, dtype=grad.dtype,
                     initializer=tf.constatnt_initializer(0))
 
-                mean_grad1_ = d1 * mean_grad1 + (1.0 - d1) * grad
-                mean_grad2_ = d2 * mean_grad2 + (1.0 - d2) * tf.square(grad)
+                new_mean_grad1 = d1 * mean_grad1 + (1.0 - d1) * grad
+                new_mean_grad2 = d2 * mean_grad2 + (1.0 - d2) * tf.square(grad)
 
-                rms = tf.sqrt(mean_grad2_ - tf.square(mean_grad1_) + ep)
+                rms = tf.sqrt(new_mean_grad2 - tf.square(new_mean_grad1) + ep)
                 new_grad = tf.truediv(grad, rms)
 
             mean_grads1.append(mean_grad1)
             mean_grads2.append(mean_grad2)
 
-            mean_grads1_updates.append(mean_grad1.assign(mean_grad1_))
-            mean_grads2_updates.append(mean_grad2.assign(mean_grad2_))
+            mean_grads1_updates.append(mean_grad1.assign(new_mean_grad1))
+            mean_grads2_updates.append(mean_grad2.assign(new_mean_grad2))
             new_grads_and_vars.append((new_grad, var))
         train_op = self.optimizer.apply_gradients(new_grads_and_vars)
         updates = mean_grads1_updates + mean_grads2_updates + [train_op]
