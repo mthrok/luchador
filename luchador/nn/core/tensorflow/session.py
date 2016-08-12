@@ -7,7 +7,7 @@ from tensorflow import (  # noqa: F401
 )
 
 from ..base import Session as BaseSession
-from .tensor import Tensor, Operation
+from .tensor import Tensor, Variable, Operation
 
 __all__ = ['Session']
 
@@ -36,11 +36,11 @@ def _parse_outputs(outputs):
         outputs = [outputs]
 
     for output in outputs:
-        if not isinstance(output, Tensor):
+        if not (isinstance(output, Tensor) or isinstance(output, Variable)):
             raise ValueError(
                 '`outputs` must be [list of] {}. Given: {}'
                 .format(_TENSOR_CLASS_STR, _get_full_class(type(output))))
-        outputs_.append(output.tensor)
+        outputs_.append(output.get())
     return outputs_
 
 
@@ -71,10 +71,10 @@ def _construct_feed_dict(inputs, givens):
         pass
     elif isinstance(inputs, dict):
         for key, value in inputs.items():
-            feed_dict[key.tensor] = value
+            feed_dict[key.get()] = value
     elif isinstance(inputs, list):
         for key, value in inputs:
-            feed_dict[key.tensor] = value
+            feed_dict[key.get()] = value
     else:
         raise ValueError(
             '`inputs` must be either dict or list of Tensor-value pair. '
@@ -84,10 +84,10 @@ def _construct_feed_dict(inputs, givens):
         pass
     elif isinstance(givens, dict):
         for key, value in givens.items():
-            feed_dict[key.tensor] = value
+            feed_dict[key.get()] = value
     elif isinstance(givens, list):
         for key, value in givens:
-            feed_dict[key.tensor] = value
+            feed_dict[key.get()] = value
     else:
         raise ValueError(
             '`givens` must be either dict or list of Tensor-value pair. '

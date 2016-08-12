@@ -1,20 +1,27 @@
 from __future__ import absolute_import
 
 
-class Tensor(object):
-    """Tensor class which provides shape information.
+class Wrapper(object):
+    """Wraps Tensor or Variable object in Theano/Tensorflow
 
     This class was introduced to provide easy shape inference to Theano Tensors
-    while having the same interface as Tensorflow Variables.
+    while having the common interface for both Theano and Tensorflow.
+    `get` method provides access to the underlying object.
     """
     def __init__(self, tensor, shape, name, dtype):
-        self.tensor = tensor
+        self._tensor = tensor
         self.shape = shape
         self.name = name
         self.dtype = dtype
 
     def get_shape(self):
         return self.shape
+
+    def get(self):
+        return self._tensor
+
+    def set(self, obj):
+        self._tensor = obj
 
 
 class Operation(object):

@@ -46,7 +46,7 @@ class TestDense(unittest.TestCase):
         for key in vars1.keys():
             expected, found = vars1[key], vars2[key]
             self.assertTrue(
-                vars1[key].tensor is vars2[key].tensor,
+                vars1[key].get() is vars2[key].get(),
                 'Variable objects in copied layer should be identical '
                 'to those in the original layer. Variable {} is not identical.'
                 .format(key)

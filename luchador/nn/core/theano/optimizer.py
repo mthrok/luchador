@@ -20,7 +20,7 @@ class TheanoOptimizer(BaseOptimizer):
 
     def compute_gradients(self, loss, wrt, **kwargs):
         # TODO: Add support for single wrt
-        loss, wrt = loss.tensor, [v.tensor for v in wrt]
+        loss, wrt = loss.get(), [v.get() for v in wrt]
         grads = theano.grad(loss, wrt)
         return [(grad, var) for grad, var in zip(grads, wrt)]
 
@@ -54,14 +54,16 @@ class RMSProp(TheanoOptimizer):
             value = var.get_value(borrow=True)
             with variable_scope(self.name):
                 name = '{}_grad_squared_mean'.format(var.name)
-                mean_grad2 = get_variable(
+                mean_grad2_ = get_variable(
                     name=name, shape=value.shape, dtype=value.dtype,
                     initializer=Constant(0), broadcastable=var.broadcastable)
+                mean_grad2 = mean_grad2_.get()
 
                 name = '{}_delta'.format(var.name)
-                delta = get_variable(
+                delta_ = get_variable(
                     name=name, shape=value.shape, dtype=value.dtype,
                     initializer=Constant(0), broadcastable=var.broadcastable)
+                delta = delta_.get()
 
                 new_mean_grad2 = d * mean_grad2 + (1.0 - d) * T.square(grad)
 
@@ -94,9 +96,10 @@ class NeonRMSProp(TheanoOptimizer):
             value = var.get_value(borrow=True)
             with variable_scope(self.name):
                 name = '{}_grad_squared_mean'.format(var.name)
-                mean_grad2 = get_variable(
+                mean_grad2_ = get_variable(
                     name=name, shape=value.shape, dtype=value.dtype,
                     initializer=Constant(0), broadcastable=var.broadcastable)
+                mean_grad2 = mean_grad2_.get()
 
                 new_mean_grad2 = d * mean_grad2 + (1.0 - d) * T.square(grad)
 
@@ -139,14 +142,16 @@ class GravesRMSProp(TheanoOptimizer):
             value = var.get_value(borrow=True)
             with variable_scope(self.name):
                 name = '{}_mean'.format(var.name)
-                mean_grad1 = get_variable(
+                mean_grad1_ = get_variable(
                     name=name, shape=value.shape, dtype=value.dtype,
                     initializer=Constant(0), broadcastable=var.broadcastable)
+                mean_grad1 = mean_grad1_.get()
 
                 name = '{}_squared_mean'.format(var.name)
-                mean_grad2 = get_variable(
+                mean_grad2_ = get_variable(
                     name=name, shape=value.shape, dtype=value.dtype,
                     initializer=Constant(0), broadcastable=var.broadcastable)
+                mean_grad2 = mean_grad2_.get()
 
                 new_mean_grad1 = d1 * mean_grad1 + (1.0 - d1) * grad
                 new_mean_grad2 = d2 * mean_grad2 + (1.0 - d2) * T.square(grad)

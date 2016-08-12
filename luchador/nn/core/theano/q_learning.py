@@ -15,6 +15,9 @@ _LG = logging.getLogger(__name__)
 __all__ = ['DeepQLearning']
 
 
+__all__ = ['DeepQLearning']
+
+
 class DeepQLearning(BaseQLI):
     def build(self, model_maker):
         """Build computation graph (error and sync ops) for Q learning
@@ -41,11 +44,11 @@ class DeepQLearning(BaseQLI):
         self.rewards = Input(dtype='float64', shape=(None,), name='rewards')
         self.terminals = Input(shape=(None,), name='continuations')
 
-        actions = self.actions().tensor
-        rewards = self.rewards().tensor
-        terminals = self.terminals().tensor
+        actions = self.actions().get()
+        rewards = self.rewards().get()
+        terminals = self.terminals().get()
 
-        post_q = self.post_trans_net.output.tensor
+        post_q = self.post_trans_net.output.get()
         post_q = T.max(post_q, axis=1)
         post_q = post_q * self.discount_rate
         post_q = post_q * (1.0 - terminals)
@@ -57,7 +60,7 @@ class DeepQLearning(BaseQLI):
         n_actions = self.pre_trans_net.output.get_shape()[1]
         mask_on = T.extra_ops.to_one_hot(actions, n_actions)
         mask_off = 1.0 - mask_on
-        current = self.pre_trans_net.output.tensor
+        current = self.pre_trans_net.output.get()
         current = current * mask_off
 
         future = T.reshape(future, (-1, 1))
@@ -75,5 +78,5 @@ class DeepQLearning(BaseQLI):
         src_vars = self.pre_trans_net.get_parameter_variables().values()
         tgt_vars = self.post_trans_net.get_parameter_variables().values()
         for src, tgt in zip(src_vars, tgt_vars):
-            sync_op[tgt.tensor] = src.tensor
+            sync_op[tgt.get()] = src.get()
         self.sync_op = Operation(op=sync_op)

@@ -24,8 +24,8 @@ class SSE2(BaseSSE):
                          '`min_delta` and `max_delta` must be provided')
 
     def build(self, target, prediction):
-        target = theano.gradient.disconnected_grad(target.tensor)
-        delta = target - prediction.tensor
+        target = theano.gradient.disconnected_grad(target.get())
+        delta = target - prediction.get()
         if self.args['min_delta']:
             delta = delta.clip(self.args['min_delta'], self.args['max_delta'])
         delta = T.square(delta) / 2

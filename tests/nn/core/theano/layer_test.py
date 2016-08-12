@@ -28,7 +28,7 @@ class TestConv2D(unittest.TestCase):
         input = Input(shape=input_shape)()
         output = conv2d(input)
 
-        f = theano.function([input.tensor], output.tensor)
+        f = theano.function([input.get()], output.get())
         input_value = np.zeros(input_shape)
         output_value = f(input_value)
 
@@ -224,7 +224,7 @@ class TestFlatten(unittest.TestCase):
         input = Input(shape=input_shape)()
         output = flatten(input)
 
-        f = theano.function([input.tensor], output.tensor)
+        f = theano.function([input.get()], output.get())
         input_value = np.zeros(input_shape)
         output_value = f(input_value)
 

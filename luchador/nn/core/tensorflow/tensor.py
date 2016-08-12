@@ -4,14 +4,19 @@ import tensorflow as tf
 
 from luchador import get_nn_dtype
 from ..base.tensor import (
-    Tensor as BaseTensor,
+    Wrapper as BaseWrapper,
     Operation,
 )
 
 __all__ = ['Tensor', 'Input', 'Operation']
 
 
-class Tensor(BaseTensor):
+class Variable(BaseWrapper):
+    def __init__(self, variable, shape, dtype):
+        super(Variable, self).__init__(variable, shape, variable.name, dtype)
+
+
+class Tensor(BaseWrapper):
     def __init__(self, tensor, shape=None, name=None, dtype=None):
         if tensor is not None:
             name = name or tensor.name
@@ -31,7 +36,7 @@ class Input(Tensor):
         return self.build()
 
     def build(self):
-        if self.tensor is None:
-            self.tensor = tf.placeholder(
-                dtype=self.dtype, shape=self.shape, name=self.name)
+        if self.get() is None:
+            self.set(tf.placeholder(
+                dtype=self.dtype, shape=self.shape, name=self.name))
         return self

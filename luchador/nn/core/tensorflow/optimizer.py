@@ -34,9 +34,9 @@ class TFOptimizer(BaseOptimizer):
         return self.apply_gradients(grads_and_vars, **kws2)
 
     def compute_gradients(self, loss, wrt, **kwargs):
-        loss = loss.tensor
+        loss = loss.get()
         # TODO: Add support for single tensor
-        var_list = [v.tensor for v in wrt] if wrt else None
+        var_list = [v.get() for v in wrt] if wrt else None
         # TODO: Wrap this with Tensor class
         grads_and_vars = self.optimizer.compute_gradients(
             loss, var_list=var_list, **kwargs)

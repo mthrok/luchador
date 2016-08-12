@@ -6,6 +6,7 @@ import theano
 from theano import config
 
 from .initializer import Normal
+from .tensor import Variable
 
 _LG = logging.getLogger(__name__)
 
@@ -123,7 +124,10 @@ def get_variable(name, shape=None, dtype=config.floatX,
         if not initializer:
             initializer = Normal(dtype=dtype)
 
-        _VARIABLES[name] = theano.shared(
-            value=initializer.sample(shape),
-            name=name, allow_downcast=True, **kwargs)
+        _VARIABLES[name] = Variable(
+            theano.shared(
+                value=initializer.sample(shape),
+                name=name, allow_downcast=True, **kwargs)
+        )
+
     return _VARIABLES[name]

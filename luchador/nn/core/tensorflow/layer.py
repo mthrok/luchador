@@ -16,6 +16,7 @@ from ..base import (
     TrueDiv as BaseTrueDiv,
 )
 from .tensor import Tensor
+from .scope import get_variable
 
 _LG = logging.getLogger(__name__)
 
@@ -32,12 +33,10 @@ class Dense(BaseDense):
         w0 = given['weight'] if given else layers.xavier_initializer()
 
         dtype = get_nn_dtype()
-        b = tf.get_variable(
-            name='bias', shape=b_shape, initializer=b0, dtype=dtype)
-        W = tf.get_variable(
+        self.parameter_variables['weight'] = get_variable(
             name='weight', shape=w_shape, initializer=w0, dtype=dtype)
-        self.parameter_variables['weight'] = Tensor(tensor=W)
-        self.parameter_variables['bias'] = Tensor(tensor=b)
+        self.parameter_variables['bias'] = get_variable(
+            name='bias', shape=b_shape, initializer=b0, dtype=dtype)
 
     def build(self, input):
         _LG.debug('    Building {}: {}'.format(type(self).__name__, self.args))
@@ -45,8 +44,8 @@ class Dense(BaseDense):
             self._instantiate_parameter_variables(input.get_shape()[1])
 
         params = self.parameter_variables
-        prod = tf.matmul(input.tensor, params['weight'].tensor)
-        output = tf.add(prod, params['bias'].tensor, name='output')
+        prod = tf.matmul(input.get(), params['weight'].get())
+        output = tf.add(prod, params['bias'].get(), name='output')
         return Tensor(tensor=output)
 
 
@@ -134,12 +133,10 @@ class Conv2D(BaseConv2D):
         w0 = given['weight'] if given else layers.xavier_initializer_conv2d()
 
         dtype = get_nn_dtype()
-        b = tf.get_variable(
-            name='bias', shape=b_shape, initializer=b0, dtype=dtype)
-        w = tf.get_variable(
+        self.parameter_variables['weight'] = get_variable(
             name='weight', shape=w_shape, initializer=w0, dtype=dtype)
-        self.parameter_variables['weight'] = Tensor(tensor=w)
-        self.parameter_variables['bias'] = Tensor(tensor=b)
+        self.parameter_variables['bias'] = get_variable(
+            name='bias', shape=b_shape, initializer=b0, dtype=dtype)
 
     def build(self, input):
         _LG.debug('    Building {}: {}'.format(type(self).__name__, self.args))
@@ -152,10 +149,10 @@ class Conv2D(BaseConv2D):
         cudnn = self.args.get('use_cudnn_on_gpu', True)
         fmt = self._get_format()
         conv = tf.nn.conv2d(
-            input.tensor, params['weight'].tensor, strides=strides,
+            input.get(), params['weight'].get(), strides=strides,
             padding=self.args['padding'], use_cudnn_on_gpu=cudnn,
             data_format=fmt, name=name)
-        output = tf.nn.bias_add(conv, params['bias'].tensor,
+        output = tf.nn.bias_add(conv, params['bias'].get(),
                                 data_format=fmt, name='output')
         return Tensor(output)
 
@@ -163,7 +160,7 @@ class Conv2D(BaseConv2D):
 class ReLU(BaseReLU):
     def build(self, input):
         _LG.debug('    Building {}: {}'.format(type(self).__name__, self.args))
-        output = tf.nn.relu(input.tensor, 'ouptut')
+        output = tf.nn.relu(input.get(), 'ouptut')
         return Tensor(output)
 
 
@@ -173,7 +170,7 @@ class Flatten(BaseFlatten):
         in_shape = input.get_shape()
         n_nodes = reduce(lambda prod, dim: prod*dim, in_shape[1:], 1)
         out_shape = (-1, n_nodes)
-        output = tf.reshape(input.tensor, out_shape, 'output')
+        output = tf.reshape(input.get(), out_shape, 'output')
         return Tensor(output)
 
 
@@ -187,5 +184,5 @@ class TrueDiv(BaseTrueDiv):
         _LG.debug('    Building {}: {}'.format(type(self).__name__, self.args))
         if self.denom is None:
             self._instantiate_denominator()
-        output = tf.truediv(input.tensor, self.denom, 'ouptut')
+        output = tf.truediv(input.get(), self.denom, 'ouptut')
         return Tensor(output)

@@ -36,10 +36,10 @@ class Dense(BaseDense):
         b_init = given['bias'] if given else Constant(0.1)
         w_init = given['weight'] if given else Xavier()
 
-        b = scp.get_variable(name='bias', shape=b_shape, initializer=b_init)
-        W = scp.get_variable(name='weight', shape=w_shape, initializer=w_init)
-        self.parameter_variables['weight'] = Tensor(tensor=W, shape=w_shape)
-        self.parameter_variables['bias'] = Tensor(tensor=b, shape=b_shape)
+        self.parameter_variables['weight'] = scp.get_variable(
+            name='weight', shape=w_shape, initializer=w_init)
+        self.parameter_variables['bias'] = scp.get_variable(
+            name='bias', shape=b_shape, initializer=b_init)
 
     def build(self, input):
         """
@@ -55,8 +55,8 @@ class Dense(BaseDense):
         if not self.parameter_variables:
             self._instantiate_parameter_variables(input.shape[1])
 
-        prod = T.dot(input.tensor, self.parameter_variables['weight'].tensor)
-        output_tensor = prod + self.parameter_variables['bias'].tensor
+        prod = T.dot(input.get(), self.parameter_variables['weight'].get())
+        output_tensor = prod + self.parameter_variables['bias'].get()
         output_shape = (input.shape[0], self.args['n_nodes'])
         return Tensor(output_tensor, shape=output_shape, name='output')
 
@@ -110,10 +110,10 @@ class Conv2D(BaseConv2D):
         b_init = given['bias'] if given else Constant(0.1)
         w_init = given['weight'] if given else XavierConv2D()
 
-        b = scp.get_variable(name='bias', shape=b_shape, initializer=b_init)
-        W = scp.get_variable(name='weight', shape=w_shape, initializer=w_init)
-        self.parameter_variables['weight'] = Tensor(tensor=W, shape=w_shape)
-        self.parameter_variables['bias'] = Tensor(tensor=b, shape=b_shape)
+        self.parameter_variables['weight'] = scp.get_variable(
+            name='weight', shape=w_shape, initializer=w_init)
+        self.parameter_variables['bias'] = scp.get_variable(
+            name='bias', shape=b_shape, initializer=b_init)
 
     def _get_subsample(self):
         if isinstance(self.args['strides'], int):
@@ -177,17 +177,17 @@ class Conv2D(BaseConv2D):
         if not self.parameter_variables:
             self._instantiate_parameter_variables(input.shape[1])
 
-        filters = self.parameter_variables['weight'].tensor
+        filters = self.parameter_variables['weight'].get()
         filter_shape = filters.get_value().shape
         subsample = self._get_subsample()
         border_mode = self._get_border_mode()
 
         conv = T.nnet.conv2d(
-            input.tensor, filters=filters,
+            input.get(), filters=filters,
             input_shape=input.shape, filter_shape=filter_shape,
             border_mode=border_mode, subsample=subsample)
 
-        bias = self.parameter_variables['bias'].tensor
+        bias = self.parameter_variables['bias'].get()
         bias = bias.dimshuffle(('x', 0, 'x', 'x'))
         output_tensor = bias + conv
         output_shape = self._get_output_shape(input.shape, filter_shape)
@@ -203,7 +203,7 @@ class ReLU(BaseReLU):
           Output: Output object
         """
         _LG.debug('    Building {}: {}'.format(type(self).__name__, self.args))
-        output_tensor = T.nnet.relu(input.tensor)
+        output_tensor = T.nnet.relu(input.get())
         _LG.debug('    input_shape: {}'.format(input.shape))
         return Tensor(output_tensor, input.shape, name='output')
 
@@ -215,7 +215,7 @@ class Flatten(BaseFlatten):
         n_nodes = int(reduce(lambda r, d: r*d, input.shape[1:], 1))
         _LG.debug('    #Nodes     : {}'.format(n_nodes))
         output_shape = (input.shape[0] or -1, n_nodes)
-        output_tensor = T.reshape(input.tensor, output_shape)
+        output_tensor = T.reshape(input.get(), output_shape)
         _LG.debug('    output_shape: {}'.format(output_shape))
         return Tensor(output_tensor, output_shape, name='output')
 
@@ -230,5 +230,5 @@ class TrueDiv(BaseTrueDiv):
         _LG.debug('    Building {}: {}'.format(type(self).__name__, self.args))
         if self.denom is None:
             self._instantiate_denominator()
-        output_tensor = input.tensor / self.args['denom']
+        output_tensor = input.get() / self.args['denom']
         return Tensor(output_tensor, input.shape, name='output')

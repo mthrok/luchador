@@ -403,7 +403,7 @@ class TestGetVariable(unittest.TestCase):
         _set_flag(True)
         var2 = get_variable(name)
         self.assertIs(
-            var1, var2,
+            var1.get(), var2.get(),
             'Reused variable should be identical to the original variable')
 
     def test_get_variable_raises_when_reuseing_non_existent_variable(self):

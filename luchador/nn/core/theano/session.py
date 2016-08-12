@@ -38,10 +38,10 @@ def _parse_inputs(inputs):
 
     if isinstance(inputs, dict):
         for key, value in inputs.items():
-            inputs_.append(key.tensor)
+            inputs_.append(key.get())
     elif isinstance(inputs, list):
         for key, value in inputs:
-            inputs_.append(key.tensor)
+            inputs_.append(key.get())
     else:
         raise ValueError(
             '`inputs` must be either dict or list of Tensor-value pair. '
@@ -54,7 +54,7 @@ def _parse_outputs(outputs):
         return []
     if not _is_iteratable(outputs):
         outputs = [outputs]
-    return [o.tensor for o in outputs]
+    return [o.get() for o in outputs]
 
 
 def _parse_updates(updates):
