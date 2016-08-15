@@ -13,4 +13,3 @@ from .optimizer import *  # noqa: F401, F403
 from .q_learning import *  # noqa: F401, F403
 
 from .io import Saver  # noqa: F401
-from .utils import get_optimizer  # noqa: F401
