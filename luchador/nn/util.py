@@ -12,3 +12,4 @@ def get_optimizer(name):
                 issubclass(obj[1], luchador.nn.base.Optimizer)
         ):
             return obj[1]
+    raise ValueError('Unknown Optimizer: {}'.format(name))
