@@ -41,6 +41,14 @@ def _reset():
     _VARIABLES = {}
 
 
+class NameScope(object):
+    def __enter__(self):
+        pass
+
+    def __exit__(self, type, value, traceback):
+        pass
+
+
 class VariableScope(object):
     def __init__(self, reuse, name=''):
         self.name = name
@@ -85,7 +93,7 @@ def variable_scope(name_or_scope, reuse=None):
 
 
 def name_scope(name):
-    pass
+    return NameScope()
 
 
 def get_variable_scope():
