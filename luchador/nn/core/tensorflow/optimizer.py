@@ -5,7 +5,7 @@ import tensorflow as tf  # nopep8
 from ..base import Optimizer as BaseOptimizer
 from .wrapper import Operation
 
-__all__ = ['RMSProp', 'GravesRMSProp']
+__all__ = ['RMSProp', 'GravesRMSProp', 'NeonRMSProp']
 
 
 class TFOptimizer(BaseOptimizer):
@@ -61,7 +61,7 @@ class RMSProp(TFOptimizer):
 class NeonRMSProp(TFOptimizer):
     def __init__(self, learning_rate, decay=0.95, epsilon=1e-6,
                  name='NeonRMSProp', **kwards):
-        self.optimizer = tf.train.GradientDexcentOptimizer(
+        self.optimizer = tf.train.GradientDescentOptimizer(
             learning_rate, name=name)
         self.decay = decay
         self.epsilon = epsilon
