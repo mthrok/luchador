@@ -11,5 +11,3 @@ from .cost import *  # noqa: F401, F403
 from .optimizer import *  # noqa: F401, F403
 
 from .q_learning import *  # noqa: F401, F403
-
-from .io import Saver  # noqa: F401
