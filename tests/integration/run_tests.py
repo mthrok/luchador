@@ -15,7 +15,7 @@ from luchador.nn import (
     GravesRMSProp,
     SummaryWriter,
 )
-from luchador.nn.models import model_factory
+from luchador.nn.util import get_model
 
 conv_format = luchador.get_nn_conv_format()
 
@@ -36,8 +36,8 @@ state_shape = (
 
 def model_maker():
     dqn = (
-        model_factory('image_normalizer', denom=255) +
-        model_factory('vanilla_dqn', n_actions=n_actions)
+        get_model('image_normalizer', denom=255) +
+        get_model('vanilla_dqn', n_actions=n_actions)
     )
     dqn(Input(shape=state_shape))
     return dqn
