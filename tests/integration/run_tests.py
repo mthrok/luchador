@@ -14,10 +14,12 @@ from luchador.nn import (
     SSE2,
     GravesRMSProp,
     SummaryWriter,
+    Saver,
 )
 from luchador.nn.util import get_model
 
 conv_format = luchador.get_nn_conv_format()
+filepath = './tmp/param.dat'
 
 max_delta, min_delta = 1.0, -1.0
 learning_rate = 0.00025
@@ -67,6 +69,9 @@ writer.add_graph(session.graph)
 writer.register('pre_trans_network_params', 'histogram', params.keys())
 writer.register('pre_trans_network_outputs', 'histogram', outputs.keys())
 
+print 'Initializing Saver'
+saver = Saver(filepath)
+
 print 'Running computation'
 data = np.load(os.path.join(os.path.dirname(__file__), batchfile))
 pre_states = data['prestates']
@@ -87,7 +92,7 @@ for i in range(100):
         session.run(name='sync', updates=ql.sync_op)
         sync_time.append(time.time() - t0)
 
-        print 'Summarizing ', i
+        print 'Summarizing', i
         t0 = time.time()
         params_vals = session.run(name='params', outputs=params.values())
         output_vals = session.run(
@@ -97,6 +102,10 @@ for i in range(100):
         writer.summarize('pre_trans_network_params', i, params_vals)
         writer.summarize('pre_trans_network_outputs', i, output_vals)
         summary_time.append(time.time() - t0)
+
+        print 'Saving', i
+        data = {key: value for key, value in zip(params.keys(), params_vals)}
+        saver.save(data)
 
     t0 = time.time()
     e, target_qs, future_rewards, post_qs, pre_qs = session.run(
@@ -116,29 +125,10 @@ for i in range(100):
             ql.terminals: terminals,
         },
         updates=minimize_op)
-    """
-    manual_error = 0.0
-    for tgt_q, ftr_r, post_q, pre_q, action, reward in zip(
-            target_qs, future_rewards, post_qs, pre_qs, actions, rewards):
-        '''
-        print 'Target Q', tgt_q
-        print 'Pre Q   ', pre_q
-        print 'Future R', ftr_r
-        print 'Action  ', action
-        print 'Reward  ', reward
-        print 'Post Q  ', post_q
-        print ''
-        '''
-        delta = tgt_q - pre_q
-        delta = np.minimum(delta, max_delta)
-        delta = np.maximum(delta, min_delta)
-        manual_error += np.sum((delta ** 2) / 2)
-    print 'Error:', e
-    print 'Error:', manual_error / len(actions)
-    print ''
-    """
     run_time.append(time.time() - t0)
 
 print 'Sync   : {} ({})'.format(np.mean(sync_time), sync_time[0])
 print 'Summary: {} ({})'.format(np.mean(summary_time), summary_time[0])
 print 'Run    : {} ({})'.format(np.mean(run_time), run_time[0])
+
+os.remove(filepath)
