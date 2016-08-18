@@ -73,6 +73,23 @@ class Model(object):
         return new_model
 
     ###########################################################################
+    # Model definition equality
+    def __eq__(self, other):
+        if not isinstance(other, self.__class__):
+            return False
+        if not len(self.layer_configs) == len(other.layer_configs):
+            return False
+        for cfg1, cfg2 in zip(self.layer_configs, other.layer_configs):
+            if not cfg1.scope == cfg2.scope:
+                return False
+            if not cfg1.layer == cfg2.layer:
+                return False
+        return True
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    ###########################################################################
     # Functions for building actual computation graphs
     def __call__(self, input):
         return self.build(input)

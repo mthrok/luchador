@@ -32,11 +32,27 @@ class CopyMixin(object):
 class BaseLayer(CopyMixin, object):
     """Defines common interface (copy and build methods) for Layer classes"""
     def __init__(self, **args):
-        """Validate and store arguments passed to subclass __init__ method"""
+        """Validate and store arguments passed to subclass __init__ method
+
+        As these **args are used to create a copy of instance, arguments which
+        cannot be passed to constructor should not be passed. In other way, the
+        signature of this constructor must match to the signature of the
+        constractor of subclass object being created.
+        """
         super(BaseLayer, self).__init__()
         self._store_args(args)
         self.parameter_variables = OrderedDict()
 
+    ###########################################################################
+    # Layer definition equality
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.args == other.args
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    ###########################################################################
+    # Functions for building computation graph
     def __call__(self, input_tensor):
         """Build layer computation graph on top of the given tensor"""
         return self.build(input_tensor)
