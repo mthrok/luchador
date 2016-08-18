@@ -1,5 +1,7 @@
 from __future__ import absolute_import
 
+"""Implements Theano backend"""
+
 from .session import *  # noqa: F401, F403
 from . import scope  # noqa: F401
 from .initializer import *  # noqa: F401, F403

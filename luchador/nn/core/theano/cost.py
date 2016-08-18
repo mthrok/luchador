@@ -14,6 +14,9 @@ __all__ = ['SSE2']
 
 
 class SSE2(BaseSSE):
+    """Compute Sum-Squared Error / 2
+    TODO: Add math expression
+    """
     def _validate_args(self, args):
         if (
                 ('min_delta' in args and 'max_delta' in args) or

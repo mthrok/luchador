@@ -104,9 +104,9 @@ class Session(BaseSession):
         pass
 
     def close(self):
-        warnings.warn('`close` is not yet implemented in Theano.')
+        warnings.warn('`close` does nothing in Theano backend.')
         pass
 
     def as_default(self):
-        warnings.warn('`as_default` is not yet implemented in Theano.')
+        warnings.warn('`as_default` does nothing in Theano backend.')
         pass

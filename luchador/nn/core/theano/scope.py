@@ -78,7 +78,6 @@ class VariableScope(object):
     def __exit__(self, type, value, traceback):
         self._close()
         _LG.debug('Current Scope: {}'.format(_CURRENT_VARIABLE_SCOPE))
-        return False
 
 
 def variable_scope(name_or_scope, reuse=None):

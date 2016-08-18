@@ -20,12 +20,15 @@ class TensorWrapper(object):
         return self.shape
 
     def get(self):
+        """Get the underlying tensor object"""
         return self._tensor
 
     def set(self, obj):
+        """Set the underlying tensor object"""
         self._tensor = obj
 
 
 class OperationWrapper(object):
+    """Wrapps theano updates or tensorflow operation"""
     def __init__(self, op):
         self.op = op

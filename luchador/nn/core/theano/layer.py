@@ -44,8 +44,10 @@ class Dense(BaseDense):
     def build(self, input):
         """
         Args:
-          input (ShapedTensor): Placeholder which holds the actual tensor
-          Output: Output object
+          input (TensorWrapper): 2D tensor
+
+        Returns:
+          TensorWrapper: 2D tensor wrapper
         """
         _LG.debug('    Building {}: {}'.format(type(self).__name__, self.args))
         if not len(input.shape) == 2:
@@ -161,11 +163,12 @@ class Conv2D(BaseConv2D):
         return output_shape
 
     def build(self, input):
-        """
+        """Build 2D conolution on top of the input tensor
         Args:
-          input (ShapedTensor): Placeholder which holds the actual tensor.
-            Expected shape is (batch, stack, row, col).
-          Output: Output object
+          input (TensorWrapper): 4D Tensor with shape (batch, stack, row, col).
+
+        Returns:
+          TensorWrapper: 4D Tensor with shape (batch, stack, row, col)
         """
         _LG.debug('    Building {}: {}'.format(type(self).__name__, self.args))
         _LG.debug('    input_shape: {}'.format(input.shape))

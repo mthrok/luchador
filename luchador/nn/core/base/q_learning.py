@@ -40,6 +40,15 @@ class DeepQLearning(object):
 
         self.sync_op = None
 
+    def __call__(self, q_network_maker):
+        """Build computation graph (error and sync ops) for Q learning
+
+        Args:
+          q_network_maker(function): Model factory function which are called
+            without any arguments and return Model object
+        """
+        self.build(q_network_maker)
+
     def build(self, q_network):
         """Build computation graph (error and sync ops) for Q learning"""
         raise NotImplementedError(
