@@ -22,6 +22,7 @@ setup(
     test_suite='tests',
     install_requires=[
         'gym',
+        'h5py',
         'Pillow',
         'pyyaml',
     ],
