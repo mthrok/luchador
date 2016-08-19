@@ -7,24 +7,22 @@ import luchador.nn.models
 
 
 def get_initializer(name):
-    # TODO: Convert this to return instance
-    for name_, class_ in inspect.getmembers(luchador.nn, inspect.isclass):
+    for name_, Class in inspect.getmembers(luchador.nn, inspect.isclass):
         if (
                 name == name_ and
-                issubclass(class_, luchador.nn.base.Initializer)
+                issubclass(Class, luchador.nn.base.Initializer)
         ):
-            return class_
-    raise ValueError('Unknown Optimizer: {}'.format(name))
+            return Class
+    raise ValueError('Unknown Initializer: {}'.format(name))
 
 
 def get_optimizer(name):
-    # TODO: Convert this to return instance
-    for name_, class_ in inspect.getmembers(luchador.nn, inspect.isclass):
+    for name_, Class in inspect.getmembers(luchador.nn, inspect.isclass):
         if (
                 name == name_ and
-                issubclass(class_, luchador.nn.base.Optimizer)
+                issubclass(Class, luchador.nn.base.Optimizer)
         ):
-            return class_
+            return Class
     raise ValueError('Unknown Optimizer: {}'.format(name))
 
 

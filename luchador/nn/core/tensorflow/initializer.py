@@ -14,6 +14,8 @@ from tensorflow.contrib.layers import (
     xavier_initializer_conv2d,
 )
 
+__all__ = ['Constant', 'Normal', 'Uniform', 'Xavier', 'XavierConv2D']
+
 
 class TFInitializer(Initializer):
     def get(self):

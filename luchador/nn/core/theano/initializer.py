@@ -9,6 +9,8 @@ from theano import config
 from .random import get_rng
 from ..base import Initializer
 
+__all__ = ['Constant', 'Normal', 'Uniform', 'Xavier', 'XavierConv2D']
+
 
 class Constant(Initializer):
     def __init__(self, value, dtype=None):
