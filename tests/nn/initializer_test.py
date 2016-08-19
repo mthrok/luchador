@@ -68,17 +68,10 @@ ARGS2 = {
 
 
 def make_initializers(args):
-    return [Layer(**args[Layer.__name__]) for Layer in INITIALIZERS]
+    return [Layer(**args[name]) for name, Layer in INITIALIZERS.items()]
 
 
 class InitializerTest(unittest.TestCase):
-    def setUp(self):
-        self.assertEqual(
-            len(INITIALIZERS), N_INITIALIZERS,
-            'Number of initializers are changed. (New initializer is added?) '
-            'Fix unittest to cover new initializers'
-        )
-
     def test_initializer_equality(self):
         """Initializers with same arguments must be equal"""
         initializers1 = make_initializers(ARGS1)
@@ -119,5 +112,5 @@ class InitializerTest(unittest.TestCase):
             found = initializer1
             self.assertEqual(
                 expected, found,
-                '{} initializer recreated from export is not identical to '
+                'Initializer recreated from export is not identical to '
                 'original. Expected: {}, Found: {}'.format(expected, found))

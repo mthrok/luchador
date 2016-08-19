@@ -20,3 +20,11 @@ def get_initializers():
         in inspect.getmembers(luchador.nn, inspect.isclass)
         if issubclass(Class, luchador.nn.base.Initializer)
     }
+
+
+def get_optimizers():
+    return {
+        name: Class for name, Class
+        in inspect.getmembers(luchador.nn, inspect.isclass)
+        if issubclass(Class, luchador.nn.base.Optimizer)
+    }
