@@ -28,3 +28,11 @@ def get_optimizers():
         in inspect.getmembers(luchador.nn, inspect.isclass)
         if issubclass(Class, luchador.nn.base.Optimizer)
     }
+
+
+def get_layers():
+    return {
+        name: Class for name, Class
+        in inspect.getmembers(luchador.nn, inspect.isclass)
+        if issubclass(Class, luchador.nn.base.Layer)
+    }

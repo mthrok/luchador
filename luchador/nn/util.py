@@ -26,6 +26,16 @@ def get_optimizer(name):
     raise ValueError('Unknown Optimizer: {}'.format(name))
 
 
+def get_layer(name):
+    for name_, Class in inspect.getmembers(luchador.nn, inspect.isclass):
+        if (
+                name == name_ and
+                issubclass(Class, luchador.nn.base.Layer)
+        ):
+            return Class
+    raise ValueError('Unknown Layer: {}'.format(name))
+
+
 def get_model(name, **kwargs):
     for name_, func in inspect.getmembers(luchador.nn.models,
                                           inspect.isfunction):
