@@ -26,7 +26,7 @@ class TheanoOptimizer(BaseOptimizer):
 
 
 class SGD(TheanoOptimizer):
-    def __init__(self, learning_rate, name='SGD'):
+    def __init__(self, learning_rate, name='SGD', **kwargs):
         super(SGD, self).__init__(name=name)
         self.learning_rate = learning_rate
 

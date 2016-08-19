@@ -5,7 +5,7 @@ import tensorflow as tf  # nopep8
 from ..base import Optimizer as BaseOptimizer
 from .wrapper import Operation
 
-__all__ = ['RMSProp', 'GravesRMSProp', 'NeonRMSProp']
+__all__ = ['SGD', 'RMSProp', 'GravesRMSProp', 'NeonRMSProp']
 
 
 class TFOptimizer(BaseOptimizer):
@@ -46,6 +46,13 @@ class TFOptimizer(BaseOptimizer):
         # TODO: Add parser once compute_gradients wraps `grads_and_vars`
         minimize_op = self.optimizer.apply_gradients(grads_and_vars, **kwargs)
         return Operation(minimize_op)
+
+
+class SGD(TFOptimizer):
+    def __init__(self, learning_rate, name='SGD', **kwargs):
+        super(SGD, self).__init__(name)
+        self.optimizer = tf.train.GradientDescentOptimizer(
+            learning_rate, name=name, **kwargs)
 
 
 class RMSProp(TFOptimizer):
