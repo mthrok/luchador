@@ -5,7 +5,6 @@ import logging
 import warnings
 
 import tensorflow as tf
-from tensorflow.contrib import layers
 
 from luchador import get_nn_conv_format, get_nn_dtype
 from ..base import (
@@ -17,6 +16,11 @@ from ..base import (
 )
 from .wrapper import Tensor
 from .scope import get_variable
+from .initializer import (
+    Constant,
+    Xavier,
+    XavierConv2D,
+)
 
 _LG = logging.getLogger(__name__)
 
@@ -29,14 +33,14 @@ class Dense(BaseDense):
         w_shape = (n_inputs, self.args['n_nodes'])
 
         given = self.args.get('initializers')
-        b0 = given['bias'] if given else tf.constant_initializer(0.1)
-        w0 = given['weight'] if given else layers.xavier_initializer()
+        b0 = given['bias'] if given else Constant(0.1)
+        w0 = given['weight'] if given else Xavier()
 
         dtype = get_nn_dtype()
         self.parameter_variables['weight'] = get_variable(
-            name='weight', shape=w_shape, initializer=w0, dtype=dtype)
+            name='weight', shape=w_shape, initializer=w0.get(), dtype=dtype)
         self.parameter_variables['bias'] = get_variable(
-            name='bias', shape=b_shape, initializer=b0, dtype=dtype)
+            name='bias', shape=b_shape, initializer=b0.get(), dtype=dtype)
 
     def build(self, input):
         _LG.debug('    Building {}: {}'.format(type(self).__name__, self.args))
@@ -129,14 +133,14 @@ class Conv2D(BaseConv2D):
         self._check_filter_shape(input_shape, w_shape)
 
         given = self.args.get('initializers')
-        b0 = given['bias'] if given else tf.constant_initializer(0.1)
-        w0 = given['weight'] if given else layers.xavier_initializer_conv2d()
+        b0 = given['bias'] if given else Constant(0.1)
+        w0 = given['weight'] if given else XavierConv2D()
 
         dtype = get_nn_dtype()
         self.parameter_variables['weight'] = get_variable(
-            name='weight', shape=w_shape, initializer=w0, dtype=dtype)
+            name='weight', shape=w_shape, initializer=w0.get(), dtype=dtype)
         self.parameter_variables['bias'] = get_variable(
-            name='bias', shape=b_shape, initializer=b0, dtype=dtype)
+            name='bias', shape=b_shape, initializer=b0.get(), dtype=dtype)
 
     def build(self, input):
         _LG.debug('    Building {}: {}'.format(type(self).__name__, self.args))
