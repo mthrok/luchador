@@ -4,33 +4,15 @@ from __future__ import absolute_import
 import logging
 from collections import OrderedDict
 
+from .common import CopyMixin
+
 _LG = logging.getLogger(__name__)
 
 __all__ = ['Dense', 'Conv2D', 'ReLU', 'Flatten', 'TrueDiv']
 
 
-class CopyMixin(object):
-    """Provide copy method which creates a copy of initialed instance"""
-    def _store_args(self, args):
-        """
-        Args:
-            args (dict): Arguments passed to __init__ of the subclass instance.
-            This will be used to recreate a subclass instance.
-        """
-        self._validate_args(args)
-        self.args = args
-
-    def _validate_args(self, args):
-        """Validate arguments"""
-        pass
-
-    def copy(self):
-        """Create and initialize new instance with the same argument"""
-        return type(self)(**self.args)
-
-
 class BaseLayer(CopyMixin, object):
-    """Defines common interface (copy and build methods) for Layer classes"""
+    """Defines common interface (copy and build) for Layer classes"""
     def __init__(self, **args):
         """Validate and store arguments passed to subclass __init__ method
 
@@ -44,12 +26,18 @@ class BaseLayer(CopyMixin, object):
         self.parameter_variables = OrderedDict()
 
     ###########################################################################
-    # Layer definition equality
-    def __eq__(self, other):
-        return isinstance(other, self.__class__) and self.args == other.args
-
-    def __ne__(self, other):
-        return not self.__eq__(other)
+    def export(self):
+        args = {}
+        for key, value in self.args.items():
+            # Initializer is given as object so we do not serialize it.
+            # TODO: Make initializers serializable.
+            if key == 'initializer':
+                pass
+            args[key] = value
+        return {
+            'name': self.__class__.__name__,
+            'args': args
+        }
 
     ###########################################################################
     # Functions for building computation graph
