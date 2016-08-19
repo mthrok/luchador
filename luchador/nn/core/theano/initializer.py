@@ -7,58 +7,52 @@ from numpy.random import RandomState
 from theano import config
 
 from .random import get_rng
-
-
-class Initializer(object):
-    def __call__(self, shape):
-        self.sample(shape)
-
-    def sample(self, shape):
-        raise NotImplementedError('`sample` method is not implemented')
+from ..base import Initializer
 
 
 class Constant(Initializer):
-    def __init__(self, value, dtype=config.floatX):
-        self.value = value
-        self.dtype = dtype
+    def __init__(self, value, dtype=None):
+        super(Constant, self).__init__(value=value, dtype=dtype)
 
     def sample(self, shape):
-        return self.value * np.ones(shape, dtype=self.dtype)
+        dtype = self.args['dtype'] or config.floatX
+        return self.args['value'] * np.ones(shape, dtype=dtype)
 
 
 class Uniform(Initializer):
-    def __init__(self, minval=0.0, maxval=1.0, seed=None, dtype=config.floatX):
-        self.low = minval
-        self.high = maxval
-        self.dtype = dtype
+    def __init__(self, minval=0.0, maxval=1.0, seed=None, dtype=None):
+        super(Uniform, self).__init__(
+            minval=minval, maxval=maxval, seed=seed, dtype=dtype)
         self._rng = RandomState(seed) if seed else get_rng()
 
     def sample(self, shape):
-        values = self._rng.uniform(low=self.low, high=self.high, size=shape)
-        return values.astype(self.dtype)
+        low, high = self.args['minval'], self.args['maxval']
+        dtype = self.args['dtype'] or config.floatX
+        values = self._rng.uniform(low=low, high=high, size=shape)
+        return values.astype(dtype)
 
 
 class Normal(Initializer):
-    def __init__(self, mean=0.0, stddev=1.0, seed=None, dtype=config.floatX):
-        self.loc = mean
-        self.scale = stddev
-        self.dtype = dtype
+    def __init__(self, mean=0.0, stddev=1.0, seed=None, dtype=None):
+        super(Normal, self).__init__(
+            mean=mean, stddev=stddev, seed=seed, dtype=dtype)
         self._rng = RandomState(seed) if seed else get_rng()
 
     def sample(self, shape):
-        values = self._rng.normal(loc=self.loc, scale=self.scale, size=shape)
-        return values.astype(self.dtype)
+        loc, scale = self.args['mean'], self.args['stddev']
+        dtype = self.args['dtype'] or config.floatX
+        values = self._rng.normal(loc=loc, scale=scale, size=shape)
+        return values.astype(dtype)
 
 
 class Xavier(Initializer):
     """Adoptation of xavier_initializer from tensorflow"""
-    def __init__(self, uniform=True, seed=None, dtype=config.floatX):
-        self.uniform = uniform
-        self.dtype = dtype
+    def __init__(self, uniform=True, seed=None, dtype=None):
+        super(Xavier, self).__init__(uniform=uniform, seed=seed, dtype=dtype)
         self._rng = RandomState(seed) if seed else get_rng()
 
     def _compute_param(self, fan_in, fan_out):
-        if self.uniform:
+        if self.args['uniform']:
             x = np.sqrt(6. / (fan_in + fan_out))
             return {'low': -x, 'high': x}
         else:
@@ -66,13 +60,14 @@ class Xavier(Initializer):
             return {'loc': 0., 'scale': scale}
 
     def _sample(self, shape, param):
-        if self.uniform:
+        if self.args['uniform']:
             values = self._rng.uniform(
                 low=param['low'], high=param['high'], size=shape)
         else:
             values = self._rng.normal(
                 loc=param['loc'], scale=param['scale'], size=shape)
-        return values.astype(self.dtype)
+        dtype = self.args['dtype'] or config.floatX
+        return values.astype(dtype)
 
     def sample(self, shape):
         if not len(shape) == 2:
@@ -88,7 +83,7 @@ class Xavier(Initializer):
 
 class XavierConv2D(Xavier):
     """Adoptation of xavier_initializer_conv2d from tensorflow"""
-    def __init__(self, uniform=True, seed=None, dtype=config.floatX):
+    def __init__(self, uniform=True, seed=None, dtype=None):
         super(XavierConv2D, self).__init__(uniform, seed, dtype)
 
     def sample(self, shape):
