@@ -18,7 +18,7 @@ def get_initializers():
     return {
         name: Class for name, Class
         in inspect.getmembers(luchador.nn, inspect.isclass)
-        if issubclass(Class, luchador.nn.base.Initializer)
+        if issubclass(Class, luchador.nn.core.base.Initializer)
     }
 
 
@@ -26,7 +26,7 @@ def get_optimizers():
     return {
         name: Class for name, Class
         in inspect.getmembers(luchador.nn, inspect.isclass)
-        if issubclass(Class, luchador.nn.base.Optimizer)
+        if issubclass(Class, luchador.nn.core.base.Optimizer)
     }
 
 
@@ -34,5 +34,5 @@ def get_layers():
     return {
         name: Class for name, Class
         in inspect.getmembers(luchador.nn, inspect.isclass)
-        if issubclass(Class, luchador.nn.base.Layer)
+        if issubclass(Class, luchador.nn.core.base.layer.Layer)
     }

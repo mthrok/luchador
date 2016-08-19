@@ -11,7 +11,7 @@ _LG = logging.getLogger(__name__)
 __all__ = ['Dense', 'Conv2D', 'ReLU', 'Flatten', 'TrueDiv']
 
 
-class BaseLayer(CopyMixin, object):
+class Layer(CopyMixin, object):
     """Defines common interface (copy and build) for Layer classes"""
     def __init__(self, **args):
         """Validate and store arguments passed to subclass __init__ method
@@ -21,7 +21,7 @@ class BaseLayer(CopyMixin, object):
         signature of this constructor must match to the signature of the
         constractor of subclass object being created.
         """
-        super(BaseLayer, self).__init__()
+        super(Layer, self).__init__()
         self._store_args(args)
         self.parameter_variables = OrderedDict()
 
@@ -54,7 +54,7 @@ class BaseLayer(CopyMixin, object):
 
 
 ###############################################################################
-class Dense(BaseLayer):
+class Dense(Layer):
     def __init__(self, n_nodes, initializers=None):
         """Initialize dense layer.
         Activation function, such as ReLU is not included.
@@ -66,7 +66,7 @@ class Dense(BaseLayer):
         super(Dense, self).__init__(n_nodes=n_nodes, initializers=initializers)
 
 
-class Conv2D(BaseLayer):
+class Conv2D(Layer):
     """Apply convolution to input"""
     def __init__(self, filter_height, filter_width, n_filters, strides,
                  padding='VALID', initializers=None, **kwargs):
@@ -98,19 +98,19 @@ class Conv2D(BaseLayer):
             initializers=initializers, **kwargs)
 
 
-class ReLU(BaseLayer):
+class ReLU(Layer):
     """Applies Rectified Linear Unit"""
     def __init__(self):
         super(ReLU, self).__init__()
 
 
-class Flatten(BaseLayer):
+class Flatten(Layer):
     """Reshape batch into 2D (batch_size, n_features)"""
     def __init__(self):
         super(Flatten, self).__init__()
 
 
-class TrueDiv(BaseLayer):
+class TrueDiv(Layer):
     """Applies element wise division"""
     def __init__(self, denom, dtype=None):
         super(TrueDiv, self).__init__(denom=denom, dtype=None)

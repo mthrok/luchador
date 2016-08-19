@@ -10,7 +10,7 @@ def get_initializer(name):
     for name_, Class in inspect.getmembers(luchador.nn, inspect.isclass):
         if (
                 name == name_ and
-                issubclass(Class, luchador.nn.base.Initializer)
+                issubclass(Class, luchador.nn.core.base.Initializer)
         ):
             return Class
     raise ValueError('Unknown Initializer: {}'.format(name))
@@ -20,7 +20,7 @@ def get_optimizer(name):
     for name_, Class in inspect.getmembers(luchador.nn, inspect.isclass):
         if (
                 name == name_ and
-                issubclass(Class, luchador.nn.base.Optimizer)
+                issubclass(Class, luchador.nn.core.base.Optimizer)
         ):
             return Class
     raise ValueError('Unknown Optimizer: {}'.format(name))
@@ -30,7 +30,7 @@ def get_layer(name):
     for name_, Class in inspect.getmembers(luchador.nn, inspect.isclass):
         if (
                 name == name_ and
-                issubclass(Class, luchador.nn.base.Layer)
+                issubclass(Class, luchador.nn.core.base.layer.Layer)
         ):
             return Class
     raise ValueError('Unknown Layer: {}'.format(name))
