@@ -70,8 +70,8 @@ class RMSProp(TheanoOptimizer):
                 rms = T.sqrt(new_mean_grad2 + self.epsilon)
                 new_grad = grad / rms
 
-                delta_ = -self.learning_rate * new_grad
-                new_delta = mom * delta + (1.0 - mom) * delta_
+                delta_var = -self.learning_rate * new_grad
+                new_delta = mom * delta + (1.0 - mom) * delta_var
                 new_var = var + new_delta
 
             updates[mean_grad2] = new_mean_grad2
@@ -106,8 +106,8 @@ class NeonRMSProp(TheanoOptimizer):
                 rms = T.sqrt(new_mean_grad2 + self.epsilon) + self.epsilon
                 new_grad = grad / rms
 
-                delta_ = -self.learning_rate * new_grad
-                new_var = var + delta_
+                delta = -self.learning_rate * new_grad
+                new_var = var + delta
 
             updates[mean_grad2] = new_mean_grad2
             updates[var] = new_var
@@ -119,9 +119,6 @@ class GravesRMSProp(TheanoOptimizer):
 
     [1] https://github.com/kuz/DeepMind-Atari-Deep-Q-Learner/blob/4b9f5a79b03ea0cfc512ed1c11f1b00bc875bc57/dqn/NeuralQLearner.lua#L265  # nopep8
     [2] http://arxiv.org/pdf/1308.0850v5.pdf
-
-    When decay1 == 0., this optimizer is same as the one implemented in
-    Tensorflow with corresponding momentum.
     """
     def __init__(self, learning_rate,
                  decay1=0.95, decay2=0.95,
@@ -141,13 +138,13 @@ class GravesRMSProp(TheanoOptimizer):
         for grad, var in grads_and_vars:
             value = var.get_value(borrow=True)
             with variable_scope(self.name):
-                name = '{}_mean'.format(var.name)
+                name = '{}_grad_mean'.format(var.name)
                 mean_grad1_ = get_variable(
                     name=name, shape=value.shape, dtype=value.dtype,
                     initializer=Constant(0), broadcastable=var.broadcastable)
                 mean_grad1 = mean_grad1_.get()
 
-                name = '{}_squared_mean'.format(var.name)
+                name = '{}_grad_squared_mean'.format(var.name)
                 mean_grad2_ = get_variable(
                     name=name, shape=value.shape, dtype=value.dtype,
                     initializer=Constant(0), broadcastable=var.broadcastable)
@@ -159,8 +156,8 @@ class GravesRMSProp(TheanoOptimizer):
                 rms = T.sqrt(new_mean_grad2 - T.square(new_mean_grad1) + eps)
                 new_grad = grad / rms
 
-                delta = -self.learning_rate * new_grad
-                new_var = var + delta
+                delta_var = -self.learning_rate * new_grad
+                new_var = var + delta_var
 
             updates[mean_grad1] = new_mean_grad1
             updates[mean_grad2] = new_mean_grad2
