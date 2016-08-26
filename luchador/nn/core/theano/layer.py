@@ -81,14 +81,28 @@ class Dense(BaseDense):
         return Tensor(output_tensor, shape=output_shape, name='output')
 
 
+def _map_border_mode(padding):
+    if isinstance(padding, str):
+        mode = padding.lower()
+        return 'half' if mode == 'same' else mode
+    return padding
+
+
 class Conv2D(BaseConv2D):
     ###########################################################################
     # Parameter validation
     def _validate_padding(self, padding):
+        msg = ('`padding` must be either str ("valid", "full", "half" or '
+               '"same"), int or tuple of two int')
+
         if isinstance(padding, int):
             return
-        if padding in ['valid', 'full', 'half']:
-            return
+
+        if isinstance(padding, str):
+            if padding.lower() in ['full', 'half', 'same', 'valid']:
+                return
+            raise ValueError(msg)
+
         try:
             p0, p1 = padding[0], padding[1]
             if (isinstance(p0, int) and isinstance(p1, int)):
@@ -96,9 +110,7 @@ class Conv2D(BaseConv2D):
         except Exception:
             pass
 
-        raise ValueError(
-            '`padding` must be either str ("valid", "full" or "half"), '
-            'int or tuple of two int')
+        raise ValueError(msg)
 
     def _validate_strides(self, strides):
         if isinstance(strides, int):
@@ -113,10 +125,6 @@ class Conv2D(BaseConv2D):
         raise ValueError('`strides` must be either int or tuple of two int')
 
     def _validate_args(self, args):
-        if isinstance(args.get('padding'), str):
-            args['padding'] = args['padding'].lower()
-            if args['padding'] == 'same':
-                args['padding'] = 'half'
         self._validate_padding(args['padding'])
         self._validate_strides(args['strides'])
 
@@ -158,7 +166,7 @@ class Conv2D(BaseConv2D):
         return self.args['strides']
 
     def _get_border_mode(self):
-        return self.args['padding']
+        return _map_border_mode(self.args['padding'])
 
     def _get_output_shape(self, input_shape, filter_shape):
         """Compute output shape

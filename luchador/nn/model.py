@@ -14,10 +14,10 @@ class LayerConfig(object):
         self.input = input
         self.output = output
 
-    def export(self):
+    def serialize(self):
         return {
             'scope': self.scope,
-            'layer': self.layer.export(),
+            'layer': self.layer.serialize(),
         }
 
 
@@ -141,6 +141,6 @@ class Model(object):
         return ret
 
     ###########################################################################
-    def export(self):
-        """Export model configuration to selirizable format"""
-        return [cfg.export() for cfg in self.layer_configs]
+    def serialize(self):
+        """Serialize model configuration to selirizable format"""
+        return [cfg.serialize() for cfg in self.layer_configs]

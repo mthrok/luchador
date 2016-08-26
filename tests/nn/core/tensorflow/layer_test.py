@@ -6,6 +6,19 @@ import tensorflow as tf
 
 from luchador.nn.core.tensorflow.wrapper import Input
 from luchador.nn.core.tensorflow.layer import Dense
+from luchador.nn.core.tensorflow.layer import _map_padding
+
+
+class TestConv2D(unittest.TestCase):
+    longMessage = True
+
+    def test_map_padding(self):
+        """padding string is correctly mapped to valid one"""
+        inputs = ('full', 'half', 'same', 'valid')
+        expecteds = ('VALID', 'SAME', 'SAME', 'VALID')
+        for i, expected in zip(inputs, expecteds):
+            found = _map_padding(i)
+            self.assertEqual(expected, found)
 
 
 class TestDense(unittest.TestCase):

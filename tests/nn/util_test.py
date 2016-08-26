@@ -14,24 +14,13 @@ from luchador.nn.util import (
     get_initializer,
 )
 
-INITIALIZERS = get_initializers()
-N_INITIALIZERS = 5
 
 OPTIMIZERS = get_optimizers()
 N_OPTIMIZERS = 4
 
-LAYERS = get_layers()
-N_LAYERS = 5
-
 
 class UtilTest(unittest.TestCase):
-    def test_initializer_test_coverage(self):
-        """All initializers are tested"""
-        self.assertEqual(
-            len(INITIALIZERS), N_INITIALIZERS,
-            'Number of initializers are changed. (New initializer is added?) '
-            'Fix unittest to cover new initializers'
-        )
+    longMessage = True
 
     def test_optimizer_test_coverage(self):
         """All initializers are tested"""
@@ -41,17 +30,9 @@ class UtilTest(unittest.TestCase):
             'Fix unittest to cover new optimizers'
         )
 
-    def test_layer_test_coverage(self):
-        """All initializers are tested"""
-        self.assertEqual(
-            len(LAYERS), N_LAYERS,
-            'Number of layers are changed. (New layer is added?) '
-            'Fix unittest to cover new layers'
-        )
-
     def test_get_initalizer(self):
         """get_initializer returns correct initalizer class"""
-        for name, Initializer in INITIALIZERS.items():
+        for name, Initializer in get_initializers().items():
             expected = Initializer
             found = get_initializer(name)
             self.assertEqual(
@@ -73,7 +54,7 @@ class UtilTest(unittest.TestCase):
 
     def test_get_layer(self):
         """get_layer returns correct layer class"""
-        for name, Layer in LAYERS.items():
+        for name, Layer in get_layers().items():
             expected = Layer
             found = get_layer(name)
             self.assertEqual(

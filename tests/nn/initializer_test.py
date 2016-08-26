@@ -72,45 +72,66 @@ def make_initializers(args):
 
 
 class InitializerTest(unittest.TestCase):
+    longMessage = True
+
+    def test_initializer_test_coverage(self):
+        """All initializers are tested"""
+        self.assertEqual(
+            len(INITIALIZERS), N_INITIALIZERS,
+            'Number of initializers are changed. (New initializer is added?) '
+            'Fix unittest to cover new initializers'
+        )
+
     def test_initializer_equality(self):
         """Initializers with same arguments must be equal"""
         initializers1 = make_initializers(ARGS1)
         initializers2 = make_initializers(ARGS1)
-        for i1, i2 in zip(initializers1, initializers2):
+        for name, i1, i2 in zip(ARGS1, initializers1, initializers2):
             self.assertEqual(
                 i1, i2,
-                '{} initialized with the '
-                'same arguments must be equal.'.format(type(i1)))
+                '{} initializers constructed with the same arguments '
+                'must equal each other.'.format(name))
+            self.assertEqual(
+                i2, i1,
+                '{} initializers constructed with the same arguments '
+                'must equal each other.'.format(name))
 
     def test_initializer_inequality(self):
         """Initializers with different arguments must not be equal"""
         initializers1 = make_initializers(ARGS1)
         initializers2 = make_initializers(ARGS2)
-        for i1, i2 in zip(initializers1, initializers2):
+        for name, i1, i2 in zip(ARGS1, initializers1, initializers2):
             self.assertNotEqual(
                 i1, i2,
-                '{} initialized with the '
-                'differnet arguments must not be equal.'.format(type(i1)))
+                '{} initializers constructed with the differnet arguments '
+                'must not equal each other.'.format(name))
+        for name, i1, i2 in zip(ARGS2, initializers1, initializers2):
+            self.assertNotEqual(
+                i2, i1,
+                '{} initializers constructed with the differnet arguments '
+                'must not equal each other.'.format(name))
 
-    def test_initializer_export(self):
-        """`export` method should return constructor arguments """
+    def test_initializer_serialize(self):
+        """`serialize` method should return constructor arguments """
         initializers = make_initializers(ARGS1)
         for initializer in initializers:
-            args = initializer.export()
+            args = initializer.serialize()
             found = args['args']
             expected = ARGS1[args['name']]
             self.assertEqual(
-                found, expected,
-                '{} exported arguments different than given in constructor')
+                expected, found,
+                '\nThe serialized arguments must '
+                'equal to the constructor arguments')
 
-    def test_initializer_equality_export(self):
-        """Initializers recreated with export are identical to originals"""
+    def test_initializer_equality_serialize(self):
+        """Initializers recreated with serialize are identical to originals"""
         for initializer0 in make_initializers(ARGS1):
-            args = initializer0.export()
+            args = initializer0.serialize()
             initializer1 = get_initializer(args['name'])(**args['args'])
             expected = initializer0
             found = initializer1
             self.assertEqual(
                 expected, found,
-                'Initializer recreated from export is not identical to '
-                'original. Expected: {}, Found: {}'.format(expected, found))
+                '\nThe initializer recreated from serialized arguments must '
+                'equal to the original.'
+            )

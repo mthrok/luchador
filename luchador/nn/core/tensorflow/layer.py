@@ -72,10 +72,27 @@ class Dense(BaseDense):
         return Tensor(tensor=output)
 
 
+def _map_padding(padding):
+    if padding.upper() in ['HALF', 'SAME']:
+        return 'SAME'
+    else:
+        return 'VALID'
+
+
 class Conv2D(BaseConv2D):
     def _validate_padding(self, padding):
-        if padding not in ['SAME', 'VALID']:
-            raise ValueError('`padding` must be either "SAME" or "VALID"')
+        msg = '`padding` must be either "SAME", "VALID", "full" or "half"'
+        if not isinstance(padding, str):
+            raise ValueError(msg)
+
+        _padding = padding.lower()
+        if _padding not in ['full', 'half', 'same', 'valid']:
+            raise ValueError(msg)
+
+        if _padding == 'full':
+            msg = ('"full" mode is not supported in tensorflow backend. '
+                   'It will be replaced by "valid"')
+            warnings.warn(msg)
 
     def _validate_strides(self, strides):
         if isinstance(strides, int):
@@ -94,7 +111,6 @@ class Conv2D(BaseConv2D):
         )
 
     def _validate_args(self, args):
-        args['padding'] = args['padding'].upper()
         self._validate_padding(args['padding'])
         self._validate_strides(args['strides'])
 
@@ -116,6 +132,9 @@ class Conv2D(BaseConv2D):
         height, width = self.args['filter_height'], self.args['filter_width']
         return (height, width, n_in, n_out)
 
+    def _get_padding(self):
+        return _map_padding(self.args['padding'])
+
     def _check_filter_shape(self, input_shape, filter_shape):
         flt_h, flt_w = filter_shape[0], filter_shape[1]
         strides = self._get_strides()
@@ -125,7 +144,7 @@ class Conv2D(BaseConv2D):
         else:
             img_h, img_w = input_shape[1], input_shape[2]
             str_h, str_w = strides[1], strides[2]
-        if self.args['padding'] == 'VALID':
+        if self._get_padding() == 'VALID':
             warn_w = bool((img_w - flt_w) % str_w)
             warn_h = bool((img_h - flt_h) % str_h)
         else:
@@ -187,9 +206,10 @@ class Conv2D(BaseConv2D):
         name = self.args.get('name')
         cudnn = self.args.get('use_cudnn_on_gpu', True)
         fmt = self._get_format()
+        padding = self._get_padding()
         conv = tf.nn.conv2d(
             input.get(), params['weight'].get(), strides=strides,
-            padding=self.args['padding'], use_cudnn_on_gpu=cudnn,
+            padding=padding, use_cudnn_on_gpu=cudnn,
             data_format=fmt, name=name)
         output = tf.nn.bias_add(conv, params['bias'].get(),
                                 data_format=fmt, name='output')

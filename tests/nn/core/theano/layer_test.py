@@ -3,8 +3,12 @@ import unittest
 import theano
 import numpy as np
 
+from luchador.nn.core.theano.layer import (
+    Conv2D,
+    Flatten,
+    _map_border_mode,
+)
 from luchador.nn.core.theano.scope import _reset as reset_scope
-from luchador.nn.core.theano.layer import Conv2D, Flatten
 from luchador.nn.core.theano.wrapper import Input
 
 # import logging
@@ -15,8 +19,18 @@ theano.config.optimizer = 'None'
 
 
 class TestConv2D(unittest.TestCase):
+    longMessage = True
+
     def setUp(self):
         reset_scope()
+
+    def test_map_border_mode(self):
+        """padding string is correctly mapped to border_mode"""
+        inputs = ('full', 'half', 'SAME', 'valid')
+        expecteds = ('full', 'half', 'half', 'valid')
+        for i, expected in zip(inputs, expecteds):
+            found = _map_border_mode(i)
+            self.assertEqual(expected, found)
 
     def _test_shape_inference(
             self, input_shape, filter_shape, n_filters, strides, padding):

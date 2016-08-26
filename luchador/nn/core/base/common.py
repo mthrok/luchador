@@ -57,11 +57,11 @@ class CopyMixin(object):
         return not self.__eq__(other)
 
     ###########################################################################
-    def export(self):
-        """Export object configuration (constructor arguments) to dictionary"""
+    def serialize(self):
+        """Serialize object configuration (constructor arguments)"""
         args = {}
-        for key, value in self.args.items():
-            args[key] = value.export() if hasattr(value, 'export') else value
+        for key, val in self.args.items():
+            args[key] = val.serialize() if hasattr(val, 'serialize') else val
         return {
             'name': self.__class__.__name__,
             'args': args
