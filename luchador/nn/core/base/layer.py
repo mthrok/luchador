@@ -23,21 +23,9 @@ class Layer(CopyMixin, object):
         """
         super(Layer, self).__init__()
         self._store_args(args)
-        self.parameter_variables = OrderedDict()
 
-    ###########################################################################
-    def export(self):
-        args = {}
-        for key, value in self.args.items():
-            # Initializer is given as object so we do not serialize it.
-            # TODO: Make initializers serializable.
-            if key == 'initializer':
-                pass
-            args[key] = value
-        return {
-            'name': self.__class__.__name__,
-            'args': args
-        }
+        self.initializers = OrderedDict()
+        self.parameter_variables = OrderedDict()
 
     ###########################################################################
     # Functions for building computation graph
@@ -55,7 +43,7 @@ class Layer(CopyMixin, object):
 
 ###############################################################################
 class Dense(Layer):
-    def __init__(self, n_nodes, initializers=None):
+    def __init__(self, n_nodes, initializers={}):
         """Initialize dense layer.
         Activation function, such as ReLU is not included.
         Also called fully connected, affine, linear or inner product.
@@ -69,7 +57,7 @@ class Dense(Layer):
 class Conv2D(Layer):
     """Apply convolution to input"""
     def __init__(self, filter_height, filter_width, n_filters, strides,
-                 padding='VALID', initializers=None, **kwargs):
+                 padding='VALID', initializers={}, **kwargs):
         """Initialize 2D convolution layer.
         Args:
           filter_height (int): filter height (== row)

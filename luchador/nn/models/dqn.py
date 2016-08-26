@@ -6,14 +6,25 @@ from luchador.nn import (
     Dense,
     Conv2D,
     Flatten,
-    Normal
 )
 
 
 def vanilla_dqn(n_actions):
     initializers = {
-        'bias': Normal(mean=0.0, stddev=0.01),
-        'weight': Normal(mean=0.0, stddev=0.01),
+        'bias': {
+            'name': 'Normal',
+            'args': {
+                'mean': 0.0,
+                'stddev': 0.01
+            },
+        },
+        'weight': {
+            'name': 'Normal',
+            'args': {
+                'mean': 0.0,
+                'stddev': 0.01,
+            },
+        },
     }
 
     conv0 = Conv2D(

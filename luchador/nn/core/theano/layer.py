@@ -20,6 +20,8 @@ from .initializer import (
     Xavier,
     XavierConv2D,
 )
+from luchador.nn.util import get_initializer
+
 
 _LG = logging.getLogger(__name__)
 
@@ -27,14 +29,30 @@ __all__ = ['Dense', 'Conv2D', 'ReLU', 'Flatten', 'TrueDiv']
 
 
 class Dense(BaseDense):
+    def _instantiate_initializers(self):
+        init_cfg = self.args.get('initializers', {})
+        if 'weight' not in self.initializers:
+            cfg = init_cfg.get('weight')
+            self.initializers['weight'] = (
+                get_initializer(cfg['name'])(**cfg['args'])
+                if cfg else Xavier()
+            )
+        if 'bias' not in self.initializers:
+            cfg = init_cfg.get('bias')
+            self.initializers['bias'] = (
+                get_initializer(cfg['name'])(**cfg['args'])
+                if cfg else Constant(0.1)
+            )
+
     def _instantiate_parameter_variables(self, n_inputs):
+        self._instantiate_initializers()
+
         args = self.args
         b_shape = (args['n_nodes'], )
         w_shape = (n_inputs, args['n_nodes'])
 
-        given = args.get('initializers')
-        b_init = given['bias'] if given else Constant(0.1)
-        w_init = given['weight'] if given else Xavier()
+        b_init = self.initializers['bias']
+        w_init = self.initializers['weight']
 
         self.parameter_variables['weight'] = scp.get_variable(
             name='weight', shape=w_shape, initializer=w_init)
@@ -103,14 +121,31 @@ class Conv2D(BaseConv2D):
         self._validate_strides(args['strides'])
 
     ###########################################################################
+    def _instantiate_initializers(self):
+        init_cfg = self.args.get('initializers', {})
+        if 'weight' not in self.initializers:
+            cfg = init_cfg.get('weight')
+            self.initializers['weight'] = (
+                get_initializer(cfg['name'])(**cfg['args'])
+                if cfg else XavierConv2D()
+            )
+        if 'bias' not in self.initializers:
+            cfg = init_cfg.get('bias')
+            self.initializers['bias'] = (
+                get_initializer(cfg['name'])(**cfg['args'])
+                if cfg else Constant(0.1)
+            )
+
     def _instantiate_parameter_variables(self, n_inputs):
+        self._instantiate_initializers()
+
         args = self.args
         b_shape = (args['n_filters'],)
         w_shape = (args['n_filters'], n_inputs,
                    args['filter_height'], args['filter_width'])
-        given = args.get('initializers')
-        b_init = given['bias'] if given else Constant(0.1)
-        w_init = given['weight'] if given else XavierConv2D()
+
+        b_init = self.initializers['bias']
+        w_init = self.initializers['weight']
 
         self.parameter_variables['weight'] = scp.get_variable(
             name='weight', shape=w_shape, initializer=w_init)

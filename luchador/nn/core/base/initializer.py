@@ -23,24 +23,28 @@ class Initializer(CopyMixin, object):
         self._store_args(kwargs)
 
     ###########################################################################
+    def _export_seed(self, args, key, value):
+        if (
+                value is None or
+                isinstance(value, int) or
+                isinstance(value, list)
+        ):
+            args[key] = value
+            return
+
+        try:
+            args[key] = value.tolist()
+        except AttributeError:
+            _LG.warning('Failed to serialize seed: {}'.format(value))
+
     def export(self):
         args = {}
         for key, value in self.args.items():
             if key == 'seed':
-                if (
-                        key is None or
-                        isinstance(value, int) or
-                        isinstance(value, list)
-                ):
-                    args[key] = value
-                    continue
+                self._export_seed(args, key, value)
+                continue
 
-                try:
-                    args[key] = value.tolist()
-                except AttributeError:
-                    _LG.warning('Failed to serialize seed: {}'.format(value))
-            else:
-                args[key] = value
+            args[key] = value.export() if hasattr(value, 'export') else value
         return {
             'name': self.__class__.__name__,
             'args': args

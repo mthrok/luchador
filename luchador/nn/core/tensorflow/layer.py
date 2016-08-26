@@ -21,6 +21,8 @@ from .initializer import (
     Xavier,
     XavierConv2D,
 )
+from luchador.nn.util import get_initializer
+
 
 _LG = logging.getLogger(__name__)
 
@@ -28,19 +30,36 @@ __all__ = ['Dense', 'Conv2D', 'ReLU', 'Flatten', 'TrueDiv']
 
 
 class Dense(BaseDense):
+    def _instantiate_initializers(self):
+        init_cfg = self.args.get('initializers', {})
+        if 'weight' not in self.initializers:
+            cfg = init_cfg.get('weight')
+            self.initializers['weight'] = (
+                get_initializer(cfg['name'])(**cfg['args'])
+                if cfg else Xavier()
+            )
+        if 'bias' not in self.initializers:
+            cfg = init_cfg.get('bias')
+            self.initializers['bias'] = (
+                get_initializer(cfg['name'])(**cfg['args'])
+                if cfg else Constant(0.1)
+            )
+
     def _instantiate_parameter_variables(self, n_inputs):
+        self._instantiate_initializers()
+
+        dtype = get_nn_dtype()
+
         b_shape = (self.args['n_nodes'],)
         w_shape = (n_inputs, self.args['n_nodes'])
 
-        given = self.args.get('initializers')
-        b0 = given['bias'] if given else Constant(0.1)
-        w0 = given['weight'] if given else Xavier()
+        b_init = self.initializers['bias'].get()
+        w_init = self.initializers['weight'].get()
 
-        dtype = get_nn_dtype()
         self.parameter_variables['weight'] = get_variable(
-            name='weight', shape=w_shape, initializer=w0.get(), dtype=dtype)
+            name='weight', shape=w_shape, initializer=w_init, dtype=dtype)
         self.parameter_variables['bias'] = get_variable(
-            name='bias', shape=b_shape, initializer=b0.get(), dtype=dtype)
+            name='bias', shape=b_shape, initializer=b_init, dtype=dtype)
 
     def build(self, input):
         _LG.debug('    Building {}: {}'.format(type(self).__name__, self.args))
@@ -125,22 +144,38 @@ class Conv2D(BaseConv2D):
                 RuntimeWarning
             )
 
+    def _instantiate_initializers(self):
+        init_cfg = self.args.get('initializers', {})
+        if 'weight' not in self.initializers:
+            cfg = init_cfg.get('weight')
+            self.initializers['weight'] = (
+                get_initializer(cfg['name'])(**cfg['args'])
+                if cfg else XavierConv2D()
+            )
+        if 'bias' not in self.initializers:
+            cfg = init_cfg.get('bias')
+            self.initializers['bias'] = (
+                get_initializer(cfg['name'])(**cfg['args'])
+                if cfg else Constant(0.1)
+            )
+
     def _instantiate_parameter_variables(self, input_shape):
         _LG.debug('    Input shape: {}'.format(input_shape))
+        self._instantiate_initializers()
+
         b_shape = (self.args['n_filters'],)
         w_shape = self._get_weight_shape(input_shape)
 
         self._check_filter_shape(input_shape, w_shape)
 
-        given = self.args.get('initializers')
-        b0 = given['bias'] if given else Constant(0.1)
-        w0 = given['weight'] if given else XavierConv2D()
+        b_init = self.initializers['bias'].get()
+        w_init = self.initializers['weight'].get()
 
         dtype = get_nn_dtype()
         self.parameter_variables['weight'] = get_variable(
-            name='weight', shape=w_shape, initializer=w0.get(), dtype=dtype)
+            name='weight', shape=w_shape, initializer=w_init, dtype=dtype)
         self.parameter_variables['bias'] = get_variable(
-            name='bias', shape=b_shape, initializer=b0.get(), dtype=dtype)
+            name='bias', shape=b_shape, initializer=b_init, dtype=dtype)
 
     def build(self, input):
         _LG.debug('    Building {}: {}'.format(type(self).__name__, self.args))

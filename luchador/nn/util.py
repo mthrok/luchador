@@ -2,11 +2,9 @@ from __future__ import absolute_import
 
 import inspect
 
-import luchador.nn
-import luchador.nn.models
-
 
 def get_initializer(name):
+    import luchador.nn
     for name_, Class in inspect.getmembers(luchador.nn, inspect.isclass):
         if (
                 name == name_ and
@@ -17,6 +15,7 @@ def get_initializer(name):
 
 
 def get_optimizer(name):
+    import luchador.nn
     for name_, Class in inspect.getmembers(luchador.nn, inspect.isclass):
         if (
                 name == name_ and
@@ -27,6 +26,7 @@ def get_optimizer(name):
 
 
 def get_layer(name):
+    import luchador.nn
     for name_, Class in inspect.getmembers(luchador.nn, inspect.isclass):
         if (
                 name == name_ and
@@ -37,8 +37,8 @@ def get_layer(name):
 
 
 def get_model(name, **kwargs):
-    for name_, func in inspect.getmembers(luchador.nn.models,
-                                          inspect.isfunction):
+    from . import models
+    for name_, func in inspect.getmembers(models, inspect.isfunction):
         if name == name_:
             return func(**kwargs)
     raise ValueError('Unknown model name: {}'.format(name))
