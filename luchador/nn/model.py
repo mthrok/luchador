@@ -14,6 +14,12 @@ class LayerConfig(object):
         self.input = input
         self.output = output
 
+    def export(self):
+        return {
+            'scope': self.scope,
+            'layer': self.layer.export(),
+        }
+
 
 class Model(object):
     def __init__(self):
@@ -133,3 +139,8 @@ class Model(object):
             name = '{}{}/{}'.format(base_name, layer_name, cfg.output.name)
             ret[name] = cfg.output
         return ret
+
+    ###########################################################################
+    def export(self):
+        """Export model configuration to selirizable format"""
+        return [cfg.export() for cfg in self.layer_configs]
