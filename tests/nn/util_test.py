@@ -12,6 +12,8 @@ from luchador.nn.util import (
     get_layer,
     get_optimizer,
     get_initializer,
+    get_model,
+    make_model,
 )
 
 
@@ -62,3 +64,9 @@ class UtilTest(unittest.TestCase):
                 'get_layer returned wrong layer Class. '
                 'Expected: {}, Found: {}.'.format(expected, found)
             )
+
+    def test_create_model(self):
+        """Deserialized model is equal to the original"""
+        m1 = get_model('vanilla_dqn', n_actions=5)
+        m2 = make_model(m1.serialize())
+        self.assertEqual(m1, m2)

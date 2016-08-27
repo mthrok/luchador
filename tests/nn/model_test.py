@@ -3,9 +3,13 @@ from __future__ import absolute_import
 import unittest
 
 from luchador.nn import (
-    Model,
     Dense,
     Conv2D,
+)
+
+from luchador.nn.model import (
+    Model,
+    LayerConfig,
 )
 
 
@@ -14,6 +18,38 @@ def make_layers():
     dense1 = Dense(n_nodes=512)
     dense2 = Dense(n_nodes=256)
     return conv, dense1, dense2
+
+
+class LayerConfigTest(unittest.TestCase):
+    longMessage = True
+
+    def test_LayerConfig_equality(self):
+        """LayerConfig with the same scope and layer should equal"""
+        conv, _, _ = make_layers()
+        cfg1 = LayerConfig(layer=conv, scope='foo')
+        cfg2 = LayerConfig(layer=conv, scope='foo')
+        self.assertEqual(cfg1, cfg2)
+
+    def test_LayerConfig_scope_inequality(self):
+        """LayerConfig with different scopes should not equal"""
+        conv, _, _ = make_layers()
+        cfg1 = LayerConfig(layer=conv, scope='foo')
+        cfg2 = LayerConfig(layer=conv, scope='bar')
+        self.assertNotEqual(cfg1, cfg2)
+
+    def test_LayerConfig_layer_inequality(self):
+        """LayerConfig with different layers should not equal"""
+        _, dense1, dense2 = make_layers()
+        cfg1 = LayerConfig(layer=dense1, scope='foo')
+        cfg2 = LayerConfig(layer=dense2, scope='foo')
+        self.assertNotEqual(cfg1, cfg2)
+
+    def test_LayerConfig_layer_scope_inequality(self):
+        """LayerConfig with different layers and scopes should not equal"""
+        _, dense1, dense2 = make_layers()
+        cfg1 = LayerConfig(layer=dense1, scope='foo')
+        cfg2 = LayerConfig(layer=dense2, scope='bar')
+        self.assertNotEqual(cfg1, cfg2)
 
 
 class ModelTest(unittest.TestCase):
@@ -38,6 +74,16 @@ class ModelTest(unittest.TestCase):
         """Models without layers should be euqal"""
         m1, m2 = Model(), Model()
         self.assertEqual(m1, m2, 'Models without layers must be equal')
+
+    def test_model_self_equality(self):
+        """Model instance always equal to self"""
+        m = Model()
+        self.assertEqual(m, m)
+
+        conv, dense, _ = make_layers()
+        m.add_layer(conv, scope='conv')
+        m.add_layer(dense, scope='dense')
+        self.assertEqual(m, m)
 
     def test_model_inequality_type(self):
         """Models is not equal with other types"""

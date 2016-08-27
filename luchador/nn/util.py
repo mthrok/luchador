@@ -42,3 +42,14 @@ def get_model(name, **kwargs):
         if name == name_:
             return func(**kwargs)
     raise ValueError('Unknown model name: {}'.format(name))
+
+
+def make_model(model_config):
+    from .model import Model
+    model = Model()
+    for cfg in model_config['layer_configs']:
+        scope = cfg['scope']
+        layer_cfg = cfg['layer']
+        layer = get_layer(layer_cfg['name'])(**layer_cfg['args'])
+        model.add_layer(layer=layer, scope=scope)
+    return model

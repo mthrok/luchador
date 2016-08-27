@@ -14,11 +14,17 @@ class LayerConfig(object):
         self.input = input
         self.output = output
 
-    def serialize(self):
-        return {
-            'scope': self.scope,
-            'layer': self.layer.serialize(),
-        }
+    def __eq__(self, other):
+        if isinstance(other, LayerConfig):
+            return self.layer == other.layer and self.scope == other.scope
+        return NotImplemented
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __repr__(self):
+        return '{{scope: {}, layer: {}, input: {}, output: {}}}'.format(
+            self.scope, self.layer, self.input, self.output)
 
 
 class Model(object):
@@ -81,16 +87,9 @@ class Model(object):
     ###########################################################################
     # Model definition equality
     def __eq__(self, other):
-        if not isinstance(other, self.__class__):
-            return False
-        if not len(self.layer_configs) == len(other.layer_configs):
-            return False
-        for cfg1, cfg2 in zip(self.layer_configs, other.layer_configs):
-            if not cfg1.scope == cfg2.scope:
-                return False
-            if not cfg1.layer == cfg2.layer:
-                return False
-        return True
+        if isinstance(other, self.__class__):
+            return self.layer_configs == other.layer_configs
+        return False
 
     def __ne__(self, other):
         return not self.__eq__(other)
@@ -142,5 +141,14 @@ class Model(object):
 
     ###########################################################################
     def serialize(self):
-        """Serialize model configuration to selirizable format"""
-        return [cfg.serialize() for cfg in self.layer_configs]
+        """Serialize model configuration"""
+        return {
+            'layer_configs': [{
+                'scope': cfg.scope,
+                'layer': cfg.layer.serialize(),
+            } for cfg in self.layer_configs]
+        }
+
+    ###########################################################################
+    def __repr__(self):
+        return str(self.layer_configs)
