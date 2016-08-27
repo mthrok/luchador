@@ -123,7 +123,7 @@ class LayerTest(unittest.TestCase):
                     .format(key, layer_name))
 
     def test_layer_equality_serialize(self):
-        """Layers recreated with serialize are identical to originals"""
+        """Layers recreated with serialized arguments equal to originals"""
         for layer0 in make_parameterized_layers(ARGS1):
             args = layer0.serialize()
             layer1 = get_layer(args['name'])(**args['args'])
@@ -131,6 +131,5 @@ class LayerTest(unittest.TestCase):
             found = layer1
             self.assertEqual(
                 expected, found,
-                '\nLayer recreated from serialize arguments is not '
-                'identical to original. Expected: {}, Found: {}'
-                .format(expected, found))
+                '\nLayer recreated from serialize arguments must '
+                'equal to the original.')
