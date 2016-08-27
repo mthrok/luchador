@@ -23,8 +23,8 @@ class LayerConfig(object):
         return not self.__eq__(other)
 
     def __repr__(self):
-        return '{{scope: {}, layer: {}, input: {}, output: {}}}'.format(
-            self.scope, self.layer, self.input, self.output)
+        return ("{{'scope': '{}', 'layer': {}, 'input': {}, 'output': {}}}"
+                .format(self.scope, self.layer, self.input, self.output))
 
 
 class Model(object):
@@ -151,4 +151,4 @@ class Model(object):
 
     ###########################################################################
     def __repr__(self):
-        return str(self.layer_configs)
+        return "{{'layer_configs': {}}}".format(self.layer_configs)

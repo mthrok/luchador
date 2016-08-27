@@ -27,6 +27,10 @@ class TensorWrapper(object):
         """Set the underlying tensor object"""
         self._tensor = obj
 
+    def __repr__(self):
+        return "{{'name': {}, 'shape': {}, 'dtype': {}}}".format(
+            self.name, self.shape, self.dtype)
+
 
 class OperationWrapper(object):
     """Wrapps theano updates or tensorflow operation"""

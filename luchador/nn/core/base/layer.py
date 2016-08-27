@@ -36,9 +36,12 @@ class Layer(CopyMixin, object):
     def build(self, input_tensor):
         """Build layer computation graph on top of the given tensor"""
         raise NotImplementedError(
-            '`build` method is not implemented for {}.{}.'
-            .format(type(self).__module__, type(self).__name__)
+            '`build` method is not implemented for {}'.format(self.__class__)
         )
+
+    def __repr__(self):
+        return "{{'name': '{}', 'args': {}}}".format(
+            self.__class__.__name__, self.args)
 
 
 ###############################################################################
