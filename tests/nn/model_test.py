@@ -17,6 +17,8 @@ def make_layers():
 
 
 class ModelTest(unittest.TestCase):
+    longMessage = True
+
     def test_model_equality(self):
         """Models with the same configuration should be euqal"""
         m1, m2 = Model(), Model()
@@ -97,3 +99,19 @@ class ModelTest(unittest.TestCase):
         self.assertNotEqual(
             m1, m2,
             'Models with the different layer configurations must not be equal')
+
+    def test_model_equality_serialized_configurations(self):
+        """Configurations serialized from same models are same"""
+        m1, m2 = Model(), Model()
+
+        conv, dense1, dense2 = make_layers()
+        m1.add_layer(conv, scope='conv')
+        m1.add_layer(dense1, scope='dense1')
+        m1.add_layer(dense2, scope='dense2')
+
+        conv, dense1, dense2 = make_layers()
+        m2.add_layer(conv, scope='conv')
+        m2.add_layer(dense1, scope='dense1')
+        m2.add_layer(dense2, scope='dense2')
+
+        self.assertEqual(m1.serialize(), m2.serialize())
