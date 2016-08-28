@@ -4,7 +4,11 @@ from collections import OrderedDict
 
 from .core import scope as scp
 
-__all__ = ['Model']
+__all__ = ['Sequential']
+
+
+class Model(object):
+    pass
 
 
 class LayerConfig(object):
@@ -27,9 +31,9 @@ class LayerConfig(object):
                 .format(self.scope, self.layer, self.input, self.output))
 
 
-class Model(object):
+class Sequential(Model):
     def __init__(self):
-        super(Model, self).__init__()
+        super(Sequential, self).__init__()
         # Layer configurations
         self.layer_configs = []
         # I/O tensors of the model
@@ -57,10 +61,10 @@ class Model(object):
     def __iadd__(self, other):
         """Append layers from another model after this model
         Args:
-          other (Model): Model to be concatenated
+          other (Sequential): Sequential to be concatenated
 
         Returns:
-          TFModel: Updated model
+          Sequential: Updated model
         """
         for cfg in other.layer_configs:
             self.add_layer(layer=cfg.layer, scope=cfg.scope)
@@ -75,17 +79,17 @@ class Model(object):
     def __add__(self, other):
         """Create new model which contains layers from other model after this model
         Args:
-          other (Model): Model to be concatenated
+          other (Sequential): Sequential to be concatenated
 
         Returns:
-          Model: Resulting new model
+          Sequential: Resulting new model
         """
         new_model = self.copy()
         new_model += other
         return new_model
 
     ###########################################################################
-    # Model definition equality
+    # Model equality
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return self.layer_configs == other.layer_configs
@@ -143,6 +147,7 @@ class Model(object):
     def serialize(self):
         """Serialize model configuration"""
         return {
+            'model_type': self.__class__.__name__,
             'layer_configs': [{
                 'scope': cfg.scope,
                 'layer': cfg.layer.serialize(),

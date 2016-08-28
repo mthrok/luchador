@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 
 from luchador.nn import (
-    Model,
+    Sequential,
     ReLU,
     Dense,
     Conv2D,
@@ -39,7 +39,7 @@ def vanilla_dqn(n_actions):
     dense0 = Dense(n_nodes=512, initializers=initializers)
     dense1 = Dense(n_nodes=n_actions, initializers=initializers)
 
-    model = Model()
+    model = Sequential()
     model.add_layer(conv0, scope='layer1/conv2D')
     model.add_layer(ReLU(), scope='layer1/ReLU')
 

@@ -1,13 +1,13 @@
 from __future__ import absolute_import
 
 from luchador.nn import (
-    Model,
+    Sequential,
     TrueDiv,
 )
 
 
 def image_normalizer(denom, dtype=None):
-    model = Model()
+    model = Sequential()
     model.add_layer(TrueDiv(denom=denom, dtype=dtype),
                     scope='preprocessing/image_normalization')
     return model
