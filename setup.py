@@ -11,6 +11,7 @@ setup(
         'luchador.nn.core.theano',
         'luchador.nn.core.tensorflow',
         'luchador.nn.models',
+        'luchador.nn.catalog',
         'luchador.agent',
         'luchador.img_proc',
     ],
@@ -27,6 +28,9 @@ setup(
         'pyyaml',
     ],
     package_data={
-        'luchador': ['data/*'],
+        'luchador': [
+            'data/*',
+            'nn/catalog/*.yml',
+        ],
     },
 )

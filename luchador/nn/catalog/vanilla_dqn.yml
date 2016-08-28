@@ -1,0 +1,82 @@
+layer_configs:
+- scope: layer0/preprocessing
+  layer:
+    name: TrueDiv
+    args:
+      denom: 255
+- scope: layer1/conv2D
+  layer:
+    name: Conv2D
+    args:
+      n_filters: 32
+      filter_width: 8
+      filter_height: 8
+      strides: 4
+      padding: valid
+      initializers:
+        bias: &normal_initializer
+          name: Normal
+          args:
+            mean: 0.0
+            stddev: 0.01
+        weight: *normal_initializer
+- scope: layer1/ReLU
+  layer:
+    args: {{}}
+    name: ReLU
+- scope: layer2/conv2D
+  layer:
+    name: Conv2D
+    args:
+      n_filters: 64
+      filter_width: 4
+      filter_height: 4
+      strides: 2
+      padding: valid
+      initializers:
+        bias: *normal_initializer
+        weight: *normal_initializer
+- scope: layer2/ReLU
+  layer:
+    name: ReLU
+    args: {{}}
+- scope: layer3/conv2D
+  layer:
+    name: Conv2D
+    args:
+      filter_width: 3
+      filter_height: 3
+      n_filters: 64
+      strides: 1
+      padding: valid
+      initializers:
+        bias: *normal_initializer
+        weight: *normal_initializer
+- scope: layer3/ReLU
+  layer:
+    name: ReLU
+    args: {{}}
+- scope: layer4/flatten
+  layer:
+    name: Flatten
+    args: {{}}
+- scope: layer5/dense
+  layer:
+    name: Dense
+    args:
+      n_nodes: 512
+      initializers:
+        bias: *normal_initializer
+        weight: *normal_initializer
+- scope: layer5/ReLU
+  layer:
+    name: ReLU
+    args: {{}}
+- scope: layer6/dense
+  layer:
+    name: Dense
+    args:
+      n_nodes: {n_actions}
+      initializers:
+        bias: *normal_initializer
+        weight: *normal_initializer
