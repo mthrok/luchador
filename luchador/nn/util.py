@@ -43,15 +43,7 @@ def get_layer(name):
     raise ValueError('Unknown Layer: {}'.format(name))
 
 
-def get_model(name, **kwargs):
-    from . import models
-    for name_, func in inspect.getmembers(models, inspect.isfunction):
-        if name == name_:
-            return func(**kwargs)
-    raise ValueError('Unknown model name: {}'.format(name))
-
-
-def get_model_(name):
+def get_model(name):
     from . import model
     for name_, Class in inspect.getmembers(model, inspect.isclass):
         if (
@@ -63,7 +55,15 @@ def get_model_(name):
 
 
 def make_model(model_config):
-    model = get_model_(model_config['model_type'])()
+    """Make model from model configuration
+
+    Args:
+      model_condig (JSON-compatible object): model configuration.
+
+    Returns:
+      Model
+    """
+    model = get_model(model_config['model_type'])()
     for cfg in model_config['layer_configs']:
         scope = cfg['scope']
         layer_cfg = cfg['layer']
@@ -72,7 +72,16 @@ def make_model(model_config):
     return model
 
 
-def load_model_config(model_name, **parameters):
+def get_model_config(model_name, **parameters):
+    """Load pre-defined model configurations
+
+    Args:
+      model_name (name): Model name
+      parameters: Parameter for model config
+
+    Returns:
+      JSON-compatible object: model configuration.
+    """
     file_name = '{}.yml'.format(model_name)
     if os.path.isfile(file_name):
         file_path = file_name

@@ -10,7 +10,6 @@ setup(
         'luchador.nn.core.base',
         'luchador.nn.core.theano',
         'luchador.nn.core.tensorflow',
-        'luchador.nn.models',
         'luchador.nn.catalog',
         'luchador.agent',
         'luchador.img_proc',

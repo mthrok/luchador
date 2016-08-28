@@ -154,6 +154,8 @@ class Sequential(Model):
             } for cfg in self.layer_configs]
         }
 
+    def deserialize(self):
+        """Deserialize model """
     ###########################################################################
     def __repr__(self):
         return "{{'layer_configs': {}}}".format(self.layer_configs)

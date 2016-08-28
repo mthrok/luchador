@@ -12,7 +12,7 @@ from luchador.nn.util import (
     get_layer,
     get_optimizer,
     get_initializer,
-    get_model,
+    get_model_config,
     make_model,
 )
 
@@ -23,6 +23,7 @@ N_OPTIMIZERS = 4
 
 class UtilTest(unittest.TestCase):
     longMessage = True
+    maxDiff = None
 
     def test_optimizer_test_coverage(self):
         """All initializers are tested"""
@@ -67,6 +68,7 @@ class UtilTest(unittest.TestCase):
 
     def test_create_model(self):
         """Deserialized model is equal to the original"""
-        m1 = get_model('vanilla_dqn', n_actions=5)
+        cfg1 = get_model_config('vanilla_dqn', n_actions=5)
+        m1 = make_model(cfg1)
         m2 = make_model(m1.serialize())
         self.assertEqual(m1, m2)

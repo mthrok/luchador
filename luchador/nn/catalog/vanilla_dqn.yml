@@ -1,3 +1,4 @@
+model_type: Sequential
 layer_configs:
 - scope: layer0/preprocessing
   layer:

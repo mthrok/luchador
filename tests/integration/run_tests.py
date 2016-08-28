@@ -16,7 +16,7 @@ from luchador.nn import (
     SummaryWriter,
     Saver,
 )
-from luchador.nn.util import get_model
+from luchador.nn.util import load_model_config, make_model
 
 conv_format = luchador.get_nn_conv_format()
 filepath = './tmp/param.dat'
@@ -37,10 +37,8 @@ state_shape = (
 
 
 def model_maker():
-    dqn = (
-        get_model('image_normalizer', denom=255) +
-        get_model('vanilla_dqn', n_actions=n_actions)
-    )
+    config = load_model_config('vanilla_dqn', n_actions=n_actions)
+    dqn = make_model(config)
     dqn(Input(shape=state_shape))
     return dqn
 
