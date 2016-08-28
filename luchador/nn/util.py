@@ -52,18 +52,18 @@ def get_model(name, **kwargs):
 
 
 def get_model_(name):
-    import luchador.nn
-    for name_, Class in inspect.getmembers(luchador.nn, inspect.isclass):
+    from . import model
+    for name_, Class in inspect.getmembers(model, inspect.isclass):
         if (
                 name == name_ and
-                issubclass(Class, luchador.nn.Model)
+                issubclass(Class, model.Model)
         ):
             return Class
     raise ValueError('Unknown model: {}'.format(name))
 
 
 def make_model(model_config):
-    model = get_model_(model_config['model_type'])
+    model = get_model_(model_config['model_type'])()
     for cfg in model_config['layer_configs']:
         scope = cfg['scope']
         layer_cfg = cfg['layer']
