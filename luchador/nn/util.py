@@ -6,8 +6,8 @@ import StringIO
 
 import yaml
 
-_CATALOG_DIR = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), 'catalog')
+_DATA_DIR = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), 'data')
 
 
 def get_initializer(name):
@@ -85,8 +85,8 @@ def get_model_config(model_name, **parameters):
     file_name = '{}.yml'.format(model_name)
     if os.path.isfile(file_name):
         file_path = file_name
-    elif os.path.isfile(os.path.join(_CATALOG_DIR, file_name)):
-        file_path = os.path.join(_CATALOG_DIR, file_name)
+    elif os.path.isfile(os.path.join(_DATA_DIR, file_name)):
+        file_path = os.path.join(_DATA_DIR, file_name)
     else:
         raise ValueError(
             'No model definition file ({}) found.'.format(file_name))
