@@ -8,7 +8,6 @@ import logging
 import inspect
 import datetime
 
-import yaml
 import luchador
 luchador.util.sane_gym_import()
 
@@ -136,8 +135,8 @@ def _parse_command_line_arguments():
         help='Overwrite monitoring data.'
     )
     ap.add_argument(
-        '--config', '-c', type=argparse.FileType('r'),
-        default=open(default_config, 'r'),
+        '--config', '-c',
+        default=default_config,
         help='YAML file containing the configuration.'
     )
     ap.add_argument(
@@ -161,7 +160,7 @@ def _get_current_time():
 
 def _parse_config():
     args = _parse_command_line_arguments()
-    config = yaml.load(args.config)
+    config = luchador.util.load_config(args.config)
     config['env'] = _parse_env_name(args.env)
     config['agent'] = _parse_agent_name(args.agent)
     if args.debug:
