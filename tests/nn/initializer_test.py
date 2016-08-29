@@ -68,7 +68,8 @@ ARGS2 = {
 
 
 def make_initializers(args):
-    return [Layer(**args[name]) for name, Layer in INITIALIZERS.items()]
+    return [Initializer(**args[name])
+            for name, Initializer in INITIALIZERS.items()]
 
 
 class InitializerTest(unittest.TestCase):
