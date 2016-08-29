@@ -37,20 +37,18 @@ class TFOptimizer(BaseOptimizer):
         loss = loss.get()
         # TODO: Add support for single tensor
         var_list = [v.get() for v in wrt] if wrt else None
-        # TODO: Wrap this with Tensor class
         grads_and_vars = self.optimizer.compute_gradients(
             loss, var_list=var_list, **kwargs)
         return grads_and_vars
 
     def apply_gradients(self, grads_and_vars, **kwargs):
-        # TODO: Add parser once compute_gradients wraps `grads_and_vars`
         minimize_op = self.optimizer.apply_gradients(grads_and_vars, **kwargs)
         return Operation(minimize_op)
 
 
 class SGD(TFOptimizer):
     def __init__(self, learning_rate, name='SGD', **kwargs):
-        super(SGD, self).__init__(name)
+        super(SGD, self).__init__(learning_rate=learning_rate, name=name)
         self.optimizer = tf.train.GradientDescentOptimizer(
             learning_rate, name=name, **kwargs)
 
@@ -59,7 +57,9 @@ class RMSProp(TFOptimizer):
     def __init__(self, learning_rate,
                  decay=0.95, momentum=None,
                  epsilon=1e-2, name='RMSProp', **kwargs):
-        super(RMSProp, self).__init__(name)
+        super(RMSProp, self).__init__(
+            learning_rate=learning_rate,
+            decay=decay, momentum=momentum, epsilon=epsilon, name=name)
         self.optimizer = tf.train.RMSPropOptimizer(
             learning_rate, decay=decay, momentum=momentum,
             epsilon=epsilon, **kwargs)
@@ -67,14 +67,16 @@ class RMSProp(TFOptimizer):
 
 class NeonRMSProp(TFOptimizer):
     def __init__(self, learning_rate, decay=0.95, epsilon=1e-6,
-                 name='NeonRMSProp', **kwards):
+                 name='NeonRMSProp', **kwargs):
+        super(NeonRMSProp, self).__init__(
+            learning_rate=learning_rate,
+            decay=decay, epsilon=epsilon, name=name)
         self.optimizer = tf.train.GradientDescentOptimizer(
             learning_rate, name=name)
         self.decay = decay
         self.epsilon = epsilon
 
     def apply_gradient(self, grads_and_vars, **kwargs):
-        # TODO: Add parser once compute_gradients wraps `grads_and_vars`
         # TODO: Save intermediate Variables in slot
         mean_grads2, mean_grads2_updates = [], []
         new_grads_and_vars = [], []
@@ -101,20 +103,20 @@ class NeonRMSProp(TFOptimizer):
 
 
 class GravesRMSProp(TFOptimizer):
-    """Implements """
     def __init__(self, learning_rate,
                  decay1=0.0, decay2=0.95, epsilon=1e-2,
                  name='GravesRMSProp', **kwargs):
         # TODO: Add support for momentum
-        super(GravesRMSProp, self).__init__(name)
-        self.optimizer = tf.train.GradientDescentOptimizer(
-            learning_rate, name=name)
+        super(GravesRMSProp, self).__init__(
+            learning_rate=learning_rate,
+            decay1=decay1, decay2=decay2, epsilon=epsilon, name=name)
         self.decay1 = decay1
         self.decay2 = decay2
         self.epsilon = epsilon
+        self.optimizer = tf.train.GradientDescentOptimizer(
+            learning_rate, name=name)
 
     def apply_gradient(self, grads_and_vars, **kwargs):
-        # TODO: Add parser once compute_gradients wraps `grads_and_vars`
         # TODO: Save intermediate Variables in slot
         mean_grads1, mean_grads1_updates = [], []
         mean_grads2, mean_grads2_updates = [], []
@@ -144,6 +146,7 @@ class GravesRMSProp(TFOptimizer):
             mean_grads1_updates.append(mean_grad1.assign(new_mean_grad1))
             mean_grads2_updates.append(mean_grad2.assign(new_mean_grad2))
             new_grads_and_vars.append((new_grad, var))
+
         train_op = self.optimizer.apply_gradients(new_grads_and_vars)
         updates = mean_grads1_updates + mean_grads2_updates + [train_op]
         return Operation(tf.group(*updates))

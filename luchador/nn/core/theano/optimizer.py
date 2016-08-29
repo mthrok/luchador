@@ -27,32 +27,33 @@ class TheanoOptimizer(BaseOptimizer):
 
 class SGD(TheanoOptimizer):
     def __init__(self, learning_rate, name='SGD', **kwargs):
-        super(SGD, self).__init__(name=name)
-        self.learning_rate = learning_rate
+        super(SGD, self).__init__(
+            learning_rate=learning_rate, name=name)
 
     def apply_gradients(self, grads_and_vars):
         updates = OrderedDict()
         for grad, var in grads_and_vars:
-            updates[var] = var - self.learning_rate * grad
+            updates[var] = var - self.args['learning_rate'] * grad
         return Operation(op=updates)
 
 
 class RMSProp(TheanoOptimizer):
     def __init__(self, learning_rate, decay=0.95, momentum=None,
                  epsilon=1e-2, name='RMSProp', **kwargs):
-        super(RMSProp, self).__init__(name)
-        self.learning_rate = learning_rate
-        self.decay = decay
-        self.momentum = momentum
-        self.epsilon = epsilon
+        super(RMSProp, self).__init__(
+            learning_rate=learning_rate,
+            decay=decay, momentum=momentum,
+            epsilon=epsilon, name=name)
 
     def apply_gradients(self, grads_and_vars):
         # TODO: Save intermediate Variables in slot
         updates = OrderedDict()
-        d, mom = self.decay, self.momentum
+        args = self.args
+        d, mom = args['decay'], args['momentum']
+        ep, lr = args['epsilon'], args['learning_rate']
         for grad, var in grads_and_vars:
             value = var.get_value(borrow=True)
-            with variable_scope(self.name):
+            with variable_scope(args['name']):
                 name = '{}_grad_squared_mean'.format(var.name)
                 mean_grad2_ = get_variable(
                     name=name, shape=value.shape, dtype=value.dtype,
@@ -67,10 +68,10 @@ class RMSProp(TheanoOptimizer):
 
                 new_mean_grad2 = d * mean_grad2 + (1.0 - d) * T.square(grad)
 
-                rms = T.sqrt(new_mean_grad2 + self.epsilon)
+                rms = T.sqrt(new_mean_grad2 + ep)
                 new_grad = grad / rms
 
-                delta_var = -self.learning_rate * new_grad
+                delta_var = -lr * new_grad
                 new_delta = mom * delta + (1.0 - mom) * delta_var
                 new_var = var + new_delta
 
@@ -83,18 +84,18 @@ class RMSProp(TheanoOptimizer):
 class NeonRMSProp(TheanoOptimizer):
     def __init__(self, learning_rate, decay=0.95, epsilon=1e-6,
                  name='NeonRMSProp', **kwargs):
-        super(NeonRMSProp, self).__init__(name)
-        self.learning_rate = learning_rate
-        self.decay = decay
-        self.epsilon = epsilon
+        super(NeonRMSProp, self).__init__(
+            learning_rate=learning_rate,
+            decay=decay, epsilon=epsilon, name=name)
 
     def apply_gradients(self, grads_and_vars):
         # TODO: Save intermediate Variables in slot
         updates = OrderedDict()
-        d = self.decay
+        args = self.args
+        d, ep, lr = args['decay'], args['epsilon'], args['learning_rate']
         for grad, var in grads_and_vars:
             value = var.get_value(borrow=True)
-            with variable_scope(self.name):
+            with variable_scope(args['name']):
                 name = '{}_grad_squared_mean'.format(var.name)
                 mean_grad2_ = get_variable(
                     name=name, shape=value.shape, dtype=value.dtype,
@@ -103,10 +104,10 @@ class NeonRMSProp(TheanoOptimizer):
 
                 new_mean_grad2 = d * mean_grad2 + (1.0 - d) * T.square(grad)
 
-                rms = T.sqrt(new_mean_grad2 + self.epsilon) + self.epsilon
+                rms = T.sqrt(new_mean_grad2 + ep) + ep
                 new_grad = grad / rms
 
-                delta = -self.learning_rate * new_grad
+                delta = -lr * new_grad
                 new_var = var + delta
 
             updates[mean_grad2] = new_mean_grad2
@@ -124,20 +125,23 @@ class GravesRMSProp(TheanoOptimizer):
                  decay1=0.95, decay2=0.95,
                  epsilon=1e-2, name='RMSProp'):
         # TODO: Add support for momentum
-        super(GravesRMSProp, self).__init__(name=name)
+        super(GravesRMSProp, self).__init__(
+            learning_rate=learning_rate,
+            decay1=decay1, decay2=decay2, epsilon=epsilon, name=name)
         self.decay1 = decay1
         self.decay2 = decay2
         self.epsilon = epsilon
         self.learning_rate = learning_rate
-        self.one = T.constant(1)
 
     def apply_gradients(self, grads_and_vars):
         # TODO: Save intermediate Variables in slot
         updates = OrderedDict()
-        d1, d2, eps = self.decay1, self.decay2, self.epsilon
+        args = self.args
+        d1, d2 = args['decay1'], args['decay2']
+        ep, lr = args['epsilon'], args['learning_rate']
         for grad, var in grads_and_vars:
             value = var.get_value(borrow=True)
-            with variable_scope(self.name):
+            with variable_scope(args['name']):
                 name = '{}_grad_mean'.format(var.name)
                 mean_grad1_ = get_variable(
                     name=name, shape=value.shape, dtype=value.dtype,
@@ -153,10 +157,10 @@ class GravesRMSProp(TheanoOptimizer):
                 new_mean_grad1 = d1 * mean_grad1 + (1.0 - d1) * grad
                 new_mean_grad2 = d2 * mean_grad2 + (1.0 - d2) * T.square(grad)
 
-                rms = T.sqrt(new_mean_grad2 - T.square(new_mean_grad1) + eps)
+                rms = T.sqrt(new_mean_grad2 - T.square(new_mean_grad1) + ep)
                 new_grad = grad / rms
 
-                delta_var = -self.learning_rate * new_grad
+                delta_var = -lr * new_grad
                 new_var = var + delta_var
 
             updates[mean_grad1] = new_mean_grad1

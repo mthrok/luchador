@@ -1,12 +1,15 @@
 from __future__ import absolute_import
 
+from .common import CopyMixin
+
 __all__ = ['Optimizer']
 
 
-class Optimizer(object):
+class Optimizer(CopyMixin):
     """Defines common interface for gradient computation and application"""
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, **args):
+        super(Optimizer, self).__init__()
+        self._store_args(args)
 
     def minimize(self, loss, wrt, **kwargs):
         """Minimize loss with the given variables

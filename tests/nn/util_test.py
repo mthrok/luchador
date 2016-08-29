@@ -17,21 +17,9 @@ from luchador.nn.util import (
 )
 
 
-OPTIMIZERS = get_optimizers()
-N_OPTIMIZERS = 4
-
-
 class UtilTest(unittest.TestCase):
     longMessage = True
     maxDiff = None
-
-    def test_optimizer_test_coverage(self):
-        """All initializers are tested"""
-        self.assertEqual(
-            len(OPTIMIZERS), N_OPTIMIZERS,
-            'Number of optimizers are changed. (New optimizer is added?) '
-            'Fix unittest to cover new optimizers'
-        )
 
     def test_get_initalizer(self):
         """get_initializer returns correct initalizer class"""
@@ -46,7 +34,7 @@ class UtilTest(unittest.TestCase):
 
     def test_get_optimzier(self):
         """get_optimizer returns correct optimizer class"""
-        for name, Optimizer in OPTIMIZERS.items():
+        for name, Optimizer in get_optimizers().items():
             expected = Optimizer
             found = get_optimizer(name)
             self.assertEqual(
