@@ -21,22 +21,6 @@ _AGENTS = sorted([obj[1].__name__ for obj in inspect.getmembers(
 
 
 ###############################################################################
-def print_env_info(env):
-    """Print environment info."""
-    def print_space_summary(space):
-        if isinstance(space, gym.spaces.Tuple):
-            for sp in space.spaces:
-                print_space_summary(sp)
-        if isinstance(space, gym.spaces.Discrete):
-            _LG.info('      Range: [0, {}]'.format(space.n-1))
-    _LG.info('... Action Space: {}'.format(env.action_space))
-    print_space_summary(env.action_space)
-    _LG.info('... Observation Space: {}'.format(env.observation_space))
-    print_space_summary(env.observation_space)
-    _LG.info('... Reward Range: {}'.format(env.reward_range))
-    return env
-
-
 def create_agent(agent_name, agent_config, env, global_config):
     _LG.info('Making new agent: {}'.format(agent_name))
     agent_class = getattr(luchador.agent, agent_name)
@@ -62,8 +46,7 @@ def main(config):
 
     env = gym.make(config['env'])
     agent = create_agent(config['agent'], config['agent_config'], env, config)
-    runner = luchador.GymEpisodeRunner(env, agent, 100)
-    print_env_info(env)
+    runner = luchador.EpisodeRunner(env, agent, 100)
 
     monitor = config['monitor']
     if monitor['enable']:
@@ -130,10 +113,6 @@ def _parse_command_line_arguments():
     ap.add_argument('--episodes', '-ep', type=int)
     ap.add_argument('--timesteps', '-ts', type=int)
     ap.add_argument('--debug', action='store_true')
-    ap.add_argument(
-        '--force', action='store_true',
-        help='Overwrite monitoring data.'
-    )
     ap.add_argument(
         '--config', '-c',
         default=default_config,

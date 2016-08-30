@@ -3,8 +3,7 @@ from __future__ import absolute_import
 
 class Agent(object):
     def __init__(self, env, agent_config, global_config):
-        self.action_space = env.action_space
-        self.observation_space = env.observation_space
+        self.env = env
 
     def observe(self, action, observation, reward, done, info):
         """Observe the action and it's outcome.
