@@ -1,6 +1,8 @@
 from __future__ import absolute_import
 
-__all__ = ['sane_gym_import']
+import yaml
+
+__all__ = ['sane_gym_import', 'load_config']
 
 
 def sane_gym_import():
@@ -15,3 +17,8 @@ def sane_gym_import():
     gym_lg.handlers = root_lg.handlers
     gym_lg.propagate = False
     root_lg.handlers = root_handlers
+
+
+def load_config(filepath):
+    with open(filepath) as f:
+        return yaml.load(f)
