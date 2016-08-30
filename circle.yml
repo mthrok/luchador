@@ -1,8 +1,11 @@
 dependencies:
   override:
     - pip install --upgrade .
+    - pip install --upgrade flake8
     - pip install --upgrade theano
     - pip install --upgrade https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-0.10.0rc0-cp27-none-linux_x86_64.whl
+    - ./script/install_ale.sh
+    - python setup.py download_ale
 
 test:
   override:
@@ -12,6 +15,6 @@ test:
     # integration test
     - LUCHADOR_NN_BACKEND=theano     LUCHADOR_NN_CONV_FORMAT=NCHW python tests/integration/run_tests.py
     - LUCHADOR_NN_BACKEND=tensorflow LUCHADOR_NN_CONV_FORMAT=NHWC python tests/integration/run_tests.py
-  post:
     # Style check
-    - pip install flake8 && flake8 .
+    - flake8 luchador
+    - flake8 tests
