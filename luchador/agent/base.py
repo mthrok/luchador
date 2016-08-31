@@ -1,9 +1,16 @@
 from __future__ import absolute_import
 
 
+__all__ = ['Agent']
+
+
 class Agent(object):
-    def __init__(self, env, agent_config, global_config):
-        self.env = env
+    def __init__(self):
+        super(Agent, self).__init__()
+
+    def set_env_info(env):
+        """Retrieve environmental information"""
+        pass
 
     def observe(self, action, observation, reward, done, info):
         """Observe the action and it's outcome.
