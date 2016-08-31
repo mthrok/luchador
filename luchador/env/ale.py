@@ -121,7 +121,11 @@ class ALEEnvironment(Environment):
         reward = self.ale.act(self.actions[action])
         screen = self._get_screen()
         terminal = self._is_terminal()
-        info = {'lives': self.ale.lives()}
+        info = {
+            'lives': self.ale.lives(),
+            'frame_number': self.ale.getFrameNumber(),
+            'episode_frame_number': self.ale.getEpisodeFrameNumber(),
+        }
         return reward, screen, terminal, info
 
     def _get_screen(self):
