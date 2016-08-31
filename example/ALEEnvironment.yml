@@ -1,0 +1,6 @@
+name: ALEEnvironment
+args:
+  rom: breakout
+  display_screen: False
+  sound: False
+  frame_skip: 1
