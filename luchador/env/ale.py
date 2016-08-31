@@ -7,6 +7,8 @@ import logging
 
 from ale_python_interface import ALEInterface
 
+from .base import Environment
+
 _LG = logging.getLogger(__name__)
 
 __all__ = ['ALEEnvironment']
@@ -15,21 +17,9 @@ _DIR = os.path.dirname(os.path.abspath(__file__))
 _ROM_DIR = os.path.join(_DIR, 'rom')
 
 
-class ALEEnvironment(object):
-    def __init__(self, rom_name, **kwargs):
-        if not rom_name.endswith('.bin'):
-            rom_name += '.bin'
-
-        rom_path = os.path.join(_ROM_DIR, rom_name)
-        if not os.path.isfile(rom_path):
-            raise ValueError('ROM ({}) not found.'.format(rom_name))
-
-        self.ale = ALEInterface()
-        self._parse_args(rom_path, **kwargs)
-
-    def _parse_args(
-            self,
-            rom_file,
+class ALEEnvironment(Environment):
+    def __init__(
+            self, rom,
             display_screen=False,
             sound=False,
             frame_skip=1,
@@ -41,58 +31,81 @@ class ALEEnvironment(object):
             record_sound_filename=None,
             minimal_action_set=True,
     ):
-        if display_screen and sys.platform == 'darwin':
+        if not rom.endswith('.bin'):
+            rom += '.bin'
+
+        self.rom = rom
+        self.display_screen = display_screen
+        self.sound = sound
+        self.frame_skip = frame_skip
+        self.repeat_action_probability = repeat_action_probability
+        self.color_averaging = color_averaging
+        self.random_seed = random_seed
+        self.record_screen_path = record_screen_path
+        self.record_sound_filename = record_sound_filename
+        self.minimal_action_set = minimal_action_set
+
+        self.ale = ALEInterface()
+        self.init()
+
+    def init(self):
+        if self.display_screen and sys.platform == 'darwin':
             import pygame
             pygame.init()
 
-        self.ale.setBool('display_screen', display_screen)
-        self.ale.setBool('sound', sound)
+        self.ale.setBool('display_screen', self.display_screen)
+        self.ale.setBool('sound', self.sound)
 
-        self.ale.setInt('frame_skip', frame_skip)
-        self.ale.setBool('color_averaging', color_averaging)
+        self.ale.setInt('frame_skip', self.frame_skip)
+        self.ale.setBool('color_averaging', self.color_averaging)
         self.ale.setFloat('repeat_action_probability',
-                          repeat_action_probability)
+                          self.repeat_action_probability)
 
-        if random_seed:
-            self.ale.setInt('random_seed', random_seed)
+        if self.random_seed:
+            self.ale.setInt('random_seed', self.random_seed)
 
-        if record_screen_path:
-            if not os.path.exists(record_screen_path):
-                _LG.info('Creating folder %s' % record_screen_path)
-                os.makedirs(record_screen_path)
-            _LG.info('Recording screens to %s', record_screen_path)
-            self.ale.setString('record_screen_dir', record_screen_path)
+        if self.record_screen_path:
+            if not os.path.exists(self.record_screen_path):
+                _LG.info('Creating folder %s' % self.record_screen_path)
+                os.makedirs(self.record_screen_path)
+            _LG.info('Recording screens to %s', self.record_screen_path)
+            self.ale.setString('record_screen_dir', self.record_screen_path)
 
-        if record_sound_filename:
-            _LG.info('Recording sound to %s', record_sound_filename)
+        if self.record_sound_filename:
+            _LG.info('Recording sound to %s', self.record_sound_filename)
             self.ale.setBool('sound', True)
-            self.ale.setString('record_sound_filename', record_sound_filename)
+            self.ale.setString('record_sound_filename',
+                               self.record_sound_filename)
 
-        self.ale.loadROM(rom_file)
+        rom_path = os.path.join(_ROM_DIR, self.rom)
+        if not os.path.isfile(rom_path):
+            raise ValueError('ROM ({}) not found.'.format(self.rom))
 
-        if minimal_action_set:
+        self.ale.loadROM(rom_path)
+
+        if self.minimal_action_set:
             self.actions = self.ale.getMinimalActionSet()
         else:
             self.actions = self.ale.getLegalActionSet()
 
-        _LG.info(
-            '\n'
-            '[Atari Env]'
-            '    ROM: {}'
-            '    display_screen           : {}'
-            '    sound                    : {}'
-            '    frame_skip               : {}'
-            '    repeat_action_probability: {}'
-            '    color_averaging          : {}'
-            '    random_seed              : {}'
-            '    record_screen_path       : {}'
-            '    record_sound_filename    : {}'
-            '    minimal_action_set       : {}'
+    def __repr__(self):
+        return (
+            '[Atari Env]\n'
+            '    ROM: {}\n'
+            '    display_screen           : {}\n'
+            '    sound                    : {}\n'
+            '    frame_skip               : {}\n'
+            '    repeat_action_probability: {}\n'
+            '    color_averaging          : {}\n'
+            '    random_seed              : {}\n'
+            '    record_screen_path       : {}\n'
+            '    record_sound_filename    : {}\n'
+            '    minimal_action_set       : {}\n'
             .format(
-                rom_file, display_screen, sound, frame_skip,
-                repeat_action_probability, color_averaging,
-                random_seed, record_screen_path, record_sound_filename,
-                minimal_action_set
+                self.rom, self.display_screen, self.sound, self.frame_skip,
+                self.repeat_action_probability, self.color_averaging,
+                self.random_seed, self.record_screen_path,
+                self.record_sound_filename, self.minimal_action_set
             )
         )
 
