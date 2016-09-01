@@ -24,20 +24,16 @@ class ALEEnvironment(BaseEnvironment):
             display_screen=False,
             sound=False,
             frame_skip=4,
-            color_averaging=False,
             random_seed=0,
             random_start=None,
             record_screen_path=None,
             record_sound_filename=None,
             minimal_action_set=True,
             mode='train',
+            grayscale=True,
     ):
         if mode not in ['test', 'train']:
             raise ValueError('`mode` must be either `test` or `train`')
-
-        if display_screen and sys.platform == 'darwin':
-            import pygame
-            pygame.init()
 
         if not rom.endswith('.bin'):
             rom += '.bin'
@@ -46,12 +42,17 @@ class ALEEnvironment(BaseEnvironment):
         if not os.path.isfile(rom_path):
             raise ValueError('ROM ({}) not found.'.format(self.rom))
 
+        if display_screen and sys.platform == 'darwin':
+            import pygame
+            pygame.init()
+
         ale = ALEInterface()
         ale.setBool('sound', sound)
         ale.setBool('display_screen', display_screen)
 
-        ale.setInt('frame_skip', 1)  # Frame skip is implemented separately
-        ale.setBool('color_averaging', color_averaging)
+        # Frame skip is implemented separately
+        ale.setInt('frame_skip', 1)
+        ale.setBool('color_averaging', False)
         ale.setFloat('repeat_action_probability', 0.0)
         # Somehow this repeat_action_probability has unexpected effect on game.
         # The larger this value is, the more frames games take to restart.
@@ -85,6 +86,7 @@ class ALEEnvironment(BaseEnvironment):
         self.ale = ale
         self.rom = rom
         self.mode = mode
+        self.grayscale = grayscale
         self.frame_skip = frame_skip
         self.random_start = random_start
         self.minimal_action_set = minimal_action_set
@@ -95,6 +97,11 @@ class ALEEnvironment(BaseEnvironment):
         else:
             self.actions = ale.getLegalActionSet()
 
+        if self.grayscale:
+            self._get_screen = self._get_screen_grayscale
+        else:
+            self._get_screen = self._get_screen_rgb
+
     def __repr__(self):
         ale = self.ale
         return (
@@ -102,9 +109,8 @@ class ALEEnvironment(BaseEnvironment):
             '    ROM: {}\n'
             '    display_screen           : {}\n'
             '    sound                    : {}\n'
+            '    grayscale                : {}\n'
             '    frame_skip               : {}\n'
-            '    repeat_action_probability: {}\n'
-            '    color_averaging          : {}\n'
             '    random_seed              : {}\n'
             '    random_start             : {}\n'
             '    record_screen_path       : {}\n'
@@ -115,9 +121,8 @@ class ALEEnvironment(BaseEnvironment):
                 self.rom,
                 ale.getBool('display_screen'),
                 ale.getBool('sound'),
+                self.grayscale,
                 self.frame_skip,
-                ale.getFloat('repeat_action_probability'),
-                ale.getBool('color_averaging'),
                 ale.getInt('random_seed'),
                 self.random_start,
                 ale.getString('record_screen_path'),
@@ -162,8 +167,11 @@ class ALEEnvironment(BaseEnvironment):
         }
         return reward, screen, terminal, info
 
-    def _get_screen(self):
+    def _get_screen_rgb(self):
         return self.ale.getScreenRGB()
+
+    def _get_screen_grayscale(self):
+        return self.ale.getScreenGrayscale()
 
     def _is_terminal(self):
         if self.mode == 'train':

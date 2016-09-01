@@ -2,6 +2,7 @@ import logging
 from argparse import ArgumentParser as AP
 
 import numpy as np
+# import matplotlib.pyplot as plt
 
 from luchador.env import ALEEnvironment
 
@@ -32,6 +33,12 @@ for episode in range(10):
         a = np.random.randint(n_actions)
         reward, screen, terminal, info = env.step(a)
         total_reward += reward
+    print type(screen)
+    print screen.shape
+    if screen.shape[2] == 1:
+        screen = screen[:, :, 0]
+    # plt.imshow(screen, cmap='Greys_r')
+    # plt.show()
 
     frame_number = env.ale.getFrameNumber()
     frame_number_ep = env.ale.getEpisodeFrameNumber()

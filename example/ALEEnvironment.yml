@@ -4,6 +4,9 @@ args:
   display_screen: False
   sound: False
   frame_skip: 4
-  color_averaging: False
-  random_start: 30 # This number of frames are played with action=0 at each reset.
-  mode: 'train' # Affects if loss of life is considered as terminal condition or not
+  # This number of frames are played with action=0 at each reset.
+  random_start: 30
+  # Affects if loss of life is considered as terminal condition or not
+  mode: train
+  # Get screen in grayscale NumPy array with shape (height, width) or (color, height, width)
+  grayscale: True
