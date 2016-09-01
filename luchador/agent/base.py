@@ -2,13 +2,10 @@ from __future__ import absolute_import
 
 from luchador.common import get_subclasses
 
-__all__ = ['Agent', 'get_agent']
+__all__ = ['BaseAgent', 'get_agent']
 
 
-class Agent(object):
-    def __init__(self):
-        super(Agent, self).__init__()
-
+class BaseAgent(object):
     def set_env_info(env):
         """Retrieve environmental information"""
         pass
@@ -42,7 +39,7 @@ class Agent(object):
 
 
 def get_agent(name):
-    for Class in get_subclasses(Agent):
+    for Class in get_subclasses(BaseAgent):
         if Class.__name__ == name:
             return Class
     raise ValueError('Unknown Agent: {}'.format(name))

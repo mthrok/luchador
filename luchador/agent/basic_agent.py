@@ -4,7 +4,7 @@ import logging
 
 import numpy as np
 
-from .base import Agent as BaseAgent
+from .base import BaseAgent
 
 __all__ = ['RandomAgent']
 
