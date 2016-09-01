@@ -44,5 +44,12 @@ def set_nn_conv_format(fmt):
 def set_nn_dtype(dtype):
     global _NN_DTYPE
 
+    if _NN_BACKEND == 'theano':
+        msg = (
+            'In theano backend, theano.config.floatX is used, '
+            'thus setting dtype has no effect.'
+        )
+        warnings.warn(msg)
+
     # TODO: Add validation
     _NN_DTYPE = dtype
