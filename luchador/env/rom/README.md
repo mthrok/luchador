@@ -1,3 +1,5 @@
-This is the directory for stronig Atari ROM files.
+This is the directory for stronig ROM files.
 
-To download ROM files manually, run `python setup.py download_ale` from the root directory.
+Before installing `luchador`, you need to download ROMs.
+
+You can download ATARI roms for `ALEEnvironment` by runnig `python setup.py download_ale` from the root directory.
