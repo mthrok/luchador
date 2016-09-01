@@ -1,5 +1,7 @@
 from __future__ import absolute_import
 
+import yaml
+
 
 def get_subclasses(Class):
     """Get the list of all subclasses
@@ -17,3 +19,8 @@ def get_subclasses(Class):
         ret.extend(get_subclasses(SubClass))
         ret.append(SubClass)
     return ret
+
+
+def load_config(filepath):
+    with open(filepath) as f:
+        return yaml.load(f)
