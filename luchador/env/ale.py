@@ -5,6 +5,7 @@ import sys
 import os
 import logging
 
+import numpy as np
 from ale_python_interface import ALEInterface
 
 from .base import Environment
@@ -23,10 +24,10 @@ class ALEEnvironment(Environment):
             display_screen=False,
             sound=False,
             frame_skip=1,
-            repeat_action_probability=0.99,  # setting this to 1.0 makes
-                                             # breakout hang
+            repeat_action_probability=0.0,
             color_averaging=False,
             random_seed=0,
+            random_start=None,
             record_screen_path=None,
             record_sound_filename=None,
             minimal_action_set=True,
@@ -64,12 +65,16 @@ class ALEEnvironment(Environment):
             if not os.path.exists(record_sound_dir):
                 os.makedirs(record_sound_dir)
             ale.setBool('sound', True)
-            ale.setString('record_sound_filename', self.record_sound_filename)
+            ale.setString('record_sound_filename', record_sound_filename)
+
+        if not rom.endswith('.bin'):
+            rom += '.bin'
 
         ale.loadROM(rom_path)
 
         self.ale = ale
         self.rom = rom
+        self.random_start = random_start
         self.minimal_action_set = minimal_action_set
 
         if self.minimal_action_set:
@@ -88,6 +93,7 @@ class ALEEnvironment(Environment):
             '    repeat_action_probability: {}\n'
             '    color_averaging          : {}\n'
             '    random_seed              : {}\n'
+            '    random_start             : {}\n'
             '    record_screen_path       : {}\n'
             '    record_sound_filename    : {}\n'
             '    minimal_action_set       : {}\n'
@@ -99,9 +105,10 @@ class ALEEnvironment(Environment):
                 ale.getFloat('repeat_action_probability'),
                 ale.getBool('color_averaging'),
                 ale.getInt('random_seed'),
+                self.random_start,
                 ale.getString('record_screen_path'),
                 ale.getString('record_sound_filename'),
-                self.minimal_action_set
+                self.minimal_action_set,
             )
         )
 
@@ -111,6 +118,9 @@ class ALEEnvironment(Environment):
 
     def reset(self):
         self.ale.reset_game()
+        if self.random_start:
+            for _ in range(1 + np.random.randint(self.random_start)):
+                self.ale.act(0)
         return self._get_screen()
 
     def step(self, action):

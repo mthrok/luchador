@@ -3,4 +3,13 @@ args:
   rom: breakout
   display_screen: False
   sound: False
-  frame_skip: 1
+  frame_skip: 1  # No frame skipping
+  repeat_action_probability: 0.0
+  # Somehow this repeat_action_probability has an unexpected effect on game.
+  # The larger this value is, the more frames games take to restart.
+  # And when 1.0 games completely hang
+  # We are setting the default value of 0.0 here, expecting that
+  # it has no effect as frame_skip == 1
+  color_averaging: False
+  random_start: 30
+  # This number of frames are played with action=0 at each reset.
