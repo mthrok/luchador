@@ -15,12 +15,13 @@ layer_configs:
       strides: 4
       padding: valid
       initializers:
-        bias: &normal_initializer
-          name: Normal
+        bias: &initializer1
+          name: Uniform
           args:
-            mean: 0.0
-            stddev: 0.01
-        weight: *normal_initializer
+            # 1 / sqrt(8 * 8 * 32) = 0.022097
+            maxval: 0.022
+            minval: -0.022
+        weight: *initializer1
 - scope: layer1/ReLU
   layer:
     args: {{}}
@@ -35,8 +36,13 @@ layer_configs:
       strides: 2
       padding: valid
       initializers:
-        bias: *normal_initializer
-        weight: *normal_initializer
+        bias: &initializer2
+          name: Uniform
+          args:
+            # 1 / sqrt(4 * 4 * 64) = 0.03125
+            maxval: 0.031
+            minval: -0.031
+        weight: *initializer2
 - scope: layer2/ReLU
   layer:
     name: ReLU
@@ -51,8 +57,13 @@ layer_configs:
       strides: 1
       padding: valid
       initializers:
-        bias: *normal_initializer
-        weight: *normal_initializer
+        bias: &initializer3
+          name: Uniform
+          args:
+            # 1 / sqrt(3 * 3 * 64) = 0.04166
+            maxval: 0.042
+            minval: -0.042
+        weight: *initializer3
 - scope: layer3/ReLU
   layer:
     name: ReLU
@@ -67,8 +78,14 @@ layer_configs:
     args:
       n_nodes: 512
       initializers:
-        bias: *normal_initializer
-        weight: *normal_initializer
+        bias: &initializer5
+          name: Uniform
+          args:
+            # 1 / sqrt(3136) = 0.01785
+            # 3136 is expected #inputs to this layer when the input size to layer0 is 84 * 84 * 4
+            maxval: 0.018
+            minval: -0.018
+        weight: *initializer5
 - scope: layer5/ReLU
   layer:
     name: ReLU
@@ -79,5 +96,10 @@ layer_configs:
     args:
       n_nodes: {n_actions}
       initializers:
-        bias: *normal_initializer
-        weight: *normal_initializer
+        bias: &initializer6
+          name: Uniform
+          args:
+            # 1 / sqrt(512) = 0.04419
+            maxval: 0.044
+            minval: -0.044
+        weight: *initializer6
