@@ -2,16 +2,12 @@ from __future__ import absolute_import
 
 import logging
 
-from .common import (
-    CopyMixin,
-    get_subclasses,
-)
+from .common import CopyMixin
+from luchador.common import get_subclasses
 
 _LG = logging.getLogger(__name__)
 
-__all__ = [
-    'Initializer', 'get_initializer',
-]
+__all__ = ['Initializer', 'get_initializer']
 
 
 class Initializer(CopyMixin, object):

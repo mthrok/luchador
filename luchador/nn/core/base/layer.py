@@ -4,7 +4,8 @@ from __future__ import absolute_import
 import logging
 from collections import OrderedDict
 
-from .common import CopyMixin, get_subclasses
+from .common import CopyMixin
+from luchador.common import get_subclasses
 
 _LG = logging.getLogger(__name__)
 
