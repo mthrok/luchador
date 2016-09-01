@@ -24,7 +24,6 @@ class ALEEnvironment(Environment):
             display_screen=False,
             sound=False,
             frame_skip=1,
-            repeat_action_probability=0.0,
             color_averaging=False,
             random_seed=0,
             random_start=None,
@@ -49,7 +48,14 @@ class ALEEnvironment(Environment):
 
         ale.setInt('frame_skip', frame_skip)
         ale.setBool('color_averaging', color_averaging)
-        ale.setFloat('repeat_action_probability', repeat_action_probability)
+        ale.setFloat('repeat_action_probability', 0.0)
+        # Somehow this repeat_action_probability has unexpected effect on game.
+        # The larger this value is, the more frames games take to restart.
+        # And when 1.0 games completely hang
+        # We are setting the default value of 0.0 here, expecting that
+        # it has no effect as frame_skip == 1
+        # This action repeating is agent's concern
+        # so we do not implement an equivalent in our wrapper.
 
         ale.setInt('random_seed', random_seed)
 

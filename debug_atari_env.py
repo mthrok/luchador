@@ -12,7 +12,6 @@ ap = AP()
 ap.add_argument('--rom', default='breakout')
 ap.add_argument('--display_screen', '-screen', action='store_true')
 ap.add_argument('--sound', action='store_true')
-ap.add_argument('--repeat-action-probability', default=0.0, type=float)
 ap.add_argument('--record_screen_path')
 ap.add_argument('--frame_skip', default=1, type=int)
 args = ap.parse_args()
@@ -20,7 +19,6 @@ args = ap.parse_args()
 env = ALEEnvironment(
     args.rom,
     display_screen=args.display_screen, sound=args.sound,
-    repeat_action_probability=args.repeat_action_probability,
     record_screen_path=args.record_screen_path,
     frame_skip=args.frame_skip)
 
