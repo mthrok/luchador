@@ -117,6 +117,7 @@ class ALEEnvironment(BaseEnvironment):
             '    record_sound_filename    : {}\n'
             '    minimal_action_set       : {}\n'
             '    mode                     : {}\n'
+            '    n_actions                : {}\n'
             .format(
                 self.rom,
                 ale.getBool('display_screen'),
@@ -129,6 +130,7 @@ class ALEEnvironment(BaseEnvironment):
                 ale.getString('record_sound_filename'),
                 self.minimal_action_set,
                 self.mode,
+                self.n_actions,
             )
         )
 
