@@ -3,7 +3,9 @@ from __future__ import absolute_import
 import logging
 import datetime
 
-from . import util
+from .env import get_env
+from .agent import get_agent
+from .common import load_config
 from .episode_runner import EpisodeRunner
 
 _LG = logging.getLogger(__name__)
@@ -11,11 +13,11 @@ _LG = logging.getLogger(__name__)
 
 ###############################################################################
 def main(env, agent, n_episodes, n_timesteps):
-    Environment = util.get_env(env['name'])
+    Environment = get_env(env['name'])
     env = Environment(**env['args'])
     _LG.info('\n{}'.format(env))
 
-    Agent = util.get_agent(agent['name'])
+    Agent = get_agent(agent['name'])
     agent = Agent(**agent['args'])
     agent.set_env_info(env)
     _LG.info('\n{}'.format(agent))
@@ -49,8 +51,8 @@ def _get_current_time():
 def _parse_config():
     args = _parse_command_line_arguments()
     config = {
-        'env': util.load_config(args.env_config),
-        'agent': util.load_config(args.agent_config),
+        'env': load_config(args.env_config),
+        'agent': load_config(args.agent_config),
         'n_episodes': args.episodes,
         'n_timesteps': args.timesteps,
     }
