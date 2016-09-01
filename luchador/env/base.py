@@ -2,10 +2,10 @@ from __future__ import absolute_import
 
 from luchador.common import get_subclasses
 
-__all__ = ['Environment', 'get_env']
+__all__ = ['BaseEnvironment', 'get_env']
 
 
-class Environment(object):
+class BaseEnvironment(object):
     @property
     def n_actions(self):
         raise NotImplementedError(
@@ -24,7 +24,7 @@ class Environment(object):
 
 
 def get_env(name):
-    for Class in get_subclasses(Environment):
+    for Class in get_subclasses(BaseEnvironment):
         if Class.__name__ == name:
             return Class
     raise ValueError('Unknown Environment: {}'.format(name))

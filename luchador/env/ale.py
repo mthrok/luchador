@@ -8,7 +8,7 @@ import logging
 import numpy as np
 from ale_python_interface import ALEInterface
 
-from .base import Environment
+from .base import BaseEnvironment
 
 _LG = logging.getLogger(__name__)
 
@@ -18,7 +18,7 @@ _DIR = os.path.dirname(os.path.abspath(__file__))
 _ROM_DIR = os.path.join(_DIR, 'rom')
 
 
-class ALEEnvironment(Environment):
+class ALEEnvironment(BaseEnvironment):
     def __init__(
             self, rom,
             display_screen=False,
