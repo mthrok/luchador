@@ -30,7 +30,11 @@ class ALEEnvironment(Environment):
             record_screen_path=None,
             record_sound_filename=None,
             minimal_action_set=True,
+            mode='train',
     ):
+        if mode not in ['test', 'train']:
+            raise ValueError('`mode` must be either `test` or `train`')
+
         if display_screen and sys.platform == 'darwin':
             import pygame
             pygame.init()
@@ -80,10 +84,12 @@ class ALEEnvironment(Environment):
 
         self.ale = ale
         self.rom = rom
+        self.mode = mode
         self.frame_skip = frame_skip
         self.random_start = random_start
         self.minimal_action_set = minimal_action_set
 
+        self.life_lost = False
         if self.minimal_action_set:
             self.actions = ale.getMinimalActionSet()
         else:
@@ -104,6 +110,7 @@ class ALEEnvironment(Environment):
             '    record_screen_path       : {}\n'
             '    record_sound_filename    : {}\n'
             '    minimal_action_set       : {}\n'
+            '    mode                     : {}\n'
             .format(
                 self.rom,
                 ale.getBool('display_screen'),
@@ -116,6 +123,7 @@ class ALEEnvironment(Environment):
                 ale.getString('record_screen_path'),
                 ale.getString('record_sound_filename'),
                 self.minimal_action_set,
+                self.mode,
             )
         )
 
@@ -124,6 +132,7 @@ class ALEEnvironment(Environment):
         return len(self.actions)
 
     def reset(self):
+        self.life_lost = False
         self.ale.reset_game()
         if self.random_start:
             for _ in range(1 + np.random.randint(self.random_start)):
@@ -133,8 +142,15 @@ class ALEEnvironment(Environment):
     def step(self, action):
         reward = 0
         action = self.actions[action]
+
+        self.life_lost = False
+        initial_lives = self.ale.lives()
         for i in range(max(self.frame_skip, 1)):
             reward += self.ale.act(action)
+
+            if not self.ale.lives() == initial_lives:
+                self.life_lost = True
+
             terminal = self._is_terminal()
             if terminal:
                 break
@@ -150,4 +166,6 @@ class ALEEnvironment(Environment):
         return self.ale.getScreenRGB()
 
     def _is_terminal(self):
+        if self.mode == 'train':
+            return self.ale.game_over() or self.life_lost
         return self.ale.game_over()
