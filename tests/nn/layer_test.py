@@ -3,13 +3,13 @@ from __future__ import absolute_import
 import unittest
 
 from luchador.nn import (
+    get_layer,
     Dense,
     Conv2D,
     ReLU,
     Flatten,
     TrueDiv,
 )
-from luchador.nn.util import get_layer
 
 PARAMETERIZED_LAYER_CLASSES = (
     Dense,

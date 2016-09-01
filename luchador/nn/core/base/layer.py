@@ -4,11 +4,14 @@ from __future__ import absolute_import
 import logging
 from collections import OrderedDict
 
-from .common import CopyMixin
+from .common import CopyMixin, get_subclasses
 
 _LG = logging.getLogger(__name__)
 
-__all__ = ['Dense', 'Conv2D', 'ReLU', 'Flatten', 'TrueDiv']
+__all__ = [
+    'Layer', 'get_layer',
+    'Dense', 'Conv2D', 'ReLU', 'Flatten', 'TrueDiv',
+]
 
 
 class Layer(CopyMixin, object):
@@ -106,3 +109,10 @@ class TrueDiv(Layer):
     def __init__(self, denom, dtype=None):
         super(TrueDiv, self).__init__(denom=denom, dtype=None)
         self.denom = None  # denominator in Variable expression
+
+
+def get_layer(name):
+    for Class in get_subclasses(Layer):
+        if Class.__name__ == name:
+            return Class
+    raise ValueError('Unknown Layer: {}'.format(name))

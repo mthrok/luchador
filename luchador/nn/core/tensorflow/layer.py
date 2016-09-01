@@ -8,7 +8,9 @@ import tensorflow as tf
 
 from luchador import get_nn_conv_format, get_nn_dtype
 from ..base import (
+    get_layer,
     get_initializer,
+    Layer as BaseLayer,
     ReLU as BaseReLU,
     Dense as BaseDense,
     Conv2D as BaseConv2D,
@@ -26,7 +28,10 @@ from .initializer import (
 
 _LG = logging.getLogger(__name__)
 
-__all__ = ['Dense', 'Conv2D', 'ReLU', 'Flatten', 'TrueDiv']
+__all__ = [
+    'BaseLayer', 'get_layer',
+    'Dense', 'Conv2D', 'ReLU', 'Flatten', 'TrueDiv'
+]
 
 
 class Dense(BaseDense):

@@ -4,8 +4,8 @@ from __future__ import absolute_import
 def get_subclasses(Class):
     ret = []
     for SubClass in Class.__subclasses__():
-        ret.append(SubClass)
         ret.extend(get_subclasses(SubClass))
+        ret.append(SubClass)
     return ret
 
 

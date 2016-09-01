@@ -40,5 +40,8 @@ def get_layers():
     return {
         name: Class for name, Class
         in inspect.getmembers(luchador.nn, inspect.isclass)
-        if issubclass(Class, luchador.nn.core.base.layer.Layer)
+        if (
+                issubclass(Class, luchador.nn.BaseLayer) and
+                not Class == luchador.nn.BaseLayer
+        )
     }
