@@ -15,7 +15,7 @@ _LG = logging.getLogger(__name__)
 __all__ = ['ALEEnvironment']
 
 _DIR = os.path.dirname(os.path.abspath(__file__))
-_ROM_DIR = os.path.join(_DIR, 'rom')
+_ROM_DIR = os.path.join(_DIR, 'rom', 'atari')
 
 
 class ALEEnvironment(BaseEnvironment):

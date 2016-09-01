@@ -3,7 +3,7 @@ from __future__ import print_function
 import os
 import setuptools
 
-ALE_ROM_DIR = os.path.join('env', 'rom')
+ALE_ROM_DIR = os.path.join('env', 'rom', 'atari')
 
 
 def download(url):
