@@ -7,6 +7,7 @@ import theano
 import theano.tensor as T
 
 from ..base import (
+    get_initializer,
     ReLU as BaseReLU,
     Dense as BaseDense,
     Conv2D as BaseConv2D,
@@ -20,7 +21,6 @@ from .initializer import (
     Xavier,
     XavierConv2D,
 )
-from luchador.nn.util import get_initializer
 
 
 _LG = logging.getLogger(__name__)

@@ -7,12 +7,18 @@ from numpy.random import RandomState
 from theano import config
 
 from .random import get_rng
-from ..base import Initializer
+from ..base import (
+    get_initializer,
+    Initializer as BaseInitializer,
+)
 
-__all__ = ['Constant', 'Normal', 'Uniform', 'Xavier', 'XavierConv2D']
+__all__ = [
+    'BaseInitializer', 'get_initializer',
+    'Constant', 'Normal', 'Uniform', 'Xavier', 'XavierConv2D',
+]
 
 
-class Constant(Initializer):
+class Constant(BaseInitializer):
     def __init__(self, value, dtype=None):
         super(Constant, self).__init__(value=value, dtype=dtype)
 
@@ -21,7 +27,7 @@ class Constant(Initializer):
         return self.args['value'] * np.ones(shape, dtype=dtype)
 
 
-class Uniform(Initializer):
+class Uniform(BaseInitializer):
     def __init__(self, minval=0.0, maxval=1.0, seed=None, dtype=None):
         super(Uniform, self).__init__(
             minval=minval, maxval=maxval, seed=seed, dtype=dtype)
@@ -34,7 +40,7 @@ class Uniform(Initializer):
         return values.astype(dtype)
 
 
-class Normal(Initializer):
+class Normal(BaseInitializer):
     def __init__(self, mean=0.0, stddev=1.0, seed=None, dtype=None):
         super(Normal, self).__init__(
             mean=mean, stddev=stddev, seed=seed, dtype=dtype)
@@ -47,7 +53,7 @@ class Normal(Initializer):
         return values.astype(dtype)
 
 
-class Xavier(Initializer):
+class Xavier(BaseInitializer):
     """Adoptation of xavier_initializer from tensorflow"""
     def __init__(self, uniform=True, seed=None, dtype=None):
         super(Xavier, self).__init__(uniform=uniform, seed=seed, dtype=dtype)
@@ -74,7 +80,7 @@ class Xavier(Initializer):
     def sample(self, shape):
         if not len(shape) == 2:
             raise ValueError(
-                'Xavier Initializer expects the shape to have 2 elements, '
+                'Xavier initializer expects the shape to have 2 elements, '
                 'e.g. [fan_in, fan_out]. Found: {}'.format(shape)
             )
 

@@ -1,8 +1,5 @@
 from __future__ import absolute_import
 
-from luchador import get_nn_dtype
-from ..base import Initializer
-
 import tensorflow as tf
 from tensorflow import (
     constant_initializer,
@@ -14,10 +11,19 @@ from tensorflow.contrib.layers import (
     xavier_initializer_conv2d,
 )
 
-__all__ = ['Constant', 'Normal', 'Uniform', 'Xavier', 'XavierConv2D']
+from luchador import get_nn_dtype
+from ..base import (
+    get_initializer,
+    Initializer as BaseInitializer
+)
+
+__all__ = [
+    'BaseInitializer', 'get_initializer',
+    'Constant', 'Normal', 'Uniform', 'Xavier', 'XavierConv2D'
+]
 
 
-class TFInitializer(Initializer):
+class TFInitializer(BaseInitializer):
     def get(self):
         return self._initializer
 

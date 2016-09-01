@@ -8,10 +8,12 @@ from tests.fixture import (
     get_initializers,
 )
 
+from luchador.nn import (
+    get_initializer,
+)
 from luchador.nn.util import (
     get_layer,
     get_optimizer,
-    get_initializer,
     get_model_config,
     make_model,
 )

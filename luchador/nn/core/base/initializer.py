@@ -2,11 +2,16 @@ from __future__ import absolute_import
 
 import logging
 
-from .common import CopyMixin
+from .common import (
+    CopyMixin,
+    get_subclasses,
+)
 
 _LG = logging.getLogger(__name__)
 
-__all__ = ['Initializer']
+__all__ = [
+    'Initializer', 'get_initializer',
+]
 
 
 class Initializer(CopyMixin, object):
@@ -58,3 +63,10 @@ class Initializer(CopyMixin, object):
         raise NotImplementedError(
             '`sample` method is not implemented for {}.{}'
             .format(type(self).__module__, type(self).__name__))
+
+
+def get_initializer(name):
+    for Class in get_subclasses(Initializer):
+        if Class.__name__ == name:
+            return Class
+    raise ValueError('Unknown Initializer: {}'.format(name))

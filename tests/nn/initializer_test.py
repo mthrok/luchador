@@ -3,7 +3,7 @@ from __future__ import absolute_import
 import unittest
 
 from tests.fixture import get_initializers
-from luchador.nn.util import get_initializer
+from luchador.nn import get_initializer
 
 INITIALIZERS = get_initializers()
 N_INITIALIZERS = 5

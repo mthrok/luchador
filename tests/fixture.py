@@ -18,7 +18,10 @@ def get_initializers():
     return {
         name: Class for name, Class
         in inspect.getmembers(luchador.nn, inspect.isclass)
-        if issubclass(Class, luchador.nn.core.base.Initializer)
+        if (
+                issubclass(Class, luchador.nn.BaseInitializer) and
+                not Class == luchador.nn.BaseInitializer
+        )
     }
 
 

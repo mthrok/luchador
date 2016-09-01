@@ -10,17 +10,6 @@ _DATA_DIR = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 'data')
 
 
-def get_initializer(name):
-    import luchador.nn
-    for name_, Class in inspect.getmembers(luchador.nn, inspect.isclass):
-        if (
-                name == name_ and
-                issubclass(Class, luchador.nn.core.base.Initializer)
-        ):
-            return Class
-    raise ValueError('Unknown Initializer: {}'.format(name))
-
-
 def get_optimizer(name):
     import luchador.nn
     for name_, Class in inspect.getmembers(luchador.nn, inspect.isclass):
