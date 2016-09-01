@@ -5,15 +5,21 @@ from collections import OrderedDict
 import theano
 import theano.tensor as T
 
-from ..base import Optimizer as BaseOptimizer
+from ..base import (
+    get_optimizer,
+    Optimizer,
+)
 from .scope import get_variable, variable_scope
 from .initializer import Constant
 from .wrapper import Operation
 
-__all__ = ['SGD', 'RMSProp', 'GravesRMSProp', 'NeonRMSProp']
+__all__ = [
+    'BaseOptimizer', 'get_optimizer',
+    'SGD', 'RMSProp', 'GravesRMSProp', 'NeonRMSProp',
+]
 
 
-class TheanoOptimizer(BaseOptimizer):
+class BaseOptimizer(Optimizer):
     def minimize(self, loss, wrt, **kwargs):
         grads_and_vars = self.compute_gradients(loss, wrt, **kwargs)
         return self.apply_gradients(grads_and_vars)
@@ -25,7 +31,7 @@ class TheanoOptimizer(BaseOptimizer):
         return [(grad, var) for grad, var in zip(grads, wrt)]
 
 
-class SGD(TheanoOptimizer):
+class SGD(BaseOptimizer):
     def __init__(self, learning_rate, name='SGD', **kwargs):
         super(SGD, self).__init__(
             learning_rate=learning_rate, name=name)
@@ -37,7 +43,7 @@ class SGD(TheanoOptimizer):
         return Operation(op=updates)
 
 
-class RMSProp(TheanoOptimizer):
+class RMSProp(BaseOptimizer):
     def __init__(self, learning_rate, decay=0.95, momentum=None,
                  epsilon=1e-2, name='RMSProp', **kwargs):
         super(RMSProp, self).__init__(
@@ -81,7 +87,7 @@ class RMSProp(TheanoOptimizer):
         return Operation(op=updates)
 
 
-class NeonRMSProp(TheanoOptimizer):
+class NeonRMSProp(BaseOptimizer):
     def __init__(self, learning_rate, decay=0.95, epsilon=1e-6,
                  name='NeonRMSProp', **kwargs):
         super(NeonRMSProp, self).__init__(
@@ -115,7 +121,7 @@ class NeonRMSProp(TheanoOptimizer):
         return Operation(op=updates)
 
 
-class GravesRMSProp(TheanoOptimizer):
+class GravesRMSProp(BaseOptimizer):
     """RMSProp used in DQN paper[1] and described in A.Graves paper [2]
 
     [1] https://github.com/kuz/DeepMind-Atari-Deep-Q-Learner/blob/4b9f5a79b03ea0cfc512ed1c11f1b00bc875bc57/dqn/NeuralQLearner.lua#L265  # nopep8

@@ -10,10 +10,10 @@ from tests.fixture import (
 
 from luchador.nn import (
     get_initializer,
+    get_optimizer,
 )
 from luchador.nn.util import (
     get_layer,
-    get_optimizer,
     get_model_config,
     make_model,
 )

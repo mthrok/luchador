@@ -29,7 +29,10 @@ def get_optimizers():
     return {
         name: Class for name, Class
         in inspect.getmembers(luchador.nn, inspect.isclass)
-        if issubclass(Class, luchador.nn.core.base.Optimizer)
+        if (
+                issubclass(Class, luchador.nn.BaseOptimizer) and
+                not Class == luchador.nn.BaseOptimizer
+        )
     }
 
 

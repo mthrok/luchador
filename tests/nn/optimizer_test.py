@@ -3,7 +3,7 @@ from __future__ import absolute_import
 import unittest
 
 from tests.fixture import get_optimizers
-from luchador.nn.util import get_optimizer
+from luchador.nn import get_optimizer
 
 OPTIMIZERS = get_optimizers()
 N_OPTIMIZERS = 4

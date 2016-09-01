@@ -2,13 +2,19 @@ from __future__ import absolute_import
 
 import tensorflow as tf  # nopep8
 
-from ..base import Optimizer as BaseOptimizer
+from ..base import (
+    get_optimizer,
+    Optimizer,
+)
 from .wrapper import Operation
 
-__all__ = ['SGD', 'RMSProp', 'GravesRMSProp', 'NeonRMSProp']
+__all__ = [
+    'BaseOptimizer', 'get_optimizer',
+    'SGD', 'RMSProp', 'GravesRMSProp', 'NeonRMSProp'
+]
 
 
-class TFOptimizer(BaseOptimizer):
+class BaseOptimizer(Optimizer):
     def _parse_kwargs(self, kwargs):
         keys_and_defaults1 = [
             ('gate_gradients', 1),
@@ -46,14 +52,14 @@ class TFOptimizer(BaseOptimizer):
         return Operation(minimize_op)
 
 
-class SGD(TFOptimizer):
+class SGD(BaseOptimizer):
     def __init__(self, learning_rate, name='SGD', **kwargs):
         super(SGD, self).__init__(learning_rate=learning_rate, name=name)
         self.optimizer = tf.train.GradientDescentOptimizer(
             learning_rate, name=name, **kwargs)
 
 
-class RMSProp(TFOptimizer):
+class RMSProp(BaseOptimizer):
     def __init__(self, learning_rate,
                  decay=0.95, momentum=None,
                  epsilon=1e-2, name='RMSProp', **kwargs):
@@ -65,7 +71,7 @@ class RMSProp(TFOptimizer):
             epsilon=epsilon, **kwargs)
 
 
-class NeonRMSProp(TFOptimizer):
+class NeonRMSProp(BaseOptimizer):
     def __init__(self, learning_rate, decay=0.95, epsilon=1e-6,
                  name='NeonRMSProp', **kwargs):
         super(NeonRMSProp, self).__init__(
@@ -102,7 +108,7 @@ class NeonRMSProp(TFOptimizer):
         return Operation(tf.group(*updates))
 
 
-class GravesRMSProp(TFOptimizer):
+class GravesRMSProp(BaseOptimizer):
     def __init__(self, learning_rate,
                  decay1=0.0, decay2=0.95, epsilon=1e-2,
                  name='GravesRMSProp', **kwargs):

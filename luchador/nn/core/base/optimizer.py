@@ -1,8 +1,8 @@
 from __future__ import absolute_import
 
-from .common import CopyMixin
+from .common import CopyMixin, get_subclasses
 
-__all__ = ['Optimizer']
+__all__ = ['Optimizer', 'get_optimizer']
 
 
 class Optimizer(CopyMixin):
@@ -60,3 +60,10 @@ class Optimizer(CopyMixin):
             '`apply_gradients` is not implemnted for {}.{}'
             .format(type(self).__module__, type(self).__name__)
         )
+
+
+def get_optimizer(name):
+    for Class in get_subclasses(Optimizer):
+        if Class.__name__ == name:
+            return Class
+    raise ValueError('Unknown Optimizer: {}'.format(name))
