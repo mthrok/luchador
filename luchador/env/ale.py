@@ -23,7 +23,7 @@ class ALEEnvironment(Environment):
             self, rom,
             display_screen=False,
             sound=False,
-            frame_skip=1,
+            frame_skip=4,
             color_averaging=False,
             random_seed=0,
             random_start=None,
@@ -46,7 +46,7 @@ class ALEEnvironment(Environment):
         ale.setBool('sound', sound)
         ale.setBool('display_screen', display_screen)
 
-        ale.setInt('frame_skip', frame_skip)
+        ale.setInt('frame_skip', 1)  # Frame skip is implemented separately
         ale.setBool('color_averaging', color_averaging)
         ale.setFloat('repeat_action_probability', 0.0)
         # Somehow this repeat_action_probability has unexpected effect on game.
@@ -80,6 +80,7 @@ class ALEEnvironment(Environment):
 
         self.ale = ale
         self.rom = rom
+        self.frame_skip = frame_skip
         self.random_start = random_start
         self.minimal_action_set = minimal_action_set
 
@@ -107,7 +108,7 @@ class ALEEnvironment(Environment):
                 self.rom,
                 ale.getBool('display_screen'),
                 ale.getBool('sound'),
-                ale.getInt('frame_skip'),
+                self.frame_skip,
                 ale.getFloat('repeat_action_probability'),
                 ale.getBool('color_averaging'),
                 ale.getInt('random_seed'),
@@ -130,9 +131,14 @@ class ALEEnvironment(Environment):
         return self._get_screen()
 
     def step(self, action):
-        reward = self.ale.act(self.actions[action])
+        reward = 0
+        action = self.actions[action]
+        for i in range(max(self.frame_skip, 1)):
+            reward += self.ale.act(action)
+            terminal = self._is_terminal()
+            if terminal:
+                break
         screen = self._get_screen()
-        terminal = self._is_terminal()
         info = {
             'lives': self.ale.lives(),
             'frame_number': self.ale.getFrameNumber(),
