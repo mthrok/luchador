@@ -13,8 +13,12 @@ ap.add_argument('--rom', default='breakout')
 ap.add_argument('--display_screen', '-screen', action='store_true')
 ap.add_argument('--sound', action='store_true')
 ap.add_argument('--record_screen_path')
-ap.add_argument('--grayscale', type=bool, default=True)
 ap.add_argument('--frame_skip', type=int, default=4)
+ap.add_argument('--random_start', type=int, default=0)
+ap.add_argument('--grayscale',
+                dest='grayscale', action='store_true')
+ap.add_argument('--color',
+                dest='grayscale', action='store_false')
 ap.add_argument('--minimal_action_set',
                 dest='minimal_action_set', action='store_true')
 ap.add_argument('--legal_action_set',
@@ -27,6 +31,7 @@ env = ALEEnvironment(
     display_screen=args.display_screen, sound=args.sound,
     record_screen_path=args.record_screen_path,
     frame_skip=args.frame_skip,
+    random_start=args.random_start,
     grayscale=args.grayscale,
     minimal_action_set=args.minimal_action_set,
     mode=args.mode)
@@ -36,16 +41,22 @@ logger.info('\n{}'.format(env))
 n_actions = env.n_actions
 for episode in range(10):
     total_reward = 0.0
-    terminal = False
-    while not terminal:
+    env.reset()
+    ep_frame0 = env.ale.getEpisodeFrameNumber()
+    for n_steps in range(1, 10000):
         a = np.random.randint(n_actions)
         reward, screen, terminal, info = env.step(a)
         total_reward += reward
-    env.reset()
+        if terminal:
+            break
+
+    ep_frame1 = info['episode_frame_number']
     logger.info('Episode {}:'.format(episode))
-    logger.info('  Score: {}, Lives: {}'.format(total_reward, info['lives']))
-    logger.info('  Frame Number: {} / {}'
-                .format(info['episode_frame_number'], info['frame_number']))
+    logger.info('  Score : {}'.format(total_reward))
+    logger.info('  Lives : {}'.format(info['lives']))
+    logger.info('  #Steps: {}'.format(n_steps))
+    logger.info('  #EpisodeFrame: {} -> {}'.format(ep_frame0, ep_frame1))
+    logger.info('  #Total Frames: {}'.format(info['total_frame_number']))
 
 logger.info('Screen type: {}'.format(type(screen)))
 logger.info('Screen shape: {}'.format(screen.shape))

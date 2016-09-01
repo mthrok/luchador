@@ -32,6 +32,7 @@ class ALEEnvironment(BaseEnvironment):
             mode='train',
             grayscale=True,
     ):
+        # TODO: Add individual unittest
         if mode not in ['test', 'train']:
             raise ValueError('`mode` must be either `test` or `train`')
 
@@ -144,6 +145,9 @@ class ALEEnvironment(BaseEnvironment):
         if self.random_start:
             for _ in range(1 + np.random.randint(self.random_start)):
                 self.ale.act(0)
+        else:
+            self.ale.act(0)
+
         return self._get_screen()
 
     def step(self, action):
@@ -164,7 +168,7 @@ class ALEEnvironment(BaseEnvironment):
         screen = self._get_screen()
         info = {
             'lives': self.ale.lives(),
-            'frame_number': self.ale.getFrameNumber(),
+            'total_frame_number': self.ale.getFrameNumber(),
             'episode_frame_number': self.ale.getEpisodeFrameNumber(),
         }
         return reward, screen, terminal, info
