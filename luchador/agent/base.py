@@ -1,7 +1,8 @@
 from __future__ import absolute_import
 
+from luchador.common import get_subclasses
 
-__all__ = ['Agent']
+__all__ = ['Agent', 'get_agent']
 
 
 class Agent(object):
@@ -38,3 +39,10 @@ class Agent(object):
     def perform_post_episode_task(self):
         """Perform post episode task"""
         pass
+
+
+def get_agent(name):
+    for Class in get_subclasses(Agent):
+        if Class.__name__ == name:
+            return Class
+    raise ValueError('Unknown Agent: {}'.format(name))

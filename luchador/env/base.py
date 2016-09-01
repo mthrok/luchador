@@ -1,7 +1,8 @@
 from __future__ import absolute_import
 
+from luchador.common import get_subclasses
 
-__all__ = ['Environment']
+__all__ = ['Environment', 'get_env']
 
 
 class Environment(object):
@@ -20,3 +21,10 @@ class Environment(object):
         raise NotImplementedError(
             '`step` method is not implemented for {}'.format(self.__class__)
         )
+
+
+def get_env(name):
+    for Class in get_subclasses(Environment):
+        if Class.__name__ == name:
+            return Class
+    raise ValueError('Unknown Environment: {}'.format(name))
