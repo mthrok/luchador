@@ -2,7 +2,6 @@ from __future__ import absolute_import
 
 import yaml
 import inspect
-import luchador
 
 __all__ = ['sane_gym_import', 'load_config', 'get_env', 'get_agent']
 
@@ -27,7 +26,8 @@ def load_config(filepath):
 
 
 def get_agent(name):
-    for name_, Class in inspect.getmembers(luchador, inspect.isclass):
+    import luchador.agent
+    for name_, Class in inspect.getmembers(luchador.agent, inspect.isclass):
         if (
                 name == name_ and
                 issubclass(Class, luchador.agent.base.Agent)
@@ -37,7 +37,8 @@ def get_agent(name):
 
 
 def get_env(name):
-    for name_, Class in inspect.getmembers(luchador, inspect.isclass):
+    import luchador.env
+    for name_, Class in inspect.getmembers(luchador.env, inspect.isclass):
         if (
                 name == name_ and
                 issubclass(Class, luchador.env.base.Environment)
