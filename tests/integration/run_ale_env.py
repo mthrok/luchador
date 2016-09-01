@@ -19,6 +19,7 @@ ap.add_argument('--minimal_action_set',
                 dest='minimal_action_set', action='store_true')
 ap.add_argument('--legal_action_set',
                 dest='minimal_action_set', action='store_false')
+ap.add_argument('--mode', choices=['test', 'train'])
 args = ap.parse_args()
 
 env = ALEEnvironment(
@@ -27,7 +28,8 @@ env = ALEEnvironment(
     record_screen_path=args.record_screen_path,
     frame_skip=args.frame_skip,
     grayscale=args.grayscale,
-    minimal_action_set=args.minimal_action_set)
+    minimal_action_set=args.minimal_action_set,
+    mode=args.mode)
 
 logger.info('\n{}'.format(env))
 

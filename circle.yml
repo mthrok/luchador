@@ -16,10 +16,12 @@ test:
     # unit test
     - LUCHADOR_NN_BACKEND=theano     LUCHADOR_NN_CONV_FORMAT=NCHW python setup.py test
     - LUCHADOR_NN_BACKEND=tensorflow LUCHADOR_NN_CONV_FORMAT=NHWC python setup.py test
-    # integration test
+    # integration test for ALEEnvironment
+    - python tests/integration/run_ale_env.py --mode test
+    - python tests/integration/run_ale_env.py --mode train
+    # integration test for DQN
     - LUCHADOR_NN_BACKEND=theano     LUCHADOR_NN_CONV_FORMAT=NCHW python tests/integration/run_dqn.py
     - LUCHADOR_NN_BACKEND=tensorflow LUCHADOR_NN_CONV_FORMAT=NHWC python tests/integration/run_dqn.py
-    - python tests/integration/run_ale_env.py
     # Style check
     - flake8 luchador
     - flake8 tests
