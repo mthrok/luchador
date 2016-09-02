@@ -40,10 +40,12 @@ class ALEEnvironment(BaseEnvironment):
             minimal_action_set=True,
             random_seed=0,
             random_start=None,
+            buffer_frames=2,
+            preprocess_mode='max',
+            display_screen=False,
+            play_sound=False,
             record_screen_path=None,
             record_sound_filename=None,
-            display_screen=False,
-            sound=False,
     ):
         """Initialize ALE Environment with the given parmeters
 
@@ -81,6 +83,16 @@ class ALEEnvironment(BaseEnvironment):
               in case of ALE, as reset command does not reset system state
               we may not need to do this. (TODO: Check.)
 
+          buffer_frames(int): The number of latest frame to preprocess.
+
+          preprocess_mode(str): Either `max` or `average`. When obtaining
+                                observation, pixel-wise maximum or average
+                                over buffered frames are taken before resizing
+
+          display_screen(bool): Display sceen when True.
+
+          play_sound(bool): Play sound
+
           record_screen_path(str): Passed to ALE. Save the original screens
               into the path.
               Note: that this is different from the observation returned by
@@ -88,9 +100,6 @@ class ALEEnvironment(BaseEnvironment):
 
           record_screen_filename(str): Passed to ALE. Save sound to a file.
 
-          display_screen(bool): Display sceen when True.
-
-          sound(bool): Play sound
         """
         # TODO: Add individual unittest
         if mode not in ['test', 'train']:
@@ -107,8 +116,48 @@ class ALEEnvironment(BaseEnvironment):
             import pygame
             pygame.init()
 
+        self.rom = rom
+        self.mode = mode
+        self.life_lost = False
+
+        self.width = width
+        self.height = height
+        self.grayscale = grayscale
+        self.frame_skip = frame_skip
+        self.random_start = random_start
+        self.minimal_action_set = minimal_action_set
+
+        self._init_ale(rom_path=rom_path,
+                       random_seed=random_seed, random_start=random_start,
+                       display_screen=display_screen, play_sound=play_sound,
+                       record_screen_path=record_screen_path,
+                       record_sound_filename=record_sound_filename)
+
+
+
+        if minimal_action_set:
+            self.actions = self.ale.getMinimalActionSet()
+        else:
+            self.actions = self.ale.getLegalActionSet()
+
+        orig_width, orig_height = self.ale.getScreenDims()
+        height = height or orig_height
+        width = width or orig_width
+        if height == orig_height and width == orig_width:
+            self.resize = None
+        else:
+            self.resize = (height, width) if grayscale else (height, width, 3)
+
+        if grayscale:
+            self._get_screen = self._get_screen_grayscale
+        else:
+            self._get_screen = self._get_screen_rgb
+
+    def _init_ale(
+            self, rom_path, random_seed, random_start, display_screen,
+            play_sound, record_screen_path, record_sound_filename):
         ale = ALEInterface()
-        ale.setBool('sound', sound)
+        ale.setBool('sound', play_sound)
         ale.setBool('display_screen', display_screen)
         ale.setInt('random_seed', random_seed)
 
@@ -141,33 +190,6 @@ class ALEEnvironment(BaseEnvironment):
         ale.loadROM(rom_path)
 
         self.ale = ale
-        self.rom = rom
-        self.mode = mode
-        self.width = width
-        self.height = height
-        self.grayscale = grayscale
-        self.frame_skip = frame_skip
-        self.random_start = random_start
-        self.minimal_action_set = minimal_action_set
-
-        self.life_lost = False
-        if minimal_action_set:
-            self.actions = ale.getMinimalActionSet()
-        else:
-            self.actions = ale.getLegalActionSet()
-
-        orig_width, orig_height = self.ale.getScreenDims()
-        height = height or orig_height
-        width = width or orig_width
-        if height == orig_height and width == orig_width:
-            self.resize = None
-        else:
-            self.resize = (height, width) if grayscale else (height, width, 3)
-
-        if grayscale:
-            self._get_screen = self._get_screen_grayscale
-        else:
-            self._get_screen = self._get_screen_rgb
 
     def __repr__(self):
         ale = self.ale
@@ -214,8 +236,7 @@ class ALEEnvironment(BaseEnvironment):
         rand = self.random_start
         repeat = 1 + (np.random.randint(rand) if rand else 0)
         for _ in range(repeat):
-            self.ale.act(0)
-
+            self._step(0)
         return self._get_observation()
 
     def step(self, action):
@@ -225,7 +246,7 @@ class ALEEnvironment(BaseEnvironment):
         self.life_lost = False
         initial_lives = self.ale.lives()
         for i in range(max(self.frame_skip, 1)):
-            reward += self.ale.act(action)
+            reward += self._step(action)
 
             if not self.ale.lives() == initial_lives:
                 self.life_lost = True
@@ -240,6 +261,10 @@ class ALEEnvironment(BaseEnvironment):
             'episode_frame_number': self.ale.getEpisodeFrameNumber(),
         }
         return reward, observation, terminal, info
+
+    def _step(self, action):
+        reward = self.ale.act(action)
+        return reward
 
     def _get_screen_grayscale(self):
         return self.ale.getScreenGrayscale()[:, :, 0]

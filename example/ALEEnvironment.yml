@@ -2,7 +2,7 @@ name: ALEEnvironment
 args:
   rom: breakout
   display_screen: False
-  sound: False
+  play_sound: False
   frame_skip: 4
   # This number of frames are played with action=0 at each reset.
   random_start: 30

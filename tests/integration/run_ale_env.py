@@ -29,7 +29,7 @@ args = ap.parse_args()
 
 env = ALEEnvironment(
     args.rom,
-    display_screen=args.display_screen, sound=args.sound,
+    display_screen=args.display_screen, play_sound=args.sound,
     record_screen_path=args.record_screen_path,
     frame_skip=args.frame_skip,
     random_start=args.random_start,
