@@ -45,6 +45,53 @@ class ALEEnvironment(BaseEnvironment):
             display_screen=False,
             sound=False,
     ):
+        """Initialize ALE Environment with the given parmeters
+
+        Args:
+          rom (str): ROM name. Use `get_roms` for the list of available ROMs.
+
+          mode (str): When `train`, a loss of life is considered as terminal
+                      condition. When `test`, a loss of life is not considered
+                      as terminal condition.
+
+          width (int or None): Output screen width.
+                               If None the original width is used.
+
+          height (int or None): Output screen height.
+                                If None the original height is used.
+
+          grayscale(bool): If True, output screen is gray scale and
+                           has no color channel. i.e. output shape == (h, w)
+                           Other wise output screen has color channel with
+                           shape (h, w, 3)
+
+          frame_skip(int): When calling `step` method, action is repeated for
+                           this numebr of times, internally, unless a terminal
+                           condition is met.
+
+          minimal_action_set(bool):
+              When True, `n_actions` property reports actions only meaningfull
+              to the loaded ROM. Otherwise all the 18 actions are dounted.
+
+          random_seed(int): ALE's random seed
+
+          random_start(int or None): When given, at most this number of frames
+              are played with action == 0. This technique is often used to
+              prevent environment from transitting deterministically, but
+              in case of ALE, as reset command does not reset system state
+              we may not need to do this. (TODO: Check.)
+
+          record_screen_path(str): Passed to ALE. Save the original screens
+              into the path.
+              Note: that this is different from the observation returned by
+              `step` method.
+
+          record_screen_filename(str): Passed to ALE. Save sound to a file.
+
+          display_screen(bool): Display sceen when True.
+
+          sound(bool): Play sound
+        """
         # TODO: Add individual unittest
         if mode not in ['test', 'train']:
             raise ValueError('`mode` must be either `test` or `train`')
@@ -63,6 +110,7 @@ class ALEEnvironment(BaseEnvironment):
         ale = ALEInterface()
         ale.setBool('sound', sound)
         ale.setBool('display_screen', display_screen)
+        ale.setInt('random_seed', random_seed)
 
         # Frame skip is implemented separately
         ale.setInt('frame_skip', 1)
@@ -75,8 +123,6 @@ class ALEEnvironment(BaseEnvironment):
         # it has no effect as frame_skip == 1
         # This action repeating is agent's concern
         # so we do not implement an equivalent in our wrapper.
-
-        ale.setInt('random_seed', random_seed)
 
         if record_screen_path:
             _LG.info('Recording screens to {}'.format(record_screen_path))
@@ -91,9 +137,6 @@ class ALEEnvironment(BaseEnvironment):
                 os.makedirs(record_sound_dir)
             ale.setBool('sound', True)
             ale.setString('record_sound_filename', record_sound_filename)
-
-        if not rom.endswith('.bin'):
-            rom += '.bin'
 
         ale.loadROM(rom_path)
 
@@ -113,13 +156,13 @@ class ALEEnvironment(BaseEnvironment):
         else:
             self.actions = ale.getLegalActionSet()
 
-        if height or width:
-            orig_width, orig_height = self.ale.getScreenDims()
-            height = height or orig_height
-            width = width or orig_width
-            self.size = (height, width) if grayscale else (height, width, 3)
+        orig_width, orig_height = self.ale.getScreenDims()
+        height = height or orig_height
+        width = width or orig_width
+        if height == orig_height and width == orig_width:
+            self.resize = None
         else:
-            self.size = None
+            self.resize = (height, width) if grayscale else (height, width, 3)
 
         if grayscale:
             self._get_screen = self._get_screen_grayscale
@@ -133,6 +176,7 @@ class ALEEnvironment(BaseEnvironment):
             '    ROM: {}\n'
             '    display_screen           : {}\n'
             '    sound                    : {}\n'
+            '    resize                   : {}\n'
             '    grayscale                : {}\n'
             '    frame_skip               : {}\n'
             '    random_seed              : {}\n'
@@ -146,12 +190,13 @@ class ALEEnvironment(BaseEnvironment):
                 self.rom,
                 ale.getBool('display_screen'),
                 ale.getBool('sound'),
+                self.resize,
                 self.grayscale,
                 self.frame_skip,
                 ale.getInt('random_seed'),
                 self.random_start,
-                ale.getString('record_screen_path'),
-                ale.getString('record_sound_filename'),
+                ale.getString('record_screen_path') or None,
+                ale.getString('record_sound_filename') or None,
                 self.minimal_action_set,
                 self.mode,
                 self.n_actions,
@@ -165,10 +210,10 @@ class ALEEnvironment(BaseEnvironment):
     def reset(self):
         self.life_lost = False
         self.ale.reset_game()
-        if self.random_start:
-            for _ in range(1 + np.random.randint(self.random_start)):
-                self.ale.act(0)
-        else:
+
+        rand = self.random_start
+        repeat = 1 + (np.random.randint(rand) if rand else 0)
+        for _ in range(repeat):
             self.ale.act(0)
 
         return self._get_observation()
@@ -204,8 +249,8 @@ class ALEEnvironment(BaseEnvironment):
 
     def _get_observation(self):
         screen = self._get_screen()
-        if self.size:
-            return imresize(screen, self.size)
+        if self.resize:
+            return imresize(screen, self.resize)
         return screen
 
     def _is_terminal(self):
