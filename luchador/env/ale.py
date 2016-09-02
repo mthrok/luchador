@@ -20,6 +20,16 @@ _ROM_DIR = os.path.join(_DIR, 'rom', 'atari')
 
 
 class ALEEnvironment(BaseEnvironment):
+    @staticmethod
+    def get_roms():
+        """Get the list of ROMs available
+
+        Returns:
+          list of srting: Names of available ROMs
+        """
+        return [rom for rom in os.listdir(_ROM_DIR)
+                if rom.endswith('.bin')]
+
     def __init__(
             self, rom,
             mode='train',
