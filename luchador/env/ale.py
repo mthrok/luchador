@@ -6,6 +6,7 @@ import os
 import logging
 
 import numpy as np
+from scipy.misc import imresize
 from ale_python_interface import ALEInterface
 
 from .base import BaseEnvironment
@@ -21,16 +22,18 @@ _ROM_DIR = os.path.join(_DIR, 'rom', 'atari')
 class ALEEnvironment(BaseEnvironment):
     def __init__(
             self, rom,
-            display_screen=False,
-            sound=False,
+            mode='train',
+            width=84,
+            height=84,
+            grayscale=True,
             frame_skip=4,
+            minimal_action_set=True,
             random_seed=0,
             random_start=None,
             record_screen_path=None,
             record_sound_filename=None,
-            minimal_action_set=True,
-            mode='train',
-            grayscale=True,
+            display_screen=False,
+            sound=False,
     ):
         # TODO: Add individual unittest
         if mode not in ['test', 'train']:
@@ -87,18 +90,28 @@ class ALEEnvironment(BaseEnvironment):
         self.ale = ale
         self.rom = rom
         self.mode = mode
+        self.width = width
+        self.height = height
         self.grayscale = grayscale
         self.frame_skip = frame_skip
         self.random_start = random_start
         self.minimal_action_set = minimal_action_set
 
         self.life_lost = False
-        if self.minimal_action_set:
+        if minimal_action_set:
             self.actions = ale.getMinimalActionSet()
         else:
             self.actions = ale.getLegalActionSet()
 
-        if self.grayscale:
+        if height or width:
+            orig_width, orig_height = self.ale.getScreenDims()
+            height = height or orig_height
+            width = width or orig_width
+            self.size = (height, width) if grayscale else (height, width, 3)
+        else:
+            self.size = None
+
+        if grayscale:
             self._get_screen = self._get_screen_grayscale
         else:
             self._get_screen = self._get_screen_rgb
@@ -148,7 +161,7 @@ class ALEEnvironment(BaseEnvironment):
         else:
             self.ale.act(0)
 
-        return self._get_screen()
+        return self._get_observation()
 
     def step(self, action):
         reward = 0
@@ -165,19 +178,25 @@ class ALEEnvironment(BaseEnvironment):
             terminal = self._is_terminal()
             if terminal:
                 break
-        screen = self._get_screen()
+        observation = self._get_observation()
         info = {
             'lives': self.ale.lives(),
             'total_frame_number': self.ale.getFrameNumber(),
             'episode_frame_number': self.ale.getEpisodeFrameNumber(),
         }
-        return reward, screen, terminal, info
+        return reward, observation, terminal, info
+
+    def _get_screen_grayscale(self):
+        return self.ale.getScreenGrayscale()[:, :, 0]
 
     def _get_screen_rgb(self):
         return self.ale.getScreenRGB()
 
-    def _get_screen_grayscale(self):
-        return self.ale.getScreenGrayscale()
+    def _get_observation(self):
+        screen = self._get_screen()
+        if self.size:
+            return imresize(screen, self.size)
+        return screen
 
     def _is_terminal(self):
         if self.mode == 'train':

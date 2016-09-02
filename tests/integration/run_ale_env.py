@@ -23,7 +23,8 @@ ap.add_argument('--minimal_action_set',
                 dest='minimal_action_set', action='store_true')
 ap.add_argument('--legal_action_set',
                 dest='minimal_action_set', action='store_false')
-ap.add_argument('--mode', choices=['test', 'train'])
+ap.add_argument('--mode', choices=['test', 'train'], default='train')
+ap.add_argument('--plot', action='store_true')
 args = ap.parse_args()
 
 env = ALEEnvironment(
@@ -62,11 +63,7 @@ logger.info('Screen type: {}'.format(type(screen)))
 logger.info('Screen shape: {}'.format(screen.shape))
 
 
-'''
-import matplotlib.pyplot as plt
-if args.grayscale:
-    plt.imshow(screen[:, :, 0], cmap='Greys_r')
-else:
-    plt.imshow(screen)
-plt.show()
-'''
+if args.plot:
+    import matplotlib.pyplot as plt
+    plt.imshow(screen, cmap='Greys_r')
+    plt.show()
