@@ -205,20 +205,14 @@ class ALEEnvironment(BaseEnvironment):
         self._buffer_index = 0
 
         self._get_raw_screen = (
-            self._get_raw_screen_grayscale if self.grayscale else
-            self._get_raw_screen_rgb
+            self._ale.getScreenGrayscale if self.grayscale else
+            self._ale.getScreenRGB
         )
 
         self._get_screen = (
             self._get_max_buffer if self.preprocess_mode == 'max' else
             self._get_average_buffer
         )
-
-    def _get_raw_screen_rgb(self):
-        return self._ale.getScreenRGB()
-
-    def _get_raw_screen_grayscale(self):
-        return self._ale.getScreenGrayscale()[:, :, 0]
 
     def _get_max_buffer(self):
         return np.max(self._frame_buffer, axis=0)
@@ -312,7 +306,8 @@ class ALEEnvironment(BaseEnvironment):
 
     def _step(self, action):
         reward = self._ale.act(action)
-        self._frame_buffer[self._buffer_index] = self._get_raw_screen()
+        buffer = self._frame_buffer[self._buffer_index]
+        self._get_raw_screen(screen_data=buffer)
         self._buffer_index = (self._buffer_index + 1) % self.buffer_frames
         return reward
 
