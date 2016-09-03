@@ -78,7 +78,6 @@ setuptools.setup(
         'luchador.nn.core.tensorflow',
         'luchador.agent',
         'luchador.env',
-        'luchador.img_proc',
     ],
     entry_points={
         'console_scripts': [
