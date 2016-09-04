@@ -16,30 +16,30 @@ class EpisodeRunner(object):
         self.max_timesteps = max_timesteps
         self.n_episodes = 0
 
-    def reset(self):
+    def _reset(self):
         """Reset environment and agent"""
         obs = self.env.reset()
         self.agent.reset(obs)
 
-    def perform_post_episode_task(self):
+    def _perform_post_episode_task(self):
         """Perform post episode task"""
         self.agent.perform_post_episode_task()
 
     def run_episode(self, max_timesteps=None):
         """Run one episode"""
         max_timesteps = max_timesteps or self.max_timesteps
-        self.reset()
+        self._reset()
 
         total_rewards = 0
         for t in range(1, max_timesteps+1):
             action = self.agent.act()
-            observation, reward, done, info = self.env.step(action)
-            self.agent.observe(action, observation, reward, done, info)
+            reward, observation, terminal, info = self.env.step(action)
+            self.agent.observe(action, observation, reward, terminal, info)
             total_rewards += reward
 
-            if done:
+            if terminal:
                 break
         else:
             t = -1
-        self.perform_post_episode_task()
+        self._perform_post_episode_task()
         return t, total_rewards
