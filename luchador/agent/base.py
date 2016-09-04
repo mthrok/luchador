@@ -6,8 +6,11 @@ __all__ = ['BaseAgent', 'get_agent']
 
 
 class BaseAgent(object):
-    def set_env_info(env):
+    def set_env_info(self, env):
         """Retrieve environmental information"""
+        pass
+
+    def init(self):
         pass
 
     def observe(self, action, observation, reward, done, info):

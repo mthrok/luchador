@@ -20,6 +20,7 @@ def main(env, agent, n_episodes, n_timesteps):
     Agent = get_agent(agent['name'])
     agent = Agent(**agent['args'])
     agent.set_env_info(env)
+    agent.init()
     _LG.info('\n{}'.format(agent))
 
     runner = EpisodeRunner(env, agent)
