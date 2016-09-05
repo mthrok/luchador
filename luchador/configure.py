@@ -4,7 +4,7 @@ import os
 import warnings
 
 _NN_DTYPE = os.environ.get('LUCHADOR_NN_DTYPE', 'float32')
-_NN_BACKEND = os.environ.get('LUCHADOR_NN_BACKEND', 'tensorflow')
+_NN_BACKEND = os.environ.get('LUCHADOR_NN_BACKEND', 'theano')
 _NN_CONV_FORMAT = os.environ.get('LUCHADOR_NN_CONV_FORMAT', 'NCHW')
 
 __all__ = [
