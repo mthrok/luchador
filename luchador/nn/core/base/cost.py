@@ -2,14 +2,14 @@ from __future__ import absolute_import
 
 import logging
 
-from .layer import CopyMixin
+from .common import StoreMixin
 
 __all__ = ['SSE']
 
 _LG = logging.getLogger(__name__)
 
 
-class BaseCost(CopyMixin, object):
+class BaseCost(StoreMixin, object):
     """Common interface for cost computation
 
     Actual Cost class must implement `build` method.

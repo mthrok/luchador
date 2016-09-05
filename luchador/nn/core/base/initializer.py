@@ -2,7 +2,7 @@ from __future__ import absolute_import
 
 import logging
 
-from .common import CopyMixin
+from .common import StoreMixin
 from luchador.common import get_subclasses
 
 _LG = logging.getLogger(__name__)
@@ -10,7 +10,7 @@ _LG = logging.getLogger(__name__)
 __all__ = ['Initializer', 'get_initializer']
 
 
-class Initializer(CopyMixin, object):
+class Initializer(StoreMixin, object):
     """Common interface (copy and export methods) for Initializer classes"""
     def __init__(self, **kwargs):
         """Validate and store arguments passed to subclass __init__ method

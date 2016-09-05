@@ -42,14 +42,14 @@ class TestDense(unittest.TestCase):
         input = Input(shape=(None, n_nodes), name='foo', dtype=tf.float32)
         dense(input())
 
-    def test_copy_success_with_reuse(self):
+    def test_recreate_success_with_reuse(self):
         """Copied layer can create node when reuse=True in variable scope"""
         n_nodes = 256
         input = Input(shape=(None, n_nodes), name='foo')()
         dense1 = Dense(n_nodes)
         dense1(input)
         with tf.variable_scope(tf.get_variable_scope(), reuse=True):
-            dense2 = dense1.copy()
+            dense2 = Dense(**dense1.serialize()['args'])
             dense2(input)
 
         vars1 = dense1.parameter_variables
@@ -77,7 +77,7 @@ class TestDense(unittest.TestCase):
         dense1 = Dense(n_nodes)
         dense1(input)
         try:
-            dense3 = dense1.copy()
+            dense3 = Dense(**dense1.serialize()['args'])
             dense3(input)
             self.fail('Copied layer should raise ValueError when '
                       'reuse is not enabled in variable scope.')

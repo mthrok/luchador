@@ -70,12 +70,6 @@ class Sequential(Model):
             self.add_layer(layer=cfg.layer, scope=cfg.scope)
         return self
 
-    def copy(self):
-        """Create new model instance with the same configuration"""
-        new_model = type(self)()
-        new_model += self
-        return new_model
-
     def __add__(self, other):
         """Create new model which contains layers from other model after this model
         Args:
@@ -84,7 +78,8 @@ class Sequential(Model):
         Returns:
           Sequential: Resulting new model
         """
-        new_model = self.copy()
+        new_model = type(self)()
+        new_model += self
         new_model += other
         return new_model
 
@@ -156,6 +151,9 @@ class Sequential(Model):
 
     def deserialize(self):
         """Deserialize model """
+        # TODO: Implement
+        pass
+
     ###########################################################################
     def __repr__(self):
         return "{{'layer_configs': {}}}".format(self.layer_configs)
