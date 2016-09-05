@@ -16,7 +16,7 @@ __all__ = [
 
 class Layer(SerializeMixin, object):
     """Defines common interface (copy and build) for Layer classes"""
-    def __init__(self, **args):
+    def __init__(self, **kwargs):
         """Validate and store arguments passed to subclass __init__ method
 
         As these **args are used to create a copy of instance, arguments which
@@ -25,7 +25,7 @@ class Layer(SerializeMixin, object):
         constractor of subclass object being created.
         """
         super(Layer, self).__init__()
-        self._store_args(args)
+        self._store_args(**kwargs)
 
         self.initializers = OrderedDict()
         self.parameter_variables = OrderedDict()

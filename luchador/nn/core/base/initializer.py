@@ -10,7 +10,7 @@ __all__ = ['Initializer', 'get_initializer']
 
 
 class Initializer(SerializeMixin, object):
-    """Common interface (copy and export methods) for Initializer classes"""
+    """Common interface for Initializer classes"""
     def __init__(self, **kwargs):
         """Validate and store arguments passed to subclass __init__ method
 
@@ -20,10 +20,10 @@ class Initializer(SerializeMixin, object):
         constractor of subclass object being created.
         """
         super(Initializer, self).__init__()
-        self._store_args(kwargs)
+        self._store_args(**kwargs)
 
     ###########################################################################
-    def _export_seed(self, args, key, value):
+    def _serialize_seed(self, args, key, value):
         if (
                 value is None or
                 isinstance(value, int) or
@@ -37,14 +37,14 @@ class Initializer(SerializeMixin, object):
         except AttributeError:
             _LG.warning('Failed to serialize seed: {}'.format(value))
 
-    def export(self):
+    def serialize(self):
         args = {}
-        for key, value in self.args.items():
+        for key, val in self.args.items():
             if key == 'seed':
-                self._export_seed(args, key, value)
+                self._serialize_seed(args, key, val)
                 continue
 
-            args[key] = value.export() if hasattr(value, 'export') else value
+            args[key] = val.serialize() if hasattr(val, 'serialize') else val
         return {
             'name': self.__class__.__name__,
             'args': args

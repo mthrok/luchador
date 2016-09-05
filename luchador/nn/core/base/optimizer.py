@@ -7,9 +7,9 @@ __all__ = ['Optimizer', 'get_optimizer']
 
 class Optimizer(SerializeMixin):
     """Defines common interface for gradient computation and application"""
-    def __init__(self, **args):
+    def __init__(self, **kwargs):
         super(Optimizer, self).__init__()
-        self._store_args(args)
+        self._store_args(**kwargs)
 
     def minimize(self, loss, wrt, **kwargs):
         """Minimize loss with the given variables

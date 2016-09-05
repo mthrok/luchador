@@ -27,7 +27,7 @@ def load_config(filepath):
 
 
 class StoreMixin(object):
-    def _store_args(self, args):
+    def _store_args(self, **args):
         """Store initializer arguments to `args` attribute
         Args:
             args (dict): Arguments passed to __init__.
@@ -43,7 +43,6 @@ class StoreMixin(object):
         """
         pass
 
-    ###########################################################################
     def __repr__(self):
         return "{{'name': '{}', 'args': {}}}".format(
             self.__class__.__name__, self.args)
