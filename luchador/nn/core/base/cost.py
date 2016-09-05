@@ -2,7 +2,7 @@ from __future__ import absolute_import
 
 import logging
 
-from .common import StoreMixin
+from luchador.common import StoreMixin
 
 __all__ = ['SSE']
 

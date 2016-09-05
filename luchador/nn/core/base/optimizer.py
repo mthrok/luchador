@@ -1,7 +1,6 @@
 from __future__ import absolute_import
 
-from .common import StoreMixin
-from luchador.common import get_subclasses
+from luchador.common import get_subclasses, StoreMixin
 
 __all__ = ['Optimizer', 'get_optimizer']
 

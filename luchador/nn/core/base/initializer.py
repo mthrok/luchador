@@ -2,8 +2,7 @@ from __future__ import absolute_import
 
 import logging
 
-from .common import StoreMixin
-from luchador.common import get_subclasses
+from luchador.common import get_subclasses, StoreMixin
 
 _LG = logging.getLogger(__name__)
 
