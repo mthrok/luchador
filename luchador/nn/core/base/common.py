@@ -46,6 +46,10 @@ class CopyMixin(object):
         """
         pass
 
+    def __repr__(self):
+        return "{{'name': '{}', 'args': {}}}".format(
+            self.__class__.__name__, self.args)
+
     ###########################################################################
     # Shallow equality
     def __eq__(self, other):

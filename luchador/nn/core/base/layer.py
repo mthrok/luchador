@@ -43,10 +43,6 @@ class Layer(CopyMixin, object):
             '`build` method is not implemented for {}'.format(self.__class__)
         )
 
-    def __repr__(self):
-        return "{{'name': '{}', 'args': {}}}".format(
-            self.__class__.__name__, self.args)
-
 
 ###############################################################################
 class Dense(Layer):
