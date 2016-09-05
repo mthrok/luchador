@@ -111,7 +111,12 @@ class ALEEnvironment(BaseEnvironment):
 
         if repeat_action < 1:
             raise ValueError(
-                '`repeat_action` must be positive integer greater than 0')
+                '`repeat_action` must be integer greater than 0')
+
+        if random_start and random_start < 1:
+            raise ValueError(
+                '`random_start` must be `None` or integer greater than 0'
+            )
 
         if not rom.endswith('.bin'):
             rom += '.bin'
@@ -278,6 +283,13 @@ class ALEEnvironment(BaseEnvironment):
         return len(self._actions)
 
     ###########################################################################
+    def _get_state(self):
+        return {
+            'lives': self._ale.lives(),
+            'total_frame_number': self._ale.getFrameNumber(),
+            'episode_frame_number': self._ale.getEpisodeFrameNumber(),
+        }
+
     def reset(self):
         self.life_lost = False
         self._ale.reset_game()
@@ -286,7 +298,10 @@ class ALEEnvironment(BaseEnvironment):
         repeat = 1 + (np.random.randint(rand) if rand else 0)
         for _ in range(repeat):
             self._step(0)
-        return self._get_observation()
+        return {
+            'observation': self._get_observation(),
+            'state': self._get_state()
+        }
 
     ###########################################################################
     # methods for `step` function
@@ -305,13 +320,13 @@ class ALEEnvironment(BaseEnvironment):
             terminal = self._is_terminal()
             if terminal:
                 break
-        observation = self._get_observation()
-        info = {
-            'lives': self._ale.lives(),
-            'total_frame_number': self._ale.getFrameNumber(),
-            'episode_frame_number': self._ale.getEpisodeFrameNumber(),
+
+        return {
+            'reward': reward,
+            'observation': self._get_observation(),
+            'terminal': terminal,
+            'state': self._get_state(),
         }
-        return reward, observation, terminal, info
 
     def _step(self, action):
         reward = self._ale.act(action)
