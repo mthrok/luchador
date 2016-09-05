@@ -4,7 +4,7 @@ from __future__ import absolute_import
 import logging
 from collections import OrderedDict
 
-from luchador.common import get_subclasses, StoreMixin
+from luchador.common import get_subclasses, SerializeMixin
 
 _LG = logging.getLogger(__name__)
 
@@ -14,7 +14,7 @@ __all__ = [
 ]
 
 
-class Layer(StoreMixin, object):
+class Layer(SerializeMixin, object):
     """Defines common interface (copy and build) for Layer classes"""
     def __init__(self, **args):
         """Validate and store arguments passed to subclass __init__ method

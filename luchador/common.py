@@ -48,8 +48,8 @@ class StoreMixin(object):
         return "{{'name': '{}', 'args': {}}}".format(
             self.__class__.__name__, self.args)
 
-    ###########################################################################
-    # Shallow equality
+
+class CompareMixin(StoreMixin):
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return self.args == other.args
@@ -58,7 +58,8 @@ class StoreMixin(object):
     def __ne__(self, other):
         return not self.__eq__(other)
 
-    ###########################################################################
+
+class SerializeMixin(CompareMixin):
     def serialize(self):
         """Serialize object configuration (constructor arguments)"""
         args = {}

@@ -1,11 +1,11 @@
 from __future__ import absolute_import
 
-from luchador.common import get_subclasses, StoreMixin
+from luchador.common import get_subclasses, SerializeMixin
 
 __all__ = ['Optimizer', 'get_optimizer']
 
 
-class Optimizer(StoreMixin):
+class Optimizer(SerializeMixin):
     """Defines common interface for gradient computation and application"""
     def __init__(self, **args):
         super(Optimizer, self).__init__()
