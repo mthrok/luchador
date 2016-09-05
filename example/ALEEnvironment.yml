@@ -3,7 +3,7 @@ args:
   rom: breakout
   display_screen: False
   play_sound: False
-  frame_skip: 4
+  repeat_action: 4
   # This number of frames are played with action=0 at each reset.
   random_start: 30
   # Affects if loss of life is considered as terminal condition or not

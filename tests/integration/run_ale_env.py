@@ -14,7 +14,7 @@ ap.add_argument('--mode', choices=['test', 'train'], default='train')
 ap.add_argument('--width', type=int, default=84)
 ap.add_argument('--height', type=int, default=84)
 
-ap.add_argument('--frame_skip', type=int, default=4)
+ap.add_argument('--repeat_action', type=int, default=4)
 ap.add_argument('--random_start', type=int, default=0)
 
 ap.add_argument('--buffer_frames', type=int, default=2)
@@ -41,7 +41,7 @@ env = ALEEnvironment(
     mode=args.mode,
     width=args.width,
     height=args.height,
-    frame_skip=args.frame_skip,
+    repeat_action=args.repeat_action,
     random_start=args.random_start,
     buffer_frames=args.buffer_frames,
     preprocess_mode=args.preprocess_mode,
@@ -61,24 +61,27 @@ for episode in range(10):
     ep_frame0 = env._ale.getEpisodeFrameNumber()
     for n_steps in range(1, 10000):
         a = np.random.randint(n_actions)
-        reward, screen, terminal, info = env.step(a)
-        total_reward += reward
-        if terminal:
+        outcome = env.step(a)
+
+        total_reward += outcome['reward']
+        if outcome['terminal']:
             break
 
-    ep_frame1 = info['episode_frame_number']
+    env_state = outcome['state']
+    ep_frame1 = env_state['episode_frame_number']
     logger.info('Episode {}:'.format(episode))
     logger.info('  Score : {}'.format(total_reward))
-    logger.info('  Lives : {}'.format(info['lives']))
+    logger.info('  Lives : {}'.format(env_state['lives']))
     logger.info('  #Steps: {}'.format(n_steps))
     logger.info('  #EpisodeFrame: {} -> {}'.format(ep_frame0, ep_frame1))
-    logger.info('  #Total Frames: {}'.format(info['total_frame_number']))
+    logger.info('  #Total Frames: {}'.format(env_state['total_frame_number']))
 
-logger.info('Screen type: {}'.format(type(screen)))
-logger.info('Screen shape: {}'.format(screen.shape))
+observation = outcome['observation']
+logger.info('Screen type: {}'.format(type(observation)))
+logger.info('Screen shape: {}'.format(observation.shape))
 
 
 if args.plot:
     import matplotlib.pyplot as plt
-    plt.imshow(screen, cmap='Greys_r')
+    plt.imshow(observation, cmap='Greys_r')
     plt.show()

@@ -36,7 +36,7 @@ class ALEEnvironment(BaseEnvironment):
             width=None,
             height=None,
             grayscale=True,
-            frame_skip=4,
+            repeat_action=4,
             buffer_frames=2,
             preprocess_mode='max',
             minimal_action_set=True,
@@ -62,14 +62,14 @@ class ALEEnvironment(BaseEnvironment):
           height (int or None): Output screen height.
                                 If None the original height is used.
 
-          grayscale (bool): If True, output screen is gray scale and
-                            has no color channel. i.e. output shape == (h, w)
-                            Other wise output screen has color channel with
-                            shape (h, w, 3)
+          grayscale (bool):
+              If True, output screen is gray scale and has no color channel.
+              i.e. output shape == (h, w). Otherwise output screen has color
+              channel with shape (h, w, 3)
 
-          frame_skip (int): When calling `step` method, action is repeated for
-                            this numebr of times, internally, unless a terminal
-                            condition is met.
+          repeat_action (int):
+              When calling `step` method, action is repeated for this numebr
+              of times, internally, unless a terminal condition is met.
 
           minimal_action_set (bool):
               When True, `n_actions` property reports actions only meaningfull
@@ -108,6 +108,10 @@ class ALEEnvironment(BaseEnvironment):
         if preprocess_mode not in ['max', 'average']:
             raise ValueError(
                 '`preprocess_mode` must be either `max` or `average`')
+
+        if repeat_action < 1:
+            raise ValueError(
+                '`repeat_action` must be positive integer greater than 0')
 
         if not rom.endswith('.bin'):
             rom += '.bin'
@@ -149,7 +153,7 @@ class ALEEnvironment(BaseEnvironment):
         self.mode = mode
         self.life_lost = False
 
-        self.frame_skip = frame_skip
+        self.repeat_action = repeat_action
         self.random_start = random_start
 
     def _init_ale(self):
@@ -229,6 +233,7 @@ class ALEEnvironment(BaseEnvironment):
         else:
             self.resize = (h, w) if self.grayscale else (h, w, 3)
 
+    ###########################################################################
     def __repr__(self):
         ale = self._ale
         return (
@@ -238,7 +243,7 @@ class ALEEnvironment(BaseEnvironment):
             '    sound                    : {}\n'
             '    resize                   : {}\n'
             '    grayscale                : {}\n'
-            '    frame_skip               : {}\n'
+            '    repeat_action            : {}\n'
             '    buffer_frames            : {}\n'
             '    preprocess_mode          : {}\n'
             '    random_seed              : {}\n'
@@ -254,7 +259,7 @@ class ALEEnvironment(BaseEnvironment):
                 ale.getBool('sound'),
                 self.resize,
                 self.grayscale,
-                self.frame_skip,
+                self.repeat_action,
                 self.buffer_frames,
                 self.preprocess_mode,
                 ale.getInt('random_seed'),
@@ -267,10 +272,12 @@ class ALEEnvironment(BaseEnvironment):
             )
         )
 
+    ###########################################################################
     @property
     def n_actions(self):
         return len(self._actions)
 
+    ###########################################################################
     def reset(self):
         self.life_lost = False
         self._ale.reset_game()
@@ -281,13 +288,15 @@ class ALEEnvironment(BaseEnvironment):
             self._step(0)
         return self._get_observation()
 
+    ###########################################################################
+    # methods for `step` function
     def step(self, action):
         reward = 0
         action = self._actions[action]
 
         self.life_lost = False
         initial_lives = self._ale.lives()
-        for i in range(max(self.frame_skip, 1)):
+        for i in range(self.repeat_action):
             reward += self._step(action)
 
             if not self._ale.lives() == initial_lives:
