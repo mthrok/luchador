@@ -37,6 +37,10 @@ class DeepQLearning(BaseQLI):
 
     def _build_target_q_value(self):
         dtype = get_nn_dtype()
+        min_reward = self.args['min_reward']
+        max_reward = self.args['max_reward']
+        discount_rate = self.args['discount_rate']
+
         self.actions = Input(dtype='int32', shape=(None,), name='actions')
         self.rewards = Input(dtype=dtype, shape=(None,), name='rewards')
         self.terminals = Input(dtype=dtype, shape=(None,), name='terminals')
@@ -50,14 +54,13 @@ class DeepQLearning(BaseQLI):
                 post_q = tf.reduce_max(
                     post_q, reduction_indices=1, name='max_post_q')
                 post_q = tf.mul(
-                    post_q, self.discount_rate, name='discounted_max_post_q')
+                    post_q, discount_rate, name='discounted_max_post_q')
                 post_q = tf.mul(
                     post_q, 1.0 - terminals, name='masked_max_post_q')
 
-            if self.min_reward and self.max_reward:
+            if min_reward and max_reward:
                 with tf.name_scope('clipped_reward'):
-                    rewards = tf.clip_by_value(
-                        rewards, self.min_reward, self.max_reward)
+                    rewards = tf.clip_by_value(rewards, min_reward, max_reward)
 
             future = tf.add(rewards, post_q, name='future_reward')
 

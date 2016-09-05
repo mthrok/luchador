@@ -40,6 +40,10 @@ class DeepQLearning(BaseQLI):
         return self
 
     def _build_target_q_value(self):
+        min_reward = self.args['min_reward']
+        max_reward = self.args['max_reward']
+        discount_rate = self.args['discount_rate']
+
         self.actions = Input(dtype='uint8', shape=(None,), name='actions')
         self.rewards = Input(dtype='float64', shape=(None,), name='rewards')
         self.terminals = Input(shape=(None,), name='continuations')
@@ -50,11 +54,11 @@ class DeepQLearning(BaseQLI):
 
         post_q = self.post_trans_net.output.get()
         post_q = T.max(post_q, axis=1)
-        post_q = post_q * self.discount_rate
+        post_q = post_q * discount_rate
         post_q = post_q * (1.0 - terminals)
 
-        if self.min_reward and self.max_reward:
-            rewards = rewards.clip(self.min_reward, self.max_reward)
+        if min_reward and max_reward:
+            rewards = rewards.clip(min_reward, max_reward)
         future = rewards + post_q
 
         n_actions = self.pre_trans_net.output.get_shape()[1]
