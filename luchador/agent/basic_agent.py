@@ -21,7 +21,7 @@ class RandomAgent(BaseAgent):
     def reset(self, observation):
         pass
 
-    def observe(self, action, observation, reward, done, info):
+    def observe(self, action, observation, reward, terminal, env_state):
         pass
 
     def act(self):
