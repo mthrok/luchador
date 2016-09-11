@@ -4,8 +4,10 @@ import warnings
 from collections import OrderedDict
 
 import theano
+import numpy as np
 
 from ..base import Session as BaseSession
+from . import scope
 from .wrapper import (
     Tensor,
     Operation,
@@ -111,3 +113,13 @@ class Session(BaseSession):
     def close(self):
         warnings.warn('`close` does nothing in Theano backend.')
         pass
+
+    ###########################################################################
+    def load_dataset(self, dataset):
+        op = OrderedDict()
+        with scope.variable_scope(scope.VariableScope(reuse=True, name='')):
+            for name, _value in dataset.items():
+                variable = scope.get_variable(name=name, shape=_value.shape)
+                value = np.array(_value, dtype=variable.dtype)
+                op[variable.get()] = value
+        self.run(name=None, updates=Operation(op=op))

@@ -5,7 +5,10 @@ from tensorflow import (
     Session as TFSession,
 )
 
+import numpy as np
+
 from ..base import Session as BaseSession
+from . import scope
 from .wrapper import (
     Tensor,
     Variable,
@@ -136,3 +139,13 @@ class Session(BaseSession):
 
     def initialize(self):
         self.session.run(tf.initialize_all_variables())
+
+    ###########################################################################
+    def load_dataset(self, dataset):
+        op = []
+        with scope.variable_scope(scope.VariableScope(reuse=True, name='')):
+            for name, _value in dataset.items():
+                variable = scope.get_variable(name=name, shape=_value.shape)
+                value = np.array(_value, dtype=variable.dtype)
+                op.append(variable.get().assign(value))
+        self.run(name=None, updates=Operation(tf.group(*op)))

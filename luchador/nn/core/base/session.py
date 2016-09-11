@@ -1,5 +1,7 @@
 from __future__ import absolute_import
 
+import h5py
+
 __all__ = ['Session']
 
 
@@ -26,5 +28,20 @@ class Session(object):
     def initialize(self):
         raise NotImplementedError(
             '`initialize` method is not yet impolemented for {}.{}.'
+            .format(type(self).__module__, type(self).__name__)
+        )
+
+    ###########################################################################
+    def load_from_file(self, filepath):
+        f = h5py.File(filepath, 'r')
+        try:
+            self.load_dataset(f)
+        except Exception:
+            f.close()
+            raise
+
+    def load_dataset(self, dataset):
+        raise NotImplementedError(
+            '`load_dataset` method is not yet impolemented for {}.{}.'
             .format(type(self).__module__, type(self).__name__)
         )
