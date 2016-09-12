@@ -4,11 +4,14 @@ import unittest
 
 import tensorflow as tf
 
+import luchador
 from luchador.nn.core.tensorflow.wrapper import Input
 from luchador.nn.core.tensorflow.layer import Dense
 from luchador.nn.core.tensorflow.layer import _map_padding
 
 
+@unittest.skipUnless(luchador.get_nn_backend() == 'tensorflow',
+                     'Tensorflow backend')
 class TestConv2D(unittest.TestCase):
     longMessage = True
 
@@ -21,6 +24,8 @@ class TestConv2D(unittest.TestCase):
             self.assertEqual(expected, found)
 
 
+@unittest.skipUnless(luchador.get_nn_backend() == 'tensorflow',
+                     'Tensorflow backend')
 class TestDense(unittest.TestCase):
     def setUp(self):
         self.session = tf.Session()

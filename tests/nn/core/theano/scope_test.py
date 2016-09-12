@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 import unittest
 
+import luchador
 from luchador.nn.core.theano import scope as scp
 
 
@@ -12,6 +13,7 @@ def _reset():
     scp._VARIABLES = {}
 
 
+@unittest.skipUnless(luchador.get_nn_backend() == 'theano', 'Theano backend')
 class TestVariableScopeClass(unittest.TestCase):
     def tearDown(self):
         # After each test, scope should be reset to root
@@ -193,6 +195,7 @@ class TestVariableScopeClass(unittest.TestCase):
             )
 
 
+@unittest.skipUnless(luchador.get_nn_backend() == 'theano', 'Theano backend')
 class TestVariableScopeFuncs(unittest.TestCase):
     def tearDown(self):
         # After each test, scope should be reset to root
@@ -371,6 +374,7 @@ class TestVariableScopeFuncs(unittest.TestCase):
                 )
 
 
+@unittest.skipUnless(luchador.get_nn_backend() == 'theano', 'Theano backend')
 class TestGetVariable(unittest.TestCase):
     def tearDown(self):
         # After each test, scope should be reset to root

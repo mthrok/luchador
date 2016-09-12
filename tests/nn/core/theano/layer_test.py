@@ -3,6 +3,7 @@ import unittest
 import theano
 import numpy as np
 
+import luchador
 from luchador.nn.core.theano.layer import (
     Conv2D,
     Flatten,
@@ -18,6 +19,7 @@ from luchador.nn.core.theano.wrapper import Input
 theano.config.optimizer = 'None'
 
 
+@unittest.skipUnless(luchador.get_nn_backend() == 'theano', 'Theano backend')
 class TestConv2D(unittest.TestCase):
     longMessage = True
 
@@ -227,6 +229,7 @@ class TestConv2D(unittest.TestCase):
             input_shape, filter_shape, n_filters, strides, padding)
 
 
+@unittest.skipUnless(luchador.get_nn_backend() == 'theano', 'Theano backend')
 class TestFlatten(unittest.TestCase):
     def setUp(self):
         reset_scope()
