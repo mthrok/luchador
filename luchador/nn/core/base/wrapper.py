@@ -36,3 +36,6 @@ class OperationWrapper(object):
     """Wrapps theano updates or tensorflow operation"""
     def __init__(self, op):
         self.op = op
+
+    def get(self):
+        return self.op

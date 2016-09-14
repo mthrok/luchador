@@ -1,13 +1,17 @@
 from __future__ import absolute_import
 
 import tensorflow as tf
-from tensorflow import (  # noqa: F401
-    Session as _Session,
-    get_default_session,
+from tensorflow import (
+    Session as TFSession,
 )
 
 from ..base import Session as BaseSession
-from .wrapper import Tensor, Variable, Operation
+from .wrapper import (
+    Tensor,
+    Variable,
+    Operation,
+)
+
 
 __all__ = ['Session']
 
@@ -57,7 +61,8 @@ def _parse_updates(updates):
             raise ValueError(
                 '`updates` must be [list of] {}. Given: {}'
                 .format(_OP_CLASS_STR, _get_full_class(type(update))))
-        ret.append(update.op)
+
+        ret.append(update.get())
     return ret
 
 
@@ -97,21 +102,27 @@ def _construct_feed_dict(inputs, givens):
 
 class Session(BaseSession):
     def __init__(self, graph=None, config=None, **kwargs):
-        self.session = _Session('', graph, config)
+        self.session = TFSession('', graph, config)
 
     @property
     def graph(self):
         return self.session.graph
 
-    def run(self, name, outputs=[], inputs={}, updates=None, givens=None):
+    def run(self, outputs=[], inputs={}, updates=None, givens=None, name=None):
         """
 
         Args:
-          name (str): Not used. Compatibility for theano backend
-          outputs (list of Tensors):
-          inputs (dict):
-          updates (Operation or list of Operations)
+          outputs (list of Tensors): Tensors of which values are fetched
+
+          inputs (dict): Keys are the input Tensors required to compute values
+                         of output Tensors. Values are actual values to feed
+                         to Tensors.
+
+          updates (Operation or list of Operations):
+
           givens (dict):
+
+          name (str): Not used. Compatibility for theano backend
         """
         fetches = _construct_fetches(outputs, updates)
         feed_dict = _construct_feed_dict(inputs, givens)

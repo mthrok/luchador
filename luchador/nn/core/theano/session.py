@@ -6,7 +6,12 @@ from collections import OrderedDict
 import theano
 
 from ..base import Session as BaseSession
-from .wrapper import Tensor, Operation
+from .wrapper import (
+    Tensor,
+    Operation,
+)
+
+__all__ = ['Session']
 
 
 def _get_full_class(cls):
@@ -14,10 +19,6 @@ def _get_full_class(cls):
 
 _TENSOR_CLASS_STR = _get_full_class(Tensor)
 _OP_CLASS_STR = _get_full_class(Operation)
-
-
-def get_default_session():
-    raise NotImplementedError('Not implemented yet')
 
 
 def _is_iteratable(l):
@@ -70,7 +71,7 @@ def _parse_updates(updates):
             raise ValueError(
                 '`updates` must be [list of] {}. Given: {}'
                 .format(_OP_CLASS_STR, _get_full_class(type(update))))
-        for shared_variable, new_expression in update.op.items():
+        for shared_variable, new_expression in update.get().items():
             ret[shared_variable] = new_expression
     return ret
 
@@ -90,12 +91,16 @@ class Session(BaseSession):
     def graph(self):
         return None
 
-    def run(self, name, outputs=[], inputs={}, updates=None, givens=None):
-        if name not in self.functions:
+    def run(self, outputs=[], inputs={}, updates=None, givens=None, name=None):
+        if name in self.functions:
+            function = self.functions[name]
+        else:
             function = _construct_function(inputs, outputs, updates, givens)
+
+        if name and name not in self.functions:
             self.functions[name] = function
 
-        values = self.functions[name](*inputs.values())
+        values = function(*inputs.values())
         if _is_iteratable(outputs):
             return values
         return values[0]
@@ -105,8 +110,4 @@ class Session(BaseSession):
 
     def close(self):
         warnings.warn('`close` does nothing in Theano backend.')
-        pass
-
-    def as_default(self):
-        warnings.warn('`as_default` does nothing in Theano backend.')
         pass
