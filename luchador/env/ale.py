@@ -123,7 +123,7 @@ class ALEEnvironment(BaseEnvironment):
 
         rom_path = os.path.join(_ROM_DIR, rom)
         if not os.path.isfile(rom_path):
-            raise ValueError('ROM ({}) not found.'.format(self.rom))
+            raise ValueError('ROM ({}) not found.'.format(rom))
 
         if display_screen and sys.platform == 'darwin':
             import pygame

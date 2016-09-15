@@ -1,6 +1,6 @@
 name: ALEEnvironment
 args:
-  rom: breakout
+  rom: space_invaders
   display_screen: False
   play_sound: False
   repeat_action: 4
