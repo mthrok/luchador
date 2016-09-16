@@ -131,6 +131,10 @@ def get_variable(name, shape=None, dtype=config.floatX,
         if not initializer:
             initializer = Normal(dtype=dtype)
 
+        # Scalar variable should not have `broadcastable`
+        if not shape and 'broadcastable' in kwargs:
+            del kwargs['broadcastable']
+
         _VARIABLES[name] = Variable(
             theano.shared(
                 value=initializer.sample(shape),
