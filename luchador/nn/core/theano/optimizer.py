@@ -55,7 +55,6 @@ class RMSProp(BaseOptimizer):
             epsilon=epsilon, name=name)
 
     def apply_gradients(self, grads_and_vars):
-        # TODO: Save intermediate Variables in slot
         updates = OrderedDict()
         args = self.args
         d, mom = args['decay'], args['momentum']
@@ -135,7 +134,6 @@ class GravesRMSProp(BaseOptimizer):
     def __init__(self, learning_rate,
                  decay1=0.95, decay2=0.95,
                  epsilon=1e-2, name='RMSProp'):
-        # TODO: Add support for momentum
         super(GravesRMSProp, self).__init__(
             learning_rate=learning_rate,
             decay1=decay1, decay2=decay2, epsilon=epsilon, name=name)
@@ -145,7 +143,6 @@ class GravesRMSProp(BaseOptimizer):
         self.learning_rate = learning_rate
 
     def apply_gradients(self, grads_and_vars):
-        # TODO: Save intermediate Variables in slot
         updates = OrderedDict()
         args = self.args
         d1, d2 = args['decay1'], args['decay2']

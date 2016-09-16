@@ -6,7 +6,10 @@ from ..base import (
     get_optimizer,
     Optimizer,
 )
-from .wrapper import Operation
+from .wrapper import (
+    Variable,
+    Operation
+)
 
 __all__ = [
     'BaseOptimizer', 'get_optimizer',
@@ -49,6 +52,9 @@ class BaseOptimizer(Optimizer):
 
     def apply_gradients(self, grads_and_vars, **kwargs):
         minimize_op = self.optimizer.apply_gradients(grads_and_vars, **kwargs)
+        # TODO: Store the name and variable of created slots here.
+        # Variable formulation is different between theano and tf backend.
+        # So that they cannot be completely compatible. What to do?
         return Operation(minimize_op)
 
 
@@ -89,10 +95,14 @@ class NeonRMSProp(BaseOptimizer):
         d2, ep = self.decay2, self.epsilon
         for grad, var in grads_and_vars:
             with tf.variable_scope(self.name):
+                shape = grad.get_shape().as_list()
+                dtype = grad.dtype.as_numpy_dtype()
+
                 name = '{}_squared_mean'.format(grad.name)
                 mean_grad2 = tf.get_variable(
-                    name=name, shape=grad.shape, dtype=grad.dtype,
+                    name=name, shape=shape, dtype=dtype,
                     initializer=tf.constatnt_initializer(0))
+                self.slot[name] = Variable(mean_grad2, shape, dtype)
 
                 new_mean_grad2 = d2 * mean_grad2 + (1.0 - d2) * tf.square(grad)
 
@@ -130,15 +140,20 @@ class GravesRMSProp(BaseOptimizer):
         d1, d2, ep = self.decay1, self.decay2, self.epsilon
         for grad, var in grads_and_vars:
             with tf.variable_scope(self.name):
+                shape = grad.get_shape().as_list()
+                dtype = grad.dtype.as_numpy_dtype()
+
                 name = '{}_mean'.format(grad.name)
                 mean_grad1 = tf.get_variable(
-                    name=name, shape=grad.shape, dtype=grad.dtype,
+                    name=name, shape=shape, dtype=dtype,
                     initializer=tf.constatnt_initializer(0))
+                self.slot[name] = Variable(mean_grad1, shape, dtype)
 
                 name = '{}_squared_mean'.format(grad.name)
                 mean_grad2 = tf.get_variable(
-                    name=name, shape=grad.shape, dtype=grad.dtype,
+                    name=name, shape=shape, dtype=dtype,
                     initializer=tf.constatnt_initializer(0))
+                self.slot[name] = Variable(mean_grad1, shape, dtype)
 
                 new_mean_grad1 = d1 * mean_grad1 + (1.0 - d1) * grad
                 new_mean_grad2 = d2 * mean_grad2 + (1.0 - d2) * tf.square(grad)
