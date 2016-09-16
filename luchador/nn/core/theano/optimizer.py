@@ -30,6 +30,9 @@ class BaseOptimizer(Optimizer):
         grads = theano.grad(loss, wrt)
         return [(grad, var) for grad, var in zip(grads, wrt)]
 
+    def get_parameter_variables(self):
+        return self.slot
+
 
 class SGD(BaseOptimizer):
     def __init__(self, learning_rate, name='SGD', **kwargs):
@@ -64,14 +67,16 @@ class RMSProp(BaseOptimizer):
                 mean_grad2_ = get_variable(
                     name=name, shape=value.shape, dtype=value.dtype,
                     initializer=Constant(0), broadcastable=var.broadcastable)
-                mean_grad2 = mean_grad2_.get()
+                self.slot[name] = mean_grad2_
 
                 name = '{}_delta'.format(var.name)
                 delta_ = get_variable(
                     name=name, shape=value.shape, dtype=value.dtype,
                     initializer=Constant(0), broadcastable=var.broadcastable)
                 delta = delta_.get()
+                self.slot[name] = delta_
 
+                mean_grad2 = mean_grad2_.get()
                 new_mean_grad2 = d * mean_grad2 + (1.0 - d) * T.square(grad)
 
                 rms = T.sqrt(new_mean_grad2 + ep)
@@ -95,7 +100,6 @@ class NeonRMSProp(BaseOptimizer):
             decay=decay, epsilon=epsilon, name=name)
 
     def apply_gradients(self, grads_and_vars):
-        # TODO: Save intermediate Variables in slot
         updates = OrderedDict()
         args = self.args
         d, ep, lr = args['decay'], args['epsilon'], args['learning_rate']
@@ -106,10 +110,11 @@ class NeonRMSProp(BaseOptimizer):
                 mean_grad2_ = get_variable(
                     name=name, shape=value.shape, dtype=value.dtype,
                     initializer=Constant(0), broadcastable=var.broadcastable)
+                self.slot[name] = mean_grad2_
+
                 mean_grad2 = mean_grad2_.get()
 
                 new_mean_grad2 = d * mean_grad2 + (1.0 - d) * T.square(grad)
-
                 rms = T.sqrt(new_mean_grad2 + ep) + ep
                 new_grad = grad / rms
 
@@ -152,12 +157,15 @@ class GravesRMSProp(BaseOptimizer):
                 mean_grad1_ = get_variable(
                     name=name, shape=value.shape, dtype=value.dtype,
                     initializer=Constant(0), broadcastable=var.broadcastable)
-                mean_grad1 = mean_grad1_.get()
+                self.slot[name] = mean_grad1_
 
                 name = '{}_grad_squared_mean'.format(var.name)
                 mean_grad2_ = get_variable(
                     name=name, shape=value.shape, dtype=value.dtype,
                     initializer=Constant(0), broadcastable=var.broadcastable)
+                self.slot[name] = mean_grad2_
+
+                mean_grad1 = mean_grad1_.get()
                 mean_grad2 = mean_grad2_.get()
 
                 new_mean_grad1 = d1 * mean_grad1 + (1.0 - d1) * grad
