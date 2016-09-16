@@ -8,7 +8,7 @@ from ..base import (
     OperationWrapper as Operation,
 )
 
-__all__ = ['Tensor', 'Input', 'Operation']
+__all__ = ['Variable', 'Tensor', 'Input', 'Operation']
 
 
 class Variable(BaseWrapper):

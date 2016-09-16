@@ -6,10 +6,8 @@ from ..base import (
     get_optimizer,
     Optimizer,
 )
-from .wrapper import (
-    Variable,
-    Operation
-)
+from .scope import get_variable
+from .wrapper import Operation
 
 __all__ = [
     'BaseOptimizer', 'get_optimizer',
@@ -99,11 +97,12 @@ class NeonRMSProp(BaseOptimizer):
                 dtype = grad.dtype.as_numpy_dtype()
 
                 name = '{}_squared_mean'.format(grad.name)
-                mean_grad2 = tf.get_variable(
+                mean_grad2_ = get_variable(
                     name=name, shape=shape, dtype=dtype,
                     initializer=tf.constatnt_initializer(0))
-                self.slot[name] = Variable(mean_grad2, shape, dtype)
+                self.slot[name] = mean_grad2_
 
+                mean_grad2 = mean_grad2_.get()
                 new_mean_grad2 = d2 * mean_grad2 + (1.0 - d2) * tf.square(grad)
 
                 rms = tf.sqrt(new_mean_grad2 + ep) + ep
@@ -144,16 +143,19 @@ class GravesRMSProp(BaseOptimizer):
                 dtype = grad.dtype.as_numpy_dtype()
 
                 name = '{}_mean'.format(grad.name)
-                mean_grad1 = tf.get_variable(
+                mean_grad1_ = get_variable(
                     name=name, shape=shape, dtype=dtype,
                     initializer=tf.constatnt_initializer(0))
-                self.slot[name] = Variable(mean_grad1, shape, dtype)
+                self.slot[name] = mean_grad1_
 
                 name = '{}_squared_mean'.format(grad.name)
-                mean_grad2 = tf.get_variable(
+                mean_grad2_ = get_variable(
                     name=name, shape=shape, dtype=dtype,
                     initializer=tf.constatnt_initializer(0))
-                self.slot[name] = Variable(mean_grad1, shape, dtype)
+                self.slot[name] = mean_grad2_
+
+                mean_grad1 = mean_grad1_.get()
+                mean_grad2 = mean_grad2_.get()
 
                 new_mean_grad1 = d1 * mean_grad1 + (1.0 - d1) * grad
                 new_mean_grad2 = d2 * mean_grad2 + (1.0 - d2) * tf.square(grad)
