@@ -291,13 +291,25 @@ class ALEEnvironment(BaseEnvironment):
         }
 
     def reset(self):
-        self.life_lost = False
-        self._ale.reset_game()
+        """Reset game
 
-        rand = self.random_start
-        repeat = 1 + (np.random.randint(rand) if rand else 0)
-        for _ in range(repeat):
-            self._step(0)
+        In test mode, the game is simply initialized. In train mode, if the
+        game is in terminal state due to a life loss but not yet game over,
+        then only life loss flag is reset so that the next game starts from
+        the current state. Otherwise, the game is simply initialized.
+        """
+        if (
+                self.mode == 'test' or
+                not self.life_lost or  # `reset` called in a middle of episode
+                self._ale.game_over()  # all lives are lost
+        ):
+            self._ale.reset_game()
+            rand = self.random_start
+            repeat = 1 + (np.random.randint(rand) if rand else 0)
+            for _ in range(repeat):
+                self._step(0)
+
+        self.life_lost = False
         return {
             'observation': self._get_observation(),
             'state': self._get_state()

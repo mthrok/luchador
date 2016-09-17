@@ -384,3 +384,32 @@ class ALEEnvironmentTest(unittest.TestCase):
                 'Not all starting frame (1 - {}) was observed after {} reset.'
                 .format(random_start, n_try)
             )
+
+    def test_train_reset(self):
+        """reset does not reset game in train mode when not yet game over"""
+        ale = ALE(
+            'breakout',
+            mode='train',
+            random_start=0,
+        )
+        ale.reset()
+        while True:
+            outcome = ale.step(action=1)
+            if not outcome['terminal']:
+                continue
+            if ale._ale.game_over():
+                break
+            frame0 = outcome['state']['episode_frame_number']
+            outcome = ale.reset()
+            frame1 = outcome['state']['episode_frame_number']
+            self.assertEqual(
+                frame0, frame1,
+                'Frame number should not be changed before/after reset. '
+                'When mode==train and not game_over'
+            )
+        outcome = ale.reset()
+        frame0 = outcome['state']['episode_frame_number']
+        self.assertEqual(
+            frame0, 1,
+            'Game should be reset when `reset` is called on game_over==True'
+        )
