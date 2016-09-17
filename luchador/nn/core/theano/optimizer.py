@@ -57,36 +57,32 @@ class RMSProp(BaseOptimizer):
     def apply_gradients(self, grads_and_vars):
         updates = OrderedDict()
         args = self.args
-        d, mom = args['decay'], args['momentum']
+        d, momentum = args['decay'], args['momentum']
         ep, lr = args['epsilon'], args['learning_rate']
         for grad, var in grads_and_vars:
             value = var.get_value(borrow=True)
             with variable_scope(args['name']):
-                name = '{}_grad_squared_mean'.format(var.name)
-                mean_grad2_ = get_variable(
+                name = '{}_rms'.format(var.name)
+                rms_ = get_variable(
                     name=name, shape=value.shape, dtype=value.dtype,
                     initializer=Constant(0), broadcastable=var.broadcastable)
-                self.slot[name] = mean_grad2_
+                self.slot[name] = rms_
 
-                name = '{}_delta'.format(var.name)
-                delta_ = get_variable(
+                name = '{}_momentum'.format(var.name)
+                mom_ = get_variable(
                     name=name, shape=value.shape, dtype=value.dtype,
                     initializer=Constant(0), broadcastable=var.broadcastable)
-                delta = delta_.get()
-                self.slot[name] = delta_
+                self.slot[name] = mom_
 
-                mean_grad2 = mean_grad2_.get()
-                new_mean_grad2 = d * mean_grad2 + (1.0 - d) * T.square(grad)
+                rms = rms_.get()
+                mom = mom_.get()
 
-                rms = T.sqrt(new_mean_grad2 + ep)
-                new_grad = grad / rms
+                new_rms = rms + (1.0 - d) * (T.square(grad) - rms)
+                new_mom = mom * momentum + lr * grad / (T.sqrt(new_rms + ep))
+                new_var = var - new_mom
 
-                delta_var = -lr * new_grad
-                new_delta = mom * delta + (1.0 - mom) * delta_var
-                new_var = var + new_delta
-
-            updates[mean_grad2] = new_mean_grad2
-            updates[delta] = new_delta
+            updates[rms] = new_rms
+            updates[mom] = new_mom
             updates[var] = new_var
         return Operation(op=updates)
 
