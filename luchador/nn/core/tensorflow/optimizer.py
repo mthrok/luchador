@@ -86,34 +86,34 @@ class NeonRMSProp(BaseOptimizer):
         self.decay = decay
         self.epsilon = epsilon
 
-    def apply_gradient(self, grads_and_vars, **kwargs):
+    def apply_gradients(self, grads_and_vars, **kwargs):
         # TODO: Save intermediate Variables in slot
-        mean_grads2, mean_grads2_updates = [], []
-        new_grads_and_vars = [], []
-        d2, ep = self.decay2, self.epsilon
+        mean_grads2_updates = []
+        new_grads_and_vars = []
+        args = self.args
+        decay, ep = args['decay'], args['epsilon']
         for grad, var in grads_and_vars:
-            with tf.variable_scope(self.name):
+            with tf.variable_scope(args['name']):
                 shape = grad.get_shape().as_list()
-                dtype = grad.dtype.as_numpy_dtype()
+                dtype = grad.dtype.as_numpy_dtype
 
-                name = '{}_squared_mean'.format(grad.name)
+                name = '{}_squared_mean'.format(grad.name.split(':')[0])
                 mean_grad2_ = get_variable(
                     name=name, shape=shape, dtype=dtype,
-                    initializer=tf.constatnt_initializer(0))
+                    initializer=tf.constant_initializer(0))
                 self.slot[name] = mean_grad2_
 
                 mean_grad2 = mean_grad2_.get()
-                new_mean_grad2 = d2 * mean_grad2 + (1.0 - d2) * tf.square(grad)
+                new_mean_grad2 = mean_grad2 + (1. - decay) * (
+                    tf.square(grad) - mean_grad2)
 
                 rms = tf.sqrt(new_mean_grad2 + ep) + ep
                 new_grad = tf.truediv(grad, rms)
 
-            mean_grads2.append(mean_grad2)
-
             mean_grads2_updates.append(mean_grad2.assign(new_mean_grad2))
             new_grads_and_vars.append((new_grad, var))
         train_op = self.optimizer.apply_gradients(new_grads_and_vars)
-        updates = mean_grads2_updates + [train_op]
+        updates = [train_op] + mean_grads2_updates
         return Operation(tf.group(*updates))
 
 
@@ -131,27 +131,28 @@ class GravesRMSProp(BaseOptimizer):
         self.optimizer = tf.train.GradientDescentOptimizer(
             learning_rate, name=name)
 
-    def apply_gradient(self, grads_and_vars, **kwargs):
+    def apply_gradients(self, grads_and_vars, **kwargs):
         # TODO: Save intermediate Variables in slot
-        mean_grads1, mean_grads1_updates = [], []
-        mean_grads2, mean_grads2_updates = [], []
-        new_grads_and_vars = [], []
-        d1, d2, ep = self.decay1, self.decay2, self.epsilon
+        mean_grads1_updates = []
+        mean_grads2_updates = []
+        new_grads_and_vars = []
+        args = self.args
+        d1, d2, ep = args['decay1'], args['decay2'], args['epsilon']
         for grad, var in grads_and_vars:
-            with tf.variable_scope(self.name):
+            with tf.variable_scope(args['name']):
                 shape = grad.get_shape().as_list()
-                dtype = grad.dtype.as_numpy_dtype()
+                dtype = grad.dtype.as_numpy_dtype
 
-                name = '{}_mean'.format(grad.name)
+                name = '{}_mean'.format(grad.name.split(':')[0])
                 mean_grad1_ = get_variable(
                     name=name, shape=shape, dtype=dtype,
-                    initializer=tf.constatnt_initializer(0))
+                    initializer=tf.constant_initializer(0))
                 self.slot[name] = mean_grad1_
 
-                name = '{}_squared_mean'.format(grad.name)
+                name = '{}_squared_mean'.format(grad.name.split(':')[0])
                 mean_grad2_ = get_variable(
                     name=name, shape=shape, dtype=dtype,
-                    initializer=tf.constatnt_initializer(0))
+                    initializer=tf.constant_initializer(0))
                 self.slot[name] = mean_grad2_
 
                 mean_grad1 = mean_grad1_.get()
@@ -162,9 +163,6 @@ class GravesRMSProp(BaseOptimizer):
 
                 rms = tf.sqrt(new_mean_grad2 - tf.square(new_mean_grad1) + ep)
                 new_grad = tf.truediv(grad, rms)
-
-            mean_grads1.append(mean_grad1)
-            mean_grads2.append(mean_grad2)
 
             mean_grads1_updates.append(mean_grad1.assign(new_mean_grad1))
             mean_grads2_updates.append(mean_grad2.assign(new_mean_grad2))
