@@ -25,5 +25,5 @@ def get_variable(name, shape=None, dtype=tf.float32,
         name, shape=shape, dtype=dtype, initializer=initializer,
         regularizer=regularizer, trainable=trainable, **kwargs)
 
-    dtype = variable.dtype.as_numpy_dtype()
+    dtype = variable.dtype.as_numpy_dtype
     return Variable(variable, shape=shape, dtype=dtype)
