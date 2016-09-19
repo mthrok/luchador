@@ -97,26 +97,22 @@ class NeonRMSProp(BaseOptimizer):
     def apply_gradients(self, grads_and_vars):
         updates = OrderedDict()
         args = self.args
-        d, ep, lr = args['decay'], args['epsilon'], args['learning_rate']
+        decay, ep, lr = args['decay'], args['epsilon'], args['learning_rate']
         for grad, var in grads_and_vars:
             value = var.get_value(borrow=True)
             with variable_scope(args['name']):
-                name = '{}_grad_squared_mean'.format(var.name)
-                mean_grad2_ = get_variable(
+                name = '{}_rms'.format(var.name)
+                rms_ = get_variable(
                     name=name, shape=value.shape, dtype=value.dtype,
                     initializer=Constant(0), broadcastable=var.broadcastable)
-                self.slot[name] = mean_grad2_
+                self.slot[name] = rms_
 
-                mean_grad2 = mean_grad2_.get()
+                rms = rms_.get()
 
-                new_mean_grad2 = d * mean_grad2 + (1.0 - d) * T.square(grad)
-                rms = T.sqrt(new_mean_grad2 + ep) + ep
-                new_grad = grad / rms
+                new_rms = rms + (1.0 - decay) * (T.square(grad) - rms)
+                new_var = var - lr * grad / (T.sqrt(new_rms + ep) + ep)
 
-                delta = -lr * new_grad
-                new_var = var + delta
-
-            updates[mean_grad2] = new_mean_grad2
+            updates[rms] = new_rms
             updates[var] = new_var
         return Operation(op=updates)
 
