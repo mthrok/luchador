@@ -54,7 +54,7 @@ print 'Building Optimization'
 rmsprop = GravesRMSProp(
     learning_rate=learning_rate, decay1=decay1, decay2=decay2)
 params = ql.pre_trans_net.get_parameter_variables()
-minimize_op = rmsprop.minimize(error, wrt=params.values())
+minimize_op = rmsprop.minimize(error, wrt=params)
 
 print 'Initializing Session'
 session = Session()
@@ -64,8 +64,10 @@ print 'Initializing SummaryWriter'
 outputs = ql.pre_trans_net.get_output_tensors()
 writer = SummaryWriter('./monitoring/test_tensorflow')
 writer.add_graph(session.graph)
-writer.register('pre_trans_network_params', 'histogram', params.keys())
-writer.register('pre_trans_network_outputs', 'histogram', outputs.keys())
+writer.register('pre_trans_network_params',
+                'histogram', [v.name for v in params])
+writer.register('pre_trans_network_outputs',
+                'histogram', [v.name for v in outputs])
 
 print 'Initializing Saver'
 saver = Saver(filepath)
@@ -92,9 +94,9 @@ for i in range(100):
 
         print 'Summarizing', i
         t0 = time.time()
-        params_vals = session.run(name='params', outputs=params.values())
+        params_vals = session.run(name='params', outputs=params)
         output_vals = session.run(
-            name='outputs', outputs=outputs.values(), inputs={
+            name='outputs', outputs=outputs, inputs={
                 ql.pre_states: pre_states
             })
         writer.summarize('pre_trans_network_params', i, params_vals)
@@ -102,7 +104,7 @@ for i in range(100):
         summary_time.append(time.time() - t0)
 
         print 'Saving', i
-        data = {key: value for key, value in zip(params.keys(), params_vals)}
+        data = {var.name: value for var, value in zip(params, params_vals)}
         saver.save(data)
 
     t0 = time.time()

@@ -86,8 +86,8 @@ class DeepQLearning(BaseQLI):
         self.predicted_q = self.pre_trans_net.output
 
     def _build_sync_op(self):
-        src_vars = self.pre_trans_net.get_parameter_variables().values()
-        tgt_vars = self.post_trans_net.get_parameter_variables().values()
+        src_vars = self.pre_trans_net.get_parameter_variables()
+        tgt_vars = self.post_trans_net.get_parameter_variables()
         ops = [tgt.get().assign(src.get())
                for src, tgt in zip(src_vars, tgt_vars)]
         self.sync_op = Operation(op=tf.group(*ops, name='sync'))

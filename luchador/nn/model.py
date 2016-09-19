@@ -1,7 +1,5 @@
 from __future__ import absolute_import
 
-from collections import OrderedDict
-
 from .core import scope as scp
 
 __all__ = ['Sequential']
@@ -113,30 +111,14 @@ class Sequential(Model):
     # Functions for retrieving variables and tensors
     def get_parameter_variables(self):
         """Get Variable objects consisting the parameters of this model"""
-        ret = OrderedDict()
-        base_name = scp.get_variable_scope().name
-        if base_name:
-            base_name = '{}/'.format(base_name)
+        ret = []
         for cfg in self.layer_configs:
-            scope = cfg.scope
-            layer_name = scope if isinstance(scope, str) else scope.name
-            for var_name, var in cfg.layer.parameter_variables.items():
-                name = '{}{}/{}'.format(base_name, layer_name, var_name)
-                ret[name] = var
+            ret.extend(cfg.layer.parameter_variables.values())
         return ret
 
     def get_output_tensors(self):
         """Get Tensor objects which represent the output of each layer"""
-        ret = OrderedDict()
-        base_name = scp.get_variable_scope().name
-        if base_name:
-            base_name = '{}/'.format(base_name)
-        for cfg in self.layer_configs:
-            scope = cfg.scope
-            layer_name = scope if isinstance(scope, str) else scope.name
-            name = '{}{}/{}'.format(base_name, layer_name, cfg.output.name)
-            ret[name] = cfg.output
-        return ret
+        return [cfg.output for cfg in self.layer_configs]
 
     ###########################################################################
     def serialize(self):

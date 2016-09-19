@@ -33,6 +33,11 @@ __all__ = [
 ]
 
 
+def _wrap_output(tensor, shape, name='output'):
+    name = '{}/{}'.format(scp.get_variable_scope().name, name)
+    return Tensor(tensor, shape=shape, name=name)
+
+
 class Dense(BaseDense):
     def _instantiate_initializers(self):
         init_cfg = self.args.get('initializers', {})
@@ -83,7 +88,7 @@ class Dense(BaseDense):
         prod = T.dot(input.get(), self.parameter_variables['weight'].get())
         output_tensor = prod + self.parameter_variables['bias'].get()
         output_shape = (input.shape[0], self.args['n_nodes'])
-        return Tensor(output_tensor, shape=output_shape, name='output')
+        return _wrap_output(output_tensor, output_shape, 'output')
 
 
 def _map_border_mode(padding):
@@ -243,7 +248,7 @@ class Conv2D(BaseConv2D):
         output_tensor = bias + conv
         output_shape = self._get_output_shape(input.shape, filter_shape)
         _LG.debug('    output_shape: {}'.format(output_shape))
-        return Tensor(output_tensor, output_shape, name='output')
+        return _wrap_output(output_tensor, output_shape, 'output')
 
 
 class ReLU(BaseReLU):
@@ -268,7 +273,7 @@ class Flatten(BaseFlatten):
         output_shape = (input.shape[0] or -1, n_nodes)
         output_tensor = T.reshape(input.get(), output_shape)
         _LG.debug('    output_shape: {}'.format(output_shape))
-        return Tensor(output_tensor, output_shape, name='output')
+        return _wrap_output(output_tensor, output_shape, 'output')
 
 
 class TrueDiv(BaseTrueDiv):
@@ -282,4 +287,4 @@ class TrueDiv(BaseTrueDiv):
         if self.denom is None:
             self._instantiate_denominator()
         output_tensor = input.get() / self.args['denom']
-        return Tensor(output_tensor, input.shape, name='output')
+        return _wrap_output(output_tensor, input.shape, 'output')

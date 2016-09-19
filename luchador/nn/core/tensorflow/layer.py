@@ -34,6 +34,11 @@ __all__ = [
 ]
 
 
+def _wrap_output(tensor, name='output'):
+    name = '{}/{}'.format(tf.get_variable_scope().name, name)
+    return Tensor(tensor, name=name)
+
+
 class Dense(BaseDense):
     def _instantiate_initializers(self):
         init_cfg = self.args.get('initializers', {})
@@ -74,7 +79,7 @@ class Dense(BaseDense):
         params = self.parameter_variables
         prod = tf.matmul(input.get(), params['weight'].get())
         output = tf.add(prod, params['bias'].get(), name='output')
-        return Tensor(tensor=output)
+        return _wrap_output(output)
 
 
 def _map_padding(padding):
@@ -218,14 +223,14 @@ class Conv2D(BaseConv2D):
             data_format=fmt, name=name)
         output = tf.nn.bias_add(conv, params['bias'].get(),
                                 data_format=fmt, name='output')
-        return Tensor(output)
+        return _wrap_output(output)
 
 
 class ReLU(BaseReLU):
     def build(self, input):
         _LG.debug('    Building {}: {}'.format(type(self).__name__, self.args))
         output = tf.nn.relu(input.get(), 'ouptut')
-        return Tensor(output)
+        return _wrap_output(output)
 
 
 class Flatten(BaseFlatten):
@@ -235,7 +240,7 @@ class Flatten(BaseFlatten):
         n_nodes = reduce(lambda prod, dim: prod*dim, in_shape[1:], 1)
         out_shape = (-1, n_nodes)
         output = tf.reshape(input.get(), out_shape, 'output')
-        return Tensor(output)
+        return _wrap_output(output)
 
 
 class TrueDiv(BaseTrueDiv):
@@ -249,4 +254,4 @@ class TrueDiv(BaseTrueDiv):
         if self.denom is None:
             self._instantiate_denominator()
         output = tf.truediv(input.get(), self.denom, 'ouptut')
-        return Tensor(output)
+        return _wrap_output(output)
