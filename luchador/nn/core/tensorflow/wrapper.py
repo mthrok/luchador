@@ -12,7 +12,15 @@ __all__ = ['Variable', 'Tensor', 'Input', 'Operation']
 
 
 class Variable(BaseWrapper):
+    """Wrap tf.Variable object for storing network parameters"""
     def __init__(self, variable, name=None):
+        """Wrap Tensorflow Variable object.
+
+        Args:
+          variable (tf.Variable): Tensorflow Variable object
+          name (str or None): When given, the name of the resulting wrapper is
+            overwritten with this name.
+        """
         name = name or variable.name
         shape = variable.get_shape().as_list()
         dtype = variable.dtype.as_numpy_dtype
@@ -21,18 +29,39 @@ class Variable(BaseWrapper):
 
 
 class Tensor(BaseWrapper):
-    def __init__(self, tensor, shape=None, name=None, dtype=None):
-        if tensor is not None:
-            name = name or tensor.name
-            shape = shape or tensor.get_shape().as_list()
-            dtype = dtype or tensor.dtype.as_numpy_dtype
+    """Wrap tf.Tensor object for storing computation result"""
+    def __init__(self, tensor, shape=None, name=None):
+        """Wrap Tensorflow Tensor object.
+
+        When wrapping Tensor object, as shape and name can be retrieved from
+        the object being wrapped, you need not to give them explicitly. You can
+        overwrite name attribute for some reasons by giving one.
+        The shape argument is here for compatibility with Theano backend and
+        not used in tensorflow backend.
+
+        Args:
+          tensor (tf.Tensor): Tensorflow Tensor object.
+          shape : Not used.
+          name (str or None): When given, the name of the resulting wrapper is
+            overwritten with this name.
+        """
+        name = name or tensor.name
+        shape = tensor.get_shape().as_list()
+        dtype = tensor.dtype.as_numpy_dtype
         super(Tensor, self).__init__(
             tensor=tensor, shape=shape, name=name, dtype=dtype)
 
 
-class Input(Tensor):
+class Input(BaseWrapper):
+    """Represents network input."""
     def __init__(self, shape, name=None, dtype=None):
-        dtype = dtype or get_nn_dtype()
+        """Creates Input object which is converted to placeholder at build time
+
+        Args:
+          shape (list): The shape of the resulting object.
+          name (str): The name of the resulting object.
+          dtype (NumPy dtype or None): If None, default dtype is used
+        """
         super(Input, self).__init__(
             tensor=None, shape=shape, name=name, dtype=dtype)
 
@@ -41,6 +70,7 @@ class Input(Tensor):
 
     def build(self):
         if self.get() is None:
-            self.set(tf.placeholder(
-                dtype=self.dtype, shape=self.shape, name=self.name))
+            dtype = self.dtype or get_nn_dtype()
+            pf = tf.placeholder(dtype=dtype, shape=self.shape, name=self.name)
+            self.set(pf)
         return self
