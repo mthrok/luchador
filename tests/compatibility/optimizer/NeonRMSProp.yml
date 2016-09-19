@@ -1,4 +1,5 @@
 name: NeonRMSProp
 args:
+  learning_rate: 0.001
   decay: 0.95
-  learning_rate: 0.0001
+  epsilon: 0.01

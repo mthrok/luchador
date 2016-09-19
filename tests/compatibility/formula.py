@@ -36,7 +36,7 @@ class x6(Formula):
         Global minimum: (x, y) = (0, -2.25)
         Local minimum: (x, y) = (+- 1.354, -0.29)
         '''
-        x_ = scope.get_variable(name='x', shape=[], initializer=Constant(1.8))
+        x_ = scope.get_variable(name='x', shape=[], initializer=Constant(2.0))
         x = x_.get()
         y = (x - 1.5) * (x - 1) * (x - 1) * (x + 1) * (x + 1) * (x + 1.5)
         y_ = Tensor(y, shape=[])

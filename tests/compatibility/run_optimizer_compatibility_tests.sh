@@ -9,11 +9,11 @@ do
 done
 
 FORMULAE="$(python ${BASE_DIR}/formula.py)"
-for OPTIMIZER in "${OPTIMIZERS[@]}"
+for FORMULA in ${FORMULAE}
 do
-    for FORMULA in ${FORMULAE}
+    for OPTIMIZER in "${OPTIMIZERS[@]}"
     do
-        echo "${OPTIMIZER} - ${FORMULA}"
+        echo "${FORMULA} - ${OPTIMIZER}"
         ${BASE_DIR}/test_optimizer_compatibility.sh --optimizer ${OPTIMIZER} --formula ${FORMULA}
     done
 done

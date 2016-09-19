@@ -6,13 +6,13 @@ import logging
 
 from luchador.common import load_config
 from luchador.nn import (
+    Saver,
     Session,
     get_optimizer,
 )
 import formula
 
 _LG = logging.getLogger('luchador')
-_LG.setLevel(logging.INFO)
 
 
 def parse_command_line_args():
@@ -29,10 +29,6 @@ def parse_command_line_args():
         help='Optimizer configuration to test'
     )
     ap.add_argument(
-        '--iterations', default=100, type=int,
-        help='#Minimize operations to run'
-    )
-    ap.add_argument(
         '--output',
         help='File path to save result.'
     )
@@ -47,19 +43,15 @@ def get_formula(name):
         raise
 
 
-def optimize(optimizer, loss, wrt, n_ite):
-    minimize_op = optimizer.minimize(loss=loss, wrt=wrt)
+def serialize(optimizer, loss, wrt):
+    optimizer.minimize(loss=loss, wrt=wrt)
+
     sess = Session()
     sess.initialize()
-    result = []
-    for _ in range(n_ite+1):
-        output = sess.run(outputs=[loss, wrt], name='output')
-        result.append({
-            'loss': output[0],
-            'wrt': output[1],
-        })
-        sess.run(updates=minimize_op, name='minimize')
-    return result
+    _LG.info('Serializing Optimizer.')
+    params = optimizer.get_parameter_variables()
+    values = sess.run(outputs=params.values())
+    return {key: value for key, value in zip(params.keys(), values)}
 
 
 def load_optimizer(name):
@@ -86,20 +78,15 @@ def save_result(filepath, result):
 
 def main():
     args = parse_command_line_args()
-    _LG.info('  Running {} on {} for {} times'.format(
-        args.optimizer, args.formula, args.iterations))
+    _LG.info('Running {} on {}'.format(args.optimizer, args.formula))
     formula = get_formula(args.formula)
     optimizer = load_optimizer(args.optimizer)
-    result = optimize(
-        optimizer=optimizer, loss=formula['loss'],
-        wrt=formula['wrt'], n_ite=args.iterations)
-    _LG.info('    Y: {} -> {}'.format(
-        result[0]['loss'], result[-1]['loss']))
-    _LG.info('    X: {} -> {}'.format(
-        result[0]['wrt'], result[-1]['wrt']))
+    result = serialize(
+        optimizer=optimizer, loss=formula['loss'], wrt=formula['wrt'])
     if args.output:
-        _LG.info('  Saving at {}'.format(args.output))
-        save_result(args.output, result)
+        _LG.info('Saving at {}'.format(args.output))
+        saver = Saver(args.output)
+        saver.save(result)
 
 if __name__ == '__main__':
     main()

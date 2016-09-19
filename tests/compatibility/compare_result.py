@@ -34,10 +34,15 @@ def load_data(filepath):
         return {'loss': loss, 'wrt': wrt}
 
 
-def check(series1, series2, threshold=1e-1):
+def check(series1, series2, abs_threshold=0.00015, relative_threshold=1e-1):
     res = []
-    for i, (val1, val2) in enumerate(zip(series1, series2)):
-        if abs(val1 - val2) / (val1 + val2) > threshold:
+    for i, (val1, val2) in enumerate(zip(series1[1:], series2[1:])):
+        abs_diff = abs(val1 - val2)
+        rel_diff = abs_diff / (val1 + val2)
+        if (
+                abs_diff > abs_threshold and
+                rel_diff > relative_threshold
+        ):
             res.append((i, val1, val2))
     return res
 
@@ -50,21 +55,23 @@ def main():
     data2 = load_data(args.input2)
 
     message = ''
-    res = check(data1['loss'], data2['loss'], threshold=args.threshold)
+    res = check(data1['loss'], data2['loss'],
+                relative_threshold=args.threshold)
     error_ratio = len(res) / len(data1['loss'])
     if res:
         message += 'Loss are different\n'
         for i, val1, val2 in res:
             message += 'Line {}: {}, {}\n'.format(i, val1, val2)
 
-    res = check(data1['wrt'], data2['wrt'], threshold=args.threshold)
+    res = check(data1['wrt'], data2['wrt'],
+                relative_threshold=args.threshold)
     if res:
         message += 'wrt are different\n'
         for i, val1, val2 in res:
             message += 'Line {}: {}, {}\n'.format(i, val1, val2)
 
     if message:
-        # _LG.error(message)
+        _LG.error(message)
         raise ValueError(
             'Data are different at {} % points'
             .format(100 * error_ratio)
