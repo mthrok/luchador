@@ -93,7 +93,7 @@ class NeonRMSProp(BaseOptimizer):
         decay, ep = args['decay'], args['epsilon']
         for grad, var in grads_and_vars:
             with tf.variable_scope(args['name']):
-                name = '{}_rms'.format(grad.name.split(':')[0])
+                name = '{}_rms'.format(var.name.split(':')[0])
                 rms_ = get_variable(
                     name=name, shape=grad.get_shape(), dtype=grad.dtype,
                     initializer=tf.constant_initializer(0))
@@ -137,13 +137,15 @@ class GravesRMSProp(BaseOptimizer):
                 shape = grad.get_shape().as_list()
                 dtype = grad.dtype.as_numpy_dtype
 
-                name = '{}_mean'.format(grad.name.split(':')[0])
+                name = '{}_grad_mean'.format(var.name.split(':')[0])
+                print name
                 mean_grad1_ = get_variable(
                     name=name, shape=shape, dtype=dtype,
                     initializer=tf.constant_initializer(0))
                 self.slot[name] = mean_grad1_
 
-                name = '{}_squared_mean'.format(grad.name.split(':')[0])
+                name = '{}_grad_squared_mean'.format(var.name.split(':')[0])
+                print name
                 mean_grad2_ = get_variable(
                     name=name, shape=shape, dtype=dtype,
                     initializer=tf.constant_initializer(0))
