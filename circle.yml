@@ -22,6 +22,8 @@ test:
     # integration test for DQN
     - LUCHADOR_NN_BACKEND=theano     LUCHADOR_NN_CONV_FORMAT=NCHW python tests/integration/run_dqn.py
     - LUCHADOR_NN_BACKEND=tensorflow LUCHADOR_NN_CONV_FORMAT=NHWC python tests/integration/run_dqn.py
+    # Optimizer compatibility test
+    - ./tests/compatibility/run_optimizer_compatibility_tests.sh
     # Style check
     - flake8 luchador
     - flake8 tests

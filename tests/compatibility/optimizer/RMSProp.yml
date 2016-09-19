@@ -1,0 +1,5 @@
+name: RMSProp
+args:
+  decay: 0.95
+  momentum: 0.0
+  learning_rate: 0.0001
