@@ -12,8 +12,12 @@ __all__ = ['Variable', 'Tensor', 'Input', 'Operation']
 
 
 class Variable(BaseWrapper):
-    def __init__(self, variable, shape, dtype):
-        super(Variable, self).__init__(variable, shape, variable.name, dtype)
+    def __init__(self, variable, name=None):
+        name = name or variable.name
+        shape = variable.get_shape().as_list()
+        dtype = variable.dtype.as_numpy_dtype
+        super(Variable, self).__init__(
+            tensor=variable, shape=shape, name=name, dtype=dtype)
 
 
 class Tensor(BaseWrapper):
@@ -21,7 +25,7 @@ class Tensor(BaseWrapper):
         if tensor is not None:
             name = name or tensor.name
             shape = shape or tensor.get_shape().as_list()
-            dtype = dtype or tensor.dtype
+            dtype = dtype or tensor.dtype.as_numpy_dtype
         super(Tensor, self).__init__(
             tensor=tensor, shape=shape, name=name, dtype=dtype)
 
