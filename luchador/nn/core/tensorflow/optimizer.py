@@ -87,33 +87,27 @@ class NeonRMSProp(BaseOptimizer):
         self.epsilon = epsilon
 
     def apply_gradients(self, grads_and_vars, **kwargs):
-        # TODO: Save intermediate Variables in slot
-        mean_grads2_updates = []
+        rms_updates = []
         new_grads_and_vars = []
         args = self.args
         decay, ep = args['decay'], args['epsilon']
         for grad, var in grads_and_vars:
             with tf.variable_scope(args['name']):
-                shape = grad.get_shape().as_list()
-                dtype = grad.dtype.as_numpy_dtype
-
-                name = '{}_squared_mean'.format(grad.name.split(':')[0])
-                mean_grad2_ = get_variable(
-                    name=name, shape=shape, dtype=dtype,
+                name = '{}_rms'.format(grad.name.split(':')[0])
+                rms_ = get_variable(
+                    name=name, shape=grad.get_shape(), dtype=grad.dtype,
                     initializer=tf.constant_initializer(0))
-                self.slot[name] = mean_grad2_
+                self.slot[name] = rms_
 
-                mean_grad2 = mean_grad2_.get()
-                new_mean_grad2 = mean_grad2 + (1. - decay) * (
-                    tf.square(grad) - mean_grad2)
+                rms = rms_.get()
 
-                rms = tf.sqrt(new_mean_grad2 + ep) + ep
-                new_grad = tf.truediv(grad, rms)
+                new_rms = rms + (1. - decay) * (tf.square(grad) - rms)
+                new_grad = tf.truediv(grad, tf.sqrt(new_rms + ep) + ep)
 
-            mean_grads2_updates.append(mean_grad2.assign(new_mean_grad2))
+            rms_updates.append(rms.assign(new_rms))
             new_grads_and_vars.append((new_grad, var))
         train_op = self.optimizer.apply_gradients(new_grads_and_vars)
-        updates = [train_op] + mean_grads2_updates
+        updates = [train_op] + rms_updates
         return Operation(tf.group(*updates))
 
 
