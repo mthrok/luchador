@@ -1,7 +1,5 @@
 from __future__ import absolute_import
 
-from collections import OrderedDict
-
 from luchador.common import get_subclasses, SerializeMixin
 
 __all__ = ['Optimizer', 'get_optimizer']
@@ -12,7 +10,7 @@ class Optimizer(SerializeMixin):
     def __init__(self, **kwargs):
         super(Optimizer, self).__init__()
         self._store_args(**kwargs)
-        self.slot = OrderedDict()
+        self.slot = []
 
     def minimize(self, loss, wrt, **kwargs):
         """Minimize loss with the given variables

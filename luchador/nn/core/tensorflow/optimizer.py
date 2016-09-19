@@ -46,7 +46,6 @@ class BaseOptimizer(Optimizer):
 
     def compute_gradients(self, loss, wrt, **kwargs):
         loss = loss.get()
-        # TODO: Add support for single tensor
         if wrt is not None and not is_iteratable(wrt):
             wrt = [wrt]
         var_list = [v.get() for v in wrt] if wrt else None
@@ -67,7 +66,17 @@ class BaseOptimizer(Optimizer):
                 base_name, index = var.name.split(':')
                 name = '{}/{}/{}:{}'.format(
                     base_name, self.args['name'], slot_name, index)
-                self.slot[name] = Variable(slot, name=name)
+                self.slot.append(Variable(slot, name=name))
+
+    def _create_slot_var(self, var, slot_name):
+        """Create slot variable for the given Variable and store it"""
+        name = '{}/{}/{}'.format(
+            var.name.split(':')[0], self.args['name'], slot_name)
+        slot_var = get_variable(
+            name=name, shape=var.get_shape(), dtype=var.dtype,
+            initializer=tf.constant_initializer(0))
+        self.slot.append(slot_var)
+        return slot_var
 
 
 class SGD(BaseOptimizer):
@@ -106,12 +115,7 @@ class NeonRMSProp(BaseOptimizer):
         args = self.args
         decay, ep = args['decay'], args['epsilon']
         for grad, var in grads_and_vars:
-            name = '{}/{}/rms'.format(var.name.split(':')[0], args['name'])
-            rms = get_variable(
-                name=name, shape=grad.get_shape(), dtype=grad.dtype,
-                initializer=tf.constant_initializer(0))
-            self.slot[name] = rms
-            rms = rms.get()
+            rms = self._create_slot_var(var, 'rms').get()
 
             new_rms = rms + (1. - decay) * (tf.square(grad) - rms)
             new_grad = tf.truediv(grad, tf.sqrt(new_rms + ep) + ep)
@@ -141,23 +145,8 @@ class GravesRMSProp(BaseOptimizer):
         args = self.args
         d1, d2, ep = args['decay1'], args['decay2'], args['epsilon']
         for grad, var in grads_and_vars:
-            dtype = grad.dtype
-            shape = grad.get_shape()
-            base_name = '{}/{}'.format(var.name.split(':')[0], args['name'])
-
-            name = '{}/grad_mean'.format(base_name)
-            mean_grad1 = get_variable(
-                name=name, shape=shape, dtype=dtype,
-                initializer=tf.constant_initializer(0))
-            self.slot[name] = mean_grad1
-            mean_grad1 = mean_grad1.get()
-
-            name = '{}/grad_squared_mean'.format(base_name)
-            mean_grad2 = get_variable(
-                name=name, shape=shape, dtype=dtype,
-                initializer=tf.constant_initializer(0))
-            self.slot[name] = mean_grad2
-            mean_grad2 = mean_grad2.get()
+            mean_grad1 = self._create_slot_var(var, 'grad_mean').get()
+            mean_grad2 = self._create_slot_var(var, 'grad_squared_mean').get()
 
             new_mean_grad1 = d1 * mean_grad1 + (1.0 - d1) * grad
             new_mean_grad2 = d2 * mean_grad2 + (1.0 - d2) * tf.square(grad)

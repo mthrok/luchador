@@ -35,6 +35,17 @@ class BaseOptimizer(Optimizer):
     def get_parameter_variables(self):
         return self.slot
 
+    def _create_slot_var(self, var, slot_name):
+        """Create slot variable for the given Variable and store it"""
+        value = var.get_value(borrow=True)
+        name = '{}/{}/{}'.format(
+            var.name.split(':')[0], self.args['name'], slot_name)
+        slot_var = get_variable(
+            name=name, shape=value.shape, dtype=value.dtype,
+            initializer=Constant(0), broadcastable=var.broadcastable)
+        self.slot.append(slot_var)
+        return slot_var
+
 
 class SGD(BaseOptimizer):
     def __init__(self, learning_rate, name='SGD', **kwargs):
@@ -62,22 +73,8 @@ class RMSProp(BaseOptimizer):
         decay, momentum = args['decay'], args['momentum']
         ep, lr = args['epsilon'], args['learning_rate']
         for grad, var in grads_and_vars:
-            value = var.get_value(borrow=True)
-            base_name = '{}/{}'.format(var.name.split(':')[0], args['name'])
-
-            name = '{}/momentum'.format(base_name)
-            mom = get_variable(
-                name=name, shape=value.shape, dtype=value.dtype,
-                initializer=Constant(0), broadcastable=var.broadcastable)
-            self.slot[name] = mom
-            mom = mom.get()
-
-            name = '{}/rms'.format(base_name)
-            rms = get_variable(
-                name=name, shape=value.shape, dtype=value.dtype,
-                initializer=Constant(0), broadcastable=var.broadcastable)
-            self.slot[name] = rms
-            rms = rms.get()
+            mom = self._create_slot_var(var, 'momentum').get()
+            rms = self._create_slot_var(var, 'rms').get()
 
             new_rms = rms + (1.0 - decay) * (T.square(grad) - rms)
             new_mom = mom * momentum + lr * grad / (T.sqrt(new_rms + ep))
@@ -101,14 +98,7 @@ class NeonRMSProp(BaseOptimizer):
         args = self.args
         decay, ep, lr = args['decay'], args['epsilon'], args['learning_rate']
         for grad, var in grads_and_vars:
-            value = var.get_value(borrow=True)
-
-            name = '{}/{}/rms'.format(var.name.split(':')[0], args['name'])
-            rms = get_variable(
-                name=name, shape=value.shape, dtype=value.dtype,
-                initializer=Constant(0), broadcastable=var.broadcastable)
-            self.slot[name] = rms
-            rms = rms.get()
+            rms = self._create_slot_var(var, 'rms').get()
 
             new_rms = rms + (1.0 - decay) * (T.square(grad) - rms)
             new_var = var - lr * grad / (T.sqrt(new_rms + ep) + ep)
@@ -141,23 +131,8 @@ class GravesRMSProp(BaseOptimizer):
         d1, d2 = args['decay1'], args['decay2']
         ep, lr = args['epsilon'], args['learning_rate']
         for grad, var in grads_and_vars:
-            base_name = '{}/{}'.format(var.name.split(':')[0], args['name'])
-            value = var.get_value(borrow=True)
-
-            name = '{}/grad_mean'.format(base_name)
-            mean_grad1_ = get_variable(
-                name=name, shape=value.shape, dtype=value.dtype,
-                initializer=Constant(0), broadcastable=var.broadcastable)
-            self.slot[name] = mean_grad1_
-
-            name = '{}/grad_squared_mean'.format(base_name)
-            mean_grad2_ = get_variable(
-                name=name, shape=value.shape, dtype=value.dtype,
-                initializer=Constant(0), broadcastable=var.broadcastable)
-            self.slot[name] = mean_grad2_
-
-            mean_grad1 = mean_grad1_.get()
-            mean_grad2 = mean_grad2_.get()
+            mean_grad1 = self._create_slot_var(var, 'grad_mean').get()
+            mean_grad2 = self._create_slot_var(var, 'grad_squared_mean').get()
 
             new_mean_grad1 = d1 * mean_grad1 + (1.0 - d1) * grad
             new_mean_grad2 = d2 * mean_grad2 + (1.0 - d2) * T.square(grad)
