@@ -3,6 +3,21 @@ from __future__ import absolute_import
 import yaml
 
 
+def load_config(filepath):
+    with open(filepath) as f:
+        return yaml.load(f)
+
+
+def is_iteratable(l):
+    try:
+        list(l)
+        return True
+    except Exception:
+        return False
+
+
+###############################################################################
+# Getter mechanism
 def get_subclasses(Class):
     """Get the list of all subclasses
 
@@ -21,11 +36,8 @@ def get_subclasses(Class):
     return ret
 
 
-def load_config(filepath):
-    with open(filepath) as f:
-        return yaml.load(f)
-
-
+###############################################################################
+# Mixins
 class StoreMixin(object):
     def _store_args(self, **args):
         """Store initializer arguments to `args` attribute

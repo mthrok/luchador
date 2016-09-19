@@ -5,11 +5,12 @@ from collections import OrderedDict
 import theano
 import theano.tensor as T
 
+from luchador.common import is_iteratable
 from ..base import (
     get_optimizer,
     Optimizer,
 )
-from .scope import get_variable, variable_scope
+from .scope import get_variable
 from .initializer import Constant
 from .wrapper import Operation
 
@@ -25,7 +26,8 @@ class BaseOptimizer(Optimizer):
         return self.apply_gradients(grads_and_vars)
 
     def compute_gradients(self, loss, wrt, **kwargs):
-        # TODO: Add support for single wrt
+        if not is_iteratable(wrt):
+            wrt = [wrt]
         loss, wrt = loss.get(), [v.get() for v in wrt]
         grads = theano.grad(loss, wrt)
         return [(grad, var) for grad, var in zip(grads, wrt)]
@@ -61,25 +63,25 @@ class RMSProp(BaseOptimizer):
         ep, lr = args['epsilon'], args['learning_rate']
         for grad, var in grads_and_vars:
             value = var.get_value(borrow=True)
-            with variable_scope(args['name']):
-                name = '{}_rms'.format(var.name.split(':')[0])
-                rms_ = get_variable(
-                    name=name, shape=value.shape, dtype=value.dtype,
-                    initializer=Constant(0), broadcastable=var.broadcastable)
-                self.slot[name] = rms_
+            base_name = '{}/{}'.format(var.name.split(':')[0], args['name'])
 
-                name = '{}_momentum'.format(var.name.split(':')[0])
-                mom_ = get_variable(
-                    name=name, shape=value.shape, dtype=value.dtype,
-                    initializer=Constant(0), broadcastable=var.broadcastable)
-                self.slot[name] = mom_
+            name = '{}/momentum'.format(base_name)
+            mom = get_variable(
+                name=name, shape=value.shape, dtype=value.dtype,
+                initializer=Constant(0), broadcastable=var.broadcastable)
+            self.slot[name] = mom
+            mom = mom.get()
 
-                rms = rms_.get()
-                mom = mom_.get()
+            name = '{}/rms'.format(base_name)
+            rms = get_variable(
+                name=name, shape=value.shape, dtype=value.dtype,
+                initializer=Constant(0), broadcastable=var.broadcastable)
+            self.slot[name] = rms
+            rms = rms.get()
 
-                new_rms = rms + (1.0 - d) * (T.square(grad) - rms)
-                new_mom = mom * momentum + lr * grad / (T.sqrt(new_rms + ep))
-                new_var = var - new_mom
+            new_rms = rms + (1.0 - d) * (T.square(grad) - rms)
+            new_mom = mom * momentum + lr * grad / (T.sqrt(new_rms + ep))
+            new_var = var - new_mom
 
             updates[rms] = new_rms
             updates[mom] = new_mom
@@ -100,17 +102,16 @@ class NeonRMSProp(BaseOptimizer):
         decay, ep, lr = args['decay'], args['epsilon'], args['learning_rate']
         for grad, var in grads_and_vars:
             value = var.get_value(borrow=True)
-            with variable_scope(args['name']):
-                name = '{}_rms'.format(var.name.split(':')[0])
-                rms_ = get_variable(
-                    name=name, shape=value.shape, dtype=value.dtype,
-                    initializer=Constant(0), broadcastable=var.broadcastable)
-                self.slot[name] = rms_
 
-                rms = rms_.get()
+            name = '{}/{}/rms'.format(var.name.split(':')[0], args['name'])
+            rms = get_variable(
+                name=name, shape=value.shape, dtype=value.dtype,
+                initializer=Constant(0), broadcastable=var.broadcastable)
+            self.slot[name] = rms
+            rms = rms.get()
 
-                new_rms = rms + (1.0 - decay) * (T.square(grad) - rms)
-                new_var = var - lr * grad / (T.sqrt(new_rms + ep) + ep)
+            new_rms = rms + (1.0 - decay) * (T.square(grad) - rms)
+            new_var = var - lr * grad / (T.sqrt(new_rms + ep) + ep)
 
             updates[rms] = new_rms
             updates[var] = new_var
@@ -125,7 +126,7 @@ class GravesRMSProp(BaseOptimizer):
     """
     def __init__(self, learning_rate,
                  decay1=0.95, decay2=0.95,
-                 epsilon=1e-2, name='RMSProp'):
+                 epsilon=1e-2, name='GravesRMSProp'):
         super(GravesRMSProp, self).__init__(
             learning_rate=learning_rate,
             decay1=decay1, decay2=decay2, epsilon=epsilon, name=name)
@@ -140,31 +141,32 @@ class GravesRMSProp(BaseOptimizer):
         d1, d2 = args['decay1'], args['decay2']
         ep, lr = args['epsilon'], args['learning_rate']
         for grad, var in grads_and_vars:
+            base_name = '{}/{}'.format(var.name.split(':')[0], args['name'])
             value = var.get_value(borrow=True)
-            with variable_scope(args['name']):
-                name = '{}_grad_mean'.format(var.name.split(':')[0])
-                mean_grad1_ = get_variable(
-                    name=name, shape=value.shape, dtype=value.dtype,
-                    initializer=Constant(0), broadcastable=var.broadcastable)
-                self.slot[name] = mean_grad1_
 
-                name = '{}_grad_squared_mean'.format(var.name.split(':')[0])
-                mean_grad2_ = get_variable(
-                    name=name, shape=value.shape, dtype=value.dtype,
-                    initializer=Constant(0), broadcastable=var.broadcastable)
-                self.slot[name] = mean_grad2_
+            name = '{}/grad_mean'.format(base_name)
+            mean_grad1_ = get_variable(
+                name=name, shape=value.shape, dtype=value.dtype,
+                initializer=Constant(0), broadcastable=var.broadcastable)
+            self.slot[name] = mean_grad1_
 
-                mean_grad1 = mean_grad1_.get()
-                mean_grad2 = mean_grad2_.get()
+            name = '{}/grad_squared_mean'.format(base_name)
+            mean_grad2_ = get_variable(
+                name=name, shape=value.shape, dtype=value.dtype,
+                initializer=Constant(0), broadcastable=var.broadcastable)
+            self.slot[name] = mean_grad2_
 
-                new_mean_grad1 = d1 * mean_grad1 + (1.0 - d1) * grad
-                new_mean_grad2 = d2 * mean_grad2 + (1.0 - d2) * T.square(grad)
+            mean_grad1 = mean_grad1_.get()
+            mean_grad2 = mean_grad2_.get()
 
-                rms = T.sqrt(new_mean_grad2 - T.square(new_mean_grad1) + ep)
-                new_grad = grad / rms
+            new_mean_grad1 = d1 * mean_grad1 + (1.0 - d1) * grad
+            new_mean_grad2 = d2 * mean_grad2 + (1.0 - d2) * T.square(grad)
 
-                delta_var = -lr * new_grad
-                new_var = var + delta_var
+            rms = T.sqrt(new_mean_grad2 - T.square(new_mean_grad1) + ep)
+            new_grad = grad / rms
+
+            delta_var = -lr * new_grad
+            new_var = var + delta_var
 
             updates[mean_grad1] = new_mean_grad1
             updates[mean_grad2] = new_mean_grad2

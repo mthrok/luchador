@@ -47,19 +47,13 @@ def get_formula(name):
 
 
 def optimize(optimizer, loss, wrt, n_ite=100):
-    try:
-        wrt[0]
-    except Exception:
-        wrt = [wrt]
-
     minimize_op = optimizer.minimize(loss=loss, wrt=wrt)
-
     sess = Session()
     sess.initialize()
     result = []
     for _ in range(n_ite):
         sess.run(updates=minimize_op, name='minimize')
-        output = sess.run(outputs=[loss] + wrt, name='output')
+        output = sess.run(outputs=[loss, wrt], name='output')
         result.append({
             'loss': output[0],
             'wrt': output[1],

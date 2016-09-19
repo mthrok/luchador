@@ -1,13 +1,17 @@
 from __future__ import absolute_import
 
-import tensorflow as tf  # nopep8
+import tensorflow as tf
 
+from luchador.common import is_iteratable
 from ..base import (
     get_optimizer,
     Optimizer,
 )
 from .scope import get_variable
-from .wrapper import Operation
+from .wrapper import (
+    Variable,
+    Operation,
+)
 
 __all__ = [
     'BaseOptimizer', 'get_optimizer',
@@ -43,6 +47,8 @@ class BaseOptimizer(Optimizer):
     def compute_gradients(self, loss, wrt, **kwargs):
         loss = loss.get()
         # TODO: Add support for single tensor
+        if wrt is not None and not is_iteratable(wrt):
+            wrt = [wrt]
         var_list = [v.get() for v in wrt] if wrt else None
         grads_and_vars = self.optimizer.compute_gradients(
             loss, var_list=var_list, **kwargs)
@@ -50,10 +56,18 @@ class BaseOptimizer(Optimizer):
 
     def apply_gradients(self, grads_and_vars, **kwargs):
         minimize_op = self.optimizer.apply_gradients(grads_and_vars, **kwargs)
-        # TODO: Store the name and variable of created slots here.
-        # Variable formulation is different between theano and tf backend.
-        # So that they cannot be completely compatible. What to do?
+        self._register_slot(grads_and_vars)
         return Operation(minimize_op)
+
+    def _register_slot(self, grads_and_vars):
+        """Store TF-native optimizer slots to luchador Optimizer slots"""
+        for _, var in grads_and_vars:
+            for slot_name in self.optimizer.get_slot_names():
+                slot = self.optimizer.get_slot(var, slot_name)
+                base_name, index = var.name.split(':')
+                name = '{}/{}/{}:{}'.format(
+                    base_name, self.args['name'], slot_name, index)
+                self.slot[name] = Variable(slot, name=name)
 
 
 class SGD(BaseOptimizer):
@@ -92,17 +106,15 @@ class NeonRMSProp(BaseOptimizer):
         args = self.args
         decay, ep = args['decay'], args['epsilon']
         for grad, var in grads_and_vars:
-            with tf.variable_scope(args['name']):
-                name = '{}_rms'.format(var.name.split(':')[0])
-                rms_ = get_variable(
-                    name=name, shape=grad.get_shape(), dtype=grad.dtype,
-                    initializer=tf.constant_initializer(0))
-                self.slot[name] = rms_
+            name = '{}/{}/rms'.format(var.name.split(':')[0], args['name'])
+            rms = get_variable(
+                name=name, shape=grad.get_shape(), dtype=grad.dtype,
+                initializer=tf.constant_initializer(0))
+            self.slot[name] = rms
+            rms = rms.get()
 
-                rms = rms_.get()
-
-                new_rms = rms + (1. - decay) * (tf.square(grad) - rms)
-                new_grad = tf.truediv(grad, tf.sqrt(new_rms + ep) + ep)
+            new_rms = rms + (1. - decay) * (tf.square(grad) - rms)
+            new_grad = tf.truediv(grad, tf.sqrt(new_rms + ep) + ep)
 
             rms_updates.append(rms.assign(new_rms))
             new_grads_and_vars.append((new_grad, var))
@@ -115,7 +127,6 @@ class GravesRMSProp(BaseOptimizer):
     def __init__(self, learning_rate,
                  decay1=0.0, decay2=0.95, epsilon=1e-2,
                  name='GravesRMSProp', **kwargs):
-        # TODO: Add support for momentum
         super(GravesRMSProp, self).__init__(
             learning_rate=learning_rate,
             decay1=decay1, decay2=decay2, epsilon=epsilon, name=name)
@@ -126,44 +137,37 @@ class GravesRMSProp(BaseOptimizer):
             learning_rate, name=name)
 
     def apply_gradients(self, grads_and_vars, **kwargs):
-        # TODO: Save intermediate Variables in slot
-        mean_grads1_updates = []
-        mean_grads2_updates = []
-        new_grads_and_vars = []
+        updates, new_grads_and_vars = [], []
         args = self.args
         d1, d2, ep = args['decay1'], args['decay2'], args['epsilon']
         for grad, var in grads_and_vars:
-            with tf.variable_scope(args['name']):
-                shape = grad.get_shape().as_list()
-                dtype = grad.dtype.as_numpy_dtype
+            dtype = grad.dtype
+            shape = grad.get_shape()
+            base_name = '{}/{}'.format(var.name.split(':')[0], args['name'])
 
-                name = '{}_grad_mean'.format(var.name.split(':')[0])
-                print name
-                mean_grad1_ = get_variable(
-                    name=name, shape=shape, dtype=dtype,
-                    initializer=tf.constant_initializer(0))
-                self.slot[name] = mean_grad1_
+            name = '{}/grad_mean'.format(base_name)
+            mean_grad1 = get_variable(
+                name=name, shape=shape, dtype=dtype,
+                initializer=tf.constant_initializer(0))
+            self.slot[name] = mean_grad1
+            mean_grad1 = mean_grad1.get()
 
-                name = '{}_grad_squared_mean'.format(var.name.split(':')[0])
-                print name
-                mean_grad2_ = get_variable(
-                    name=name, shape=shape, dtype=dtype,
-                    initializer=tf.constant_initializer(0))
-                self.slot[name] = mean_grad2_
+            name = '{}/grad_squared_mean'.format(base_name)
+            mean_grad2 = get_variable(
+                name=name, shape=shape, dtype=dtype,
+                initializer=tf.constant_initializer(0))
+            self.slot[name] = mean_grad2
+            mean_grad2 = mean_grad2.get()
 
-                mean_grad1 = mean_grad1_.get()
-                mean_grad2 = mean_grad2_.get()
+            new_mean_grad1 = d1 * mean_grad1 + (1.0 - d1) * grad
+            new_mean_grad2 = d2 * mean_grad2 + (1.0 - d2) * tf.square(grad)
 
-                new_mean_grad1 = d1 * mean_grad1 + (1.0 - d1) * grad
-                new_mean_grad2 = d2 * mean_grad2 + (1.0 - d2) * tf.square(grad)
+            rms = tf.sqrt(new_mean_grad2 - tf.square(new_mean_grad1) + ep)
+            new_grad = tf.truediv(grad, rms)
 
-                rms = tf.sqrt(new_mean_grad2 - tf.square(new_mean_grad1) + ep)
-                new_grad = tf.truediv(grad, rms)
-
-            mean_grads1_updates.append(mean_grad1.assign(new_mean_grad1))
-            mean_grads2_updates.append(mean_grad2.assign(new_mean_grad2))
+            updates.append(mean_grad1.assign(new_mean_grad1))
+            updates.append(mean_grad2.assign(new_mean_grad2))
             new_grads_and_vars.append((new_grad, var))
 
-        train_op = self.optimizer.apply_gradients(new_grads_and_vars)
-        updates = mean_grads1_updates + mean_grads2_updates + [train_op]
+        updates.append(self.optimizer.apply_gradients(new_grads_and_vars))
         return Operation(tf.group(*updates))

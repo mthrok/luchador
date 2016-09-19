@@ -6,6 +6,7 @@ from collections import OrderedDict
 import theano
 import numpy as np
 
+from luchador.common import is_iteratable
 from ..base import Session as BaseSession
 from . import scope
 from .wrapper import (
@@ -23,20 +24,12 @@ _TENSOR_CLASS_STR = _get_full_class(Tensor)
 _OP_CLASS_STR = _get_full_class(Operation)
 
 
-def _is_iteratable(l):
-    try:
-        list(l)
-        return True
-    except Exception:
-        return False
-
-
 def _parse_inputs(inputs):
     inputs_ = []
     if inputs is None:
         return inputs_
 
-    if not _is_iteratable(inputs):
+    if not is_iteratable(inputs):
         inputs = [inputs]
 
     if isinstance(inputs, dict):
@@ -55,7 +48,7 @@ def _parse_inputs(inputs):
 def _parse_outputs(outputs):
     if outputs is None:
         return []
-    if not _is_iteratable(outputs):
+    if not is_iteratable(outputs):
         outputs = [outputs]
     return [o.get() for o in outputs]
 
@@ -65,7 +58,7 @@ def _parse_updates(updates):
     if updates is None:
         return ret
 
-    if not _is_iteratable(updates):
+    if not is_iteratable(updates):
         updates = [updates]
 
     for update in updates:
@@ -103,7 +96,7 @@ class Session(BaseSession):
             self.functions[name] = function
 
         values = function(*inputs.values())
-        if _is_iteratable(outputs):
+        if is_iteratable(outputs):
             return values
         return values[0]
 
