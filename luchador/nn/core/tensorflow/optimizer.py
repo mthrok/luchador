@@ -79,7 +79,7 @@ class SGD(BaseOptimizer):
 
 class RMSProp(BaseOptimizer):
     def __init__(self, learning_rate,
-                 decay=0.95, momentum=None,
+                 decay=0.95, momentum=0.0,
                  epsilon=1e-2, name='RMSProp', **kwargs):
         super(RMSProp, self).__init__(
             learning_rate=learning_rate,

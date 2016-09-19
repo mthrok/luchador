@@ -49,7 +49,7 @@ class SGD(BaseOptimizer):
 
 
 class RMSProp(BaseOptimizer):
-    def __init__(self, learning_rate, decay=0.95, momentum=None,
+    def __init__(self, learning_rate, decay=0.95, momentum=0.0,
                  epsilon=1e-2, name='RMSProp', **kwargs):
         super(RMSProp, self).__init__(
             learning_rate=learning_rate,
@@ -59,7 +59,7 @@ class RMSProp(BaseOptimizer):
     def apply_gradients(self, grads_and_vars):
         updates = OrderedDict()
         args = self.args
-        d, momentum = args['decay'], args['momentum']
+        decay, momentum = args['decay'], args['momentum']
         ep, lr = args['epsilon'], args['learning_rate']
         for grad, var in grads_and_vars:
             value = var.get_value(borrow=True)
@@ -79,7 +79,7 @@ class RMSProp(BaseOptimizer):
             self.slot[name] = rms
             rms = rms.get()
 
-            new_rms = rms + (1.0 - d) * (T.square(grad) - rms)
+            new_rms = rms + (1.0 - decay) * (T.square(grad) - rms)
             new_mom = mom * momentum + lr * grad / (T.sqrt(new_rms + ep))
             new_var = var - new_mom
 

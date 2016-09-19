@@ -51,6 +51,7 @@ def optimize(optimizer, loss, wrt, n_ite=100):
     sess = Session()
     sess.initialize()
     result = []
+    _LG.info('Running optimization for {} times.'.format(n_ite))
     for _ in range(n_ite):
         sess.run(updates=minimize_op, name='minimize')
         output = sess.run(outputs=[loss, wrt], name='output')
