@@ -62,13 +62,13 @@ class RMSProp(BaseOptimizer):
         for grad, var in grads_and_vars:
             value = var.get_value(borrow=True)
             with variable_scope(args['name']):
-                name = '{}_rms'.format(var.name)
+                name = '{}_rms'.format(var.name.split(':')[0])
                 rms_ = get_variable(
                     name=name, shape=value.shape, dtype=value.dtype,
                     initializer=Constant(0), broadcastable=var.broadcastable)
                 self.slot[name] = rms_
 
-                name = '{}_momentum'.format(var.name)
+                name = '{}_momentum'.format(var.name.split(':')[0])
                 mom_ = get_variable(
                     name=name, shape=value.shape, dtype=value.dtype,
                     initializer=Constant(0), broadcastable=var.broadcastable)
@@ -101,7 +101,7 @@ class NeonRMSProp(BaseOptimizer):
         for grad, var in grads_and_vars:
             value = var.get_value(borrow=True)
             with variable_scope(args['name']):
-                name = '{}_rms'.format(var.name)
+                name = '{}_rms'.format(var.name.split(':')[0])
                 rms_ = get_variable(
                     name=name, shape=value.shape, dtype=value.dtype,
                     initializer=Constant(0), broadcastable=var.broadcastable)
@@ -142,13 +142,13 @@ class GravesRMSProp(BaseOptimizer):
         for grad, var in grads_and_vars:
             value = var.get_value(borrow=True)
             with variable_scope(args['name']):
-                name = '{}_grad_mean'.format(var.name)
+                name = '{}_grad_mean'.format(var.name.split(':')[0])
                 mean_grad1_ = get_variable(
                     name=name, shape=value.shape, dtype=value.dtype,
                     initializer=Constant(0), broadcastable=var.broadcastable)
                 self.slot[name] = mean_grad1_
 
-                name = '{}_grad_squared_mean'.format(var.name)
+                name = '{}_grad_squared_mean'.format(var.name.split(':')[0])
                 mean_grad2_ = get_variable(
                     name=name, shape=value.shape, dtype=value.dtype,
                     initializer=Constant(0), broadcastable=var.broadcastable)
