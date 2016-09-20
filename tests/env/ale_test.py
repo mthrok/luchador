@@ -399,17 +399,17 @@ class ALEEnvironmentTest(unittest.TestCase):
                 continue
             if ale._ale.game_over():
                 break
-            frame0 = outcome['state']['episode_frame_number']
+            ep0 = outcome['state']['episode']
             outcome = ale.reset()
-            frame1 = outcome['state']['episode_frame_number']
+            ep1 = outcome['state']['episode']
             self.assertEqual(
-                frame0, frame1,
-                'Frame number should not be changed before/after reset. '
-                'When mode==train and not game_over'
+                ep0, ep1,
+                'New episode should not start at reset '
+                'when mode==train and not game_over'
             )
         outcome = ale.reset()
-        frame0 = outcome['state']['episode_frame_number']
+        ep1 = outcome['state']['episode']
         self.assertEqual(
-            frame0, 1,
-            'Game should be reset when `reset` is called on game_over==True'
+            ep0 + 1, ep1,
+            'New episode should be started when `reset` is called on game_over'
         )

@@ -161,6 +161,8 @@ class ALEEnvironment(BaseEnvironment):
         self.repeat_action = repeat_action
         self.random_start = random_start
 
+        self.n_episodes = 0
+
     def _init_ale(self):
         ale = ALEInterface()
         ale.setBool('sound', self.play_sound)
@@ -285,6 +287,7 @@ class ALEEnvironment(BaseEnvironment):
     ###########################################################################
     def _get_state(self):
         return {
+            'episode': self.n_episodes,
             'lives': self._ale.lives(),
             'total_frame_number': self._ale.getFrameNumber(),
             'episode_frame_number': self._ale.getEpisodeFrameNumber(),
@@ -304,6 +307,7 @@ class ALEEnvironment(BaseEnvironment):
                 self._ale.game_over()  # all lives are lost
         ):
             self._ale.reset_game()
+            self.n_episodes += 1
             rand = self.random_start
             repeat = 1 + (np.random.randint(rand) if rand else 0)
             for _ in range(repeat):
