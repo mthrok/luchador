@@ -1,5 +1,7 @@
 from __future__ import absolute_import
 
+import logging
+
 import tensorflow as tf
 from tensorflow import (
     Session as TFSession,
@@ -16,6 +18,7 @@ from .wrapper import (
     Operation,
 )
 
+_LG = logging.getLogger(__name__)
 
 __all__ = ['Session']
 
@@ -138,6 +141,7 @@ class Session(BaseSession):
         op = []
         with scope.variable_scope(scope.VariableScope(reuse=True, name='')):
             for name, _value in dataset.items():
+                _LG.info('  Loading data {}'.format(name))
                 variable = scope.get_variable(name=name, shape=_value.shape)
                 value = np.array(_value, dtype=variable.dtype)
                 op.append(variable.get().assign(value))

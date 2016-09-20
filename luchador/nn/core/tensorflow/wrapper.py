@@ -22,6 +22,7 @@ class Variable(BaseWrapper):
             overwritten with this name.
         """
         name = name or variable.name
+        name = name.split(':')[0]
         shape = variable.get_shape().as_list()
         dtype = variable.dtype.as_numpy_dtype
         super(Variable, self).__init__(

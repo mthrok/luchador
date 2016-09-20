@@ -40,7 +40,7 @@ class BaseOptimizer(Optimizer):
         """Create slot variable for the given Variable and store it"""
         value = var.get_value(borrow=True)
         name = '{}/{}/{}'.format(
-            var.name.split(':')[0], self.args['name'], slot_name)
+            self.args['name'], var.name.split(':')[0], slot_name)
         slot_var = get_variable(
             name=name, shape=value.shape, dtype=value.dtype,
             initializer=Constant(0), broadcastable=var.broadcastable)

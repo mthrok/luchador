@@ -64,15 +64,14 @@ class BaseOptimizer(Optimizer):
         for _, var in grads_and_vars:
             for slot_name in self.optimizer.get_slot_names():
                 slot = self.optimizer.get_slot(var, slot_name)
-                base_name, index = var.name.split(':')
-                name = '{}/{}/{}:{}'.format(
-                    base_name, self.args['name'], slot_name, index)
+                name = '{}/{}/{}'.format(
+                    self.args['name'],  var.name, slot_name)
                 self.slot.append(Variable(slot, name=name))
 
     def _create_slot_var(self, var, slot_name):
         """Create slot variable for the given Variable and store it"""
         name = '{}/{}/{}'.format(
-            var.name.split(':')[0], self.args['name'], slot_name)
+            self.args['name'], var.name.split(':')[0], slot_name)
         slot_var = get_variable(
             name=name, shape=var.get_shape(), dtype=var.dtype,
             initializer=tf.constant_initializer(0))

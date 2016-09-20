@@ -1,7 +1,5 @@
 from __future__ import absolute_import
 
-from collections import Counter
-
 import theano
 import theano.tensor as T
 
@@ -11,8 +9,6 @@ from ..base import (
 )
 
 __all__ = ['Tensor', 'Input', 'Operation']
-
-VARIABLE_COUNTER = Counter()
 
 
 class Variable(BaseWrapper):
@@ -26,10 +22,8 @@ class Variable(BaseWrapper):
             overwritten with this name, otherwise, name is constructed in the
             manner as Tensorflow.
         """
-        if name is None:
-            name_ = variable.name
-            count = VARIABLE_COUNTER[name_]
-            name = '{}:{}'.format(name_, count)
+        name = name or variable.name
+        name = name.split(':')[0]
         val = variable.get_value()
         super(Variable, self).__init__(
             tensor=variable, shape=val.shape, name=name, dtype=val.dtype)

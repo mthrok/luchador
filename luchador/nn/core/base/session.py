@@ -5,6 +5,17 @@ import h5py
 __all__ = ['Session']
 
 
+def _parse_dataset(h5group, prefix=''):
+    ret = {}
+    for key, value in h5group.items():
+        path = '{}/{}'.format(prefix, key) if prefix else key
+        if isinstance(value, h5py.Group):
+            ret.update(_parse_dataset(value, prefix=path))
+        else:
+            ret[path] = value
+    return ret
+
+
 class Session(object):
     """Defines common interface for computation handler
 
@@ -35,7 +46,7 @@ class Session(object):
     def load_from_file(self, filepath):
         f = h5py.File(filepath, 'r')
         try:
-            self.load_dataset(f)
+            self.load_dataset(_parse_dataset(f))
         except Exception:
             f.close()
             raise

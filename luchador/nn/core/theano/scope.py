@@ -82,7 +82,7 @@ class VariableScope(object):
 
 def variable_scope(name_or_scope, reuse=None):
     if isinstance(name_or_scope, VariableScope):
-        if reuse is True:
+        if reuse:
             return VariableScope(reuse, name_or_scope.name)
         return name_or_scope
 
