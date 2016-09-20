@@ -45,13 +45,16 @@ def get_model_config(model_name, **parameters):
     """Load pre-defined model configurations
 
     Args:
-      model_name (name): Model name
+      model_name (name): Model name or path to YAML file
       parameters: Parameter for model config
 
     Returns:
       JSON-compatible object: model configuration.
     """
-    file_name = '{}.yml'.format(model_name)
+    file_name = model_name
+    if not file_name.endswith('.yml'):
+        file_name = '{}.yml'.format(file_name)
+
     if os.path.isfile(file_name):
         file_path = file_name
     elif os.path.isfile(os.path.join(_DATA_DIR, file_name)):
