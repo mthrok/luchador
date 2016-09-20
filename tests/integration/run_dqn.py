@@ -1,27 +1,36 @@
 import os
 import time
+import logging
+from collections import OrderedDict
+
 import numpy as np
 
-# import theano
-# theano.config.optimizer = 'None'
-# theano.config.exception_verbosity = 'high'
+'''debug
+import theano
+theano.config.optimizer = 'None'
+theano.config.exception_verbosity = 'high'
+'''
 
 import luchador
 from luchador.nn import (
     Session,
     Input,
     DeepQLearning,
-    SSE2,
     GravesRMSProp,
     SummaryWriter,
     Saver,
 )
 from luchador.nn.util import get_model_config, make_model
 
+logger = logging.getLogger('luchador')
+logging.getLogger('luchador.nn.saver').setLevel(logging.DEBUG)
+
 conv_format = luchador.get_nn_conv_format()
 filepath = './tmp/param.dat'
 
-max_delta, min_delta = 1.0, -1.0
+min_delta, min_reward = -1.0, -1.0
+max_delta, max_reward = 1.0, 1.0
+
 learning_rate = 0.00025
 decay1, decay2 = 0.95, 0.95
 batchfile = 'mini-batch_Breakout-v0.npz'
@@ -42,25 +51,27 @@ def model_maker():
     dqn(Input(shape=state_shape))
     return dqn
 
-print 'Building Q networks'
-ql = DeepQLearning(discount_rate)
+logger.info('Building Q networks')
+ql = DeepQLearning(
+    discount_rate=discount_rate,
+    min_reward=min_reward,
+    max_reward=max_reward,
+    min_delta=min_delta,
+    max_delta=max_delta,
+)
 ql.build(model_maker)
 
-print 'Building Error'
-sse2 = SSE2(min_delta=min_delta, max_delta=max_delta)
-error = sse2(ql.target_q, ql.predicted_q)
-
-print 'Building Optimization'
+logger.info('Building Optimization')
 rmsprop = GravesRMSProp(
     learning_rate=learning_rate, decay1=decay1, decay2=decay2)
 params = ql.pre_trans_net.get_parameter_variables()
-minimize_op = rmsprop.minimize(error, wrt=params)
+minimize_op = rmsprop.minimize(ql.error, wrt=params)
 
-print 'Initializing Session'
+logger.info('Initializing Session')
 session = Session()
 session.initialize()
 
-print 'Initializing SummaryWriter'
+logger.info('Initializing SummaryWriter')
 outputs = ql.pre_trans_net.get_output_tensors()
 writer = SummaryWriter('./monitoring/test_tensorflow')
 writer.add_graph(session.graph)
@@ -69,10 +80,10 @@ writer.register('pre_trans_network_params',
 writer.register('pre_trans_network_outputs',
                 'histogram', [v.name for v in outputs])
 
-print 'Initializing Saver'
+logger.info('Initializing Saver')
 saver = Saver(filepath)
 
-print 'Running computation'
+logger.info('Running computation')
 data = np.load(os.path.join(os.path.dirname(__file__), batchfile))
 pre_states = data['prestates']
 post_states = data['poststates']
@@ -87,31 +98,38 @@ summary_time = []
 run_time = []
 for i in range(100):
     if i % 10 == 0:
-        print 'Syncing'
+        #######################################################################
+        logger.info('Syncing')
         t0 = time.time()
         session.run(name='sync', updates=ql.sync_op)
         sync_time.append(time.time() - t0)
 
-        print 'Summarizing', i
+        #######################################################################
+        logger.info('Summarizing: {}'.format(i))
         t0 = time.time()
-        params_vals = session.run(name='params', outputs=params)
+        params_vals = session.run(outputs=params, name='params')
         output_vals = session.run(
-            name='outputs', outputs=outputs, inputs={
-                ql.pre_states: pre_states
-            })
+            outputs=outputs,
+            inputs={ql.pre_states: pre_states},
+            name='outputs',
+        )
         writer.summarize('pre_trans_network_params', i, params_vals)
         writer.summarize('pre_trans_network_outputs', i, output_vals)
         summary_time.append(time.time() - t0)
 
-        print 'Saving', i
-        data = {var.name: value for var, value in zip(params, params_vals)}
+        #######################################################################
+        logger.info('Saving: {}'.format(i))
+        data = OrderedDict()
+        for var, value in zip(params, params_vals):
+            data[var.name] = value
         saver.save(data)
 
+    ###########################################################################
     t0 = time.time()
     e, target_qs, future_rewards, post_qs, pre_qs = session.run(
         name='minibatch',
         outputs=[
-            error,
+            ql.error,
             ql.target_q,
             ql.future_reward,
             ql.post_trans_net.output,
@@ -127,8 +145,8 @@ for i in range(100):
         updates=minimize_op)
     run_time.append(time.time() - t0)
 
-print 'Sync   : {} ({})'.format(np.mean(sync_time), sync_time[0])
-print 'Summary: {} ({})'.format(np.mean(summary_time), summary_time[0])
-print 'Run    : {} ({})'.format(np.mean(run_time), run_time[0])
+logger.info('Sync   : {} ({})'.format(np.mean(sync_time), sync_time[0]))
+logger.info('Summary: {} ({})'.format(np.mean(summary_time), summary_time[0]))
+logger.info('Run    : {} ({})'.format(np.mean(run_time), run_time[0]))
 
 os.remove(filepath)

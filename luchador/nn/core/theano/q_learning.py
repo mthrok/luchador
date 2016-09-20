@@ -9,6 +9,7 @@ import theano.tensor as T
 from ..base import DeepQLearning as BaseQLI
 from . import scope as scp
 from .wrapper import Input, Tensor, Operation
+from .cost import SSE2
 
 _LG = logging.getLogger(__name__)
 
@@ -34,6 +35,8 @@ class DeepQLearning(BaseQLI):
             self._build_target_q_value()
         with scp.variable_scope('sync'):
             self._build_sync_op()
+        with scp.variable_scope('error'):
+            self._build_error()
         return self
 
     def _build_target_q_value(self):
@@ -81,3 +84,8 @@ class DeepQLearning(BaseQLI):
         for src, tgt in zip(src_vars, tgt_vars):
             sync_op[tgt.get()] = src.get()
         self.sync_op = Operation(op=sync_op)
+
+    def _build_error(self):
+        min_delta, max_delta = self.args['min_delta'], self.args['max_delta']
+        sse2 = SSE2(min_delta=min_delta, max_delta=max_delta)
+        self.error = sse2(self.target_q, self.predicted_q)

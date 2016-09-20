@@ -11,11 +11,15 @@ _LG = logging.getLogger(__name__)
 
 class DeepQLearning(StoreMixin, object):
     """Build Q-learning network and optimization operations"""
-    def __init__(self, discount_rate, min_reward=None, max_reward=None):
+    def __init__(self, discount_rate,
+                 min_reward=None, max_reward=None,
+                 min_delta=None, max_delta=None):
         self._store_args(
             discount_rate=discount_rate,
             min_reward=min_reward,
             max_reward=max_reward,
+            min_delta=min_delta,
+            max_delta=max_delta,
         )
 
         # Inputs to the network

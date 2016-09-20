@@ -8,6 +8,7 @@ import tensorflow as tf
 from luchador import get_nn_dtype
 from ..base import DeepQLearning as BaseQLI
 from .wrapper import Tensor, Input, Operation
+from .cost import SSE2
 
 __all__ = ['DeepQLearning']
 
@@ -33,6 +34,8 @@ class DeepQLearning(BaseQLI):
             self._build_target_q_value()
         with tf.variable_scope('sync'):
             self._build_sync_op()
+        with tf.variable_scope('error'):
+            self._build_error()
         return self
 
     def _build_target_q_value(self):
@@ -91,3 +94,8 @@ class DeepQLearning(BaseQLI):
         ops = [tgt.get().assign(src.get())
                for src, tgt in zip(src_vars, tgt_vars)]
         self.sync_op = Operation(op=tf.group(*ops, name='sync'))
+
+    def _build_error(self):
+        min_delta, max_delta = self.args['min_delta'], self.args['max_delta']
+        sse2 = SSE2(min_delta=min_delta, max_delta=max_delta)
+        self.error = sse2(self.target_q, self.predicted_q)
