@@ -43,14 +43,15 @@ fi
 ITERATIONS=${ITERATIONS-1000}
 THRESHOLD=${THRESHOLD-0.005}
 
-FILE1="tmp/${FORMULA}_${OPTIMIZER}_theano.csv"
-FILE2="tmp/${FORMULA}_${OPTIMIZER}_tensorflow.csv"
+OPTIMIZER_FILENAME=$(basename ${OPTIMIZER})
+FILE1="tmp/${FORMULA}_${OPTIMIZER_FILENAME%.*}_theano.csv"
+FILE2="tmp/${FORMULA}_${OPTIMIZER_FILENAME%.*}_tensorflow.csv"
 
 BASE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 TEST_COMMAND="python ${BASE_DIR}/run_optimizer.py ${FORMULA} ${OPTIMIZER}"
 COMPARE_COMMAND="python ${BASE_DIR}/compare_result.py"
 
-cat ${BASE_DIR}/optimizer/${OPTIMIZER}
+cat ${OPTIMIZER}
 LUCHADOR_NN_BACKEND=theano     LUCHADOR_NN_CONV_FORMAT=NCHW ${TEST_COMMAND} --output ${FILE1} --iterations ${ITERATIONS}
 LUCHADOR_NN_BACKEND=tensorflow LUCHADOR_NN_CONV_FORMAT=NHWC ${TEST_COMMAND} --output ${FILE2} --iterations ${ITERATIONS}
 ${COMPARE_COMMAND} $FILE1 $FILE2 --threshold ${THRESHOLD}
