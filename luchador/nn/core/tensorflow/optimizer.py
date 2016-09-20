@@ -4,6 +4,7 @@ import tensorflow as tf
 
 from luchador.common import is_iteratable
 from ..base import (
+    make_optimizer,
     get_optimizer,
     Optimizer,
 )
@@ -14,7 +15,7 @@ from .wrapper import (
 )
 
 __all__ = [
-    'BaseOptimizer', 'get_optimizer',
+    'BaseOptimizer', 'make_optimizer', 'get_optimizer',
     'SGD', 'RMSProp', 'GravesRMSProp', 'NeonRMSProp'
 ]
 

@@ -2,7 +2,7 @@ from __future__ import absolute_import
 
 from luchador.common import get_subclasses, SerializeMixin
 
-__all__ = ['Optimizer', 'get_optimizer']
+__all__ = ['Optimizer', 'get_optimizer', 'make_optimizer']
 
 
 class Optimizer(SerializeMixin):
@@ -68,7 +68,13 @@ class Optimizer(SerializeMixin):
 
 
 def get_optimizer(name):
+    """Get optimizer class"""
     for Class in get_subclasses(Optimizer):
         if Class.__name__ == name:
             return Class
     raise ValueError('Unknown Optimizer: {}'.format(name))
+
+
+def make_optimizer(cfg):
+    Optimizer = get_optimizer(cfg['name'])
+    return Optimizer(**cfg['args'])

@@ -7,6 +7,7 @@ import theano.tensor as T
 
 from luchador.common import is_iteratable
 from ..base import (
+    make_optimizer,
     get_optimizer,
     Optimizer,
 )
@@ -15,7 +16,7 @@ from .initializer import Constant
 from .wrapper import Operation
 
 __all__ = [
-    'BaseOptimizer', 'get_optimizer',
+    'BaseOptimizer', 'make_optimizer', 'get_optimizer',
     'SGD', 'RMSProp', 'GravesRMSProp', 'NeonRMSProp',
 ]
 
