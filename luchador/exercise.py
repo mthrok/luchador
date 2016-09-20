@@ -5,7 +5,7 @@ import datetime
 
 from .env import get_env
 from .agent import get_agent
-from .common import load_config
+from .util import load_config
 from .episode_runner import EpisodeRunner
 
 _LG = logging.getLogger(__name__)

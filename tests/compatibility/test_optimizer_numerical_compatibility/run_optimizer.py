@@ -4,7 +4,7 @@ import os
 import csv
 import logging
 
-from luchador.common import load_config
+from luchador.util import load_config
 from luchador.nn import (
     Session,
     get_optimizer,

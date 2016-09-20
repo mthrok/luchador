@@ -1,12 +1,5 @@
 from __future__ import absolute_import
 
-import yaml
-
-
-def load_config(filepath):
-    with open(filepath) as f:
-        return yaml.load(f)
-
 
 def is_iteratable(l):
     try:
