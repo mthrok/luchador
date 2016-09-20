@@ -1,14 +1,11 @@
-machine:
-  environment:
-    ROM_DIR: luchador/env/rom
 dependencies:
   cache_directories:
-    - ${ROM_DIR}
+    - "luchador/env/rom"
     - "Arcade-Learning-Environment"
   override:
     - ./script/fix_urllib_sni.sh
     - ./script/install_ale.sh
-    - ./script/download_atari_roms.sh "${ROM_DIR}/atari"
+    - ./script/download_atari_roms.sh luchador/env/rom/atari
     - pip install --upgrade flake8
     - pip install --upgrade coverage
     - pip install --upgrade codeclimate-test-reporter
