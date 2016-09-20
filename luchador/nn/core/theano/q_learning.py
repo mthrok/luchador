@@ -15,9 +15,6 @@ _LG = logging.getLogger(__name__)
 __all__ = ['DeepQLearning']
 
 
-__all__ = ['DeepQLearning']
-
-
 class DeepQLearning(BaseQLI):
     def build(self, model_maker):
         """Build computation graph (error and sync ops) for Q learning
