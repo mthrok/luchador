@@ -48,7 +48,8 @@ state_shape = (
 def model_maker():
     config = get_model_config('vanilla_dqn', n_actions=n_actions)
     dqn = make_model(config)
-    dqn(Input(shape=state_shape))
+    input = Input(shape=state_shape)
+    dqn(input())
     return dqn
 
 logger.info('Building Q networks')

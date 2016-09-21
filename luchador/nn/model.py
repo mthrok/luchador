@@ -98,7 +98,7 @@ class Sequential(Model):
 
     def build(self, input):
         """Build the model on top of input tensor"""
-        tensor = self.input = input()
+        tensor = self.input = input
         for cfg in self.layer_configs:
             cfg.input = tensor
             with scp.variable_scope(cfg.scope or scp.get_variable_scope()):
