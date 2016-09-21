@@ -2,7 +2,7 @@ from __future__ import absolute_import
 
 import unittest
 
-from tests.fixture import get_optimizers
+from tests.unit.fixture import get_optimizers
 from luchador.nn import get_optimizer
 
 OPTIMIZERS = get_optimizers()

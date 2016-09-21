@@ -2,7 +2,7 @@ from __future__ import absolute_import
 
 import unittest
 
-from tests.fixture import (
+from tests.unit.fixture import (
     get_layers,
     get_optimizers,
     get_initializers,

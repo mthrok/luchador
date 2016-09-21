@@ -84,7 +84,7 @@ setuptools.setup(
             'luchador = luchador.exercise:entry_point',
         ]
     },
-    test_suite='tests',
+    test_suite='tests.unit',
     install_requires=[
         'gym',
         'h5py',
