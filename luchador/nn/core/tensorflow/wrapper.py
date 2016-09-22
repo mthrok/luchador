@@ -21,8 +21,7 @@ class Variable(BaseWrapper):
           name (str or None): When given, the name of the resulting wrapper is
             overwritten with this name.
         """
-        name = name or variable.name
-        name = name.split(':')[0]
+        name = name or variable.op.name
         shape = variable.get_shape().as_list()
         dtype = variable.dtype.as_numpy_dtype
         super(Variable, self).__init__(

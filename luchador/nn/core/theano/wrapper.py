@@ -23,7 +23,6 @@ class Variable(BaseWrapper):
             manner as Tensorflow.
         """
         name = name or variable.name
-        name = name.split(':')[0]
         val = variable.get_value()
         super(Variable, self).__init__(
             tensor=variable, shape=val.shape, name=name, dtype=val.dtype)
