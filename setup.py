@@ -86,7 +86,6 @@ setuptools.setup(
     },
     test_suite='tests.unit',
     install_requires=[
-        'gym',
         'h5py',
         'Pillow',
         'pyyaml',
