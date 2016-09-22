@@ -87,7 +87,6 @@ setuptools.setup(
     test_suite='tests.unit',
     install_requires=[
         'h5py',
-        'Pillow',
         'pyyaml',
     ],
     package_data={
