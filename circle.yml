@@ -3,8 +3,9 @@ dependencies:
     - "luchador/env/rom"
     - "Arcade-Learning-Environment"
   pre:
+    - sudo apt-get update && sudo apt-get autoremove
+    - ./script/install_dependencies.sh
     - ./script/fix_urllib_sni.sh
-    - sudo apt-get update && sudo apt-get install -y libhdf5-serial-dev g++ libopenblas-dev
   override:
     - ./script/install_ale.sh
     - ./script/download_atari_roms.sh luchador/env/rom/atari
@@ -13,6 +14,8 @@ dependencies:
     - pip install --upgrade git+git://github.com/Theano/Theano.git
     - pip install --upgrade https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-0.10.0rc0-cp27-none-linux_x86_64.whl
     - pip install --upgrade .
+  post:
+    - ./script/print_version.sh
 
 test:
   pre:
@@ -32,5 +35,4 @@ test:
     - flake8 tests
   post:
     # Report test coverage
-    - pip install --upgrade codeclimate-test-reporter
-    - CODECLIMATE_REPO_TOKEN="${CODECLIMATE_REPO_TOKEN}" codeclimate-test-reporter
+    - if [[ "$CIRCLE_PROJECT_USERNAME" -eq "mthrok" ]]; then ./script/report_codeclimate_test_coverage.sh; fi
