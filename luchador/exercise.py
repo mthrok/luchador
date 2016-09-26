@@ -22,13 +22,13 @@ def main(env, agent, episodes, steps, debug=False):
 
     Agent = get_agent(agent['name'])
     agent = Agent(**agent['args'])
-    agent.set_env_info(env)
-    agent.init()
+    agent.init(env)
     _LG.info('\n{}'.format(agent))
 
     runner = EpisodeRunner(env, agent)
     for i in range(episodes):
-        _LG.debug('Running episode: {}'.format(i))
+        if i % 1000 == 0:
+            _LG.info('Running episode: {}'.format(i))
         runner.run_episode(steps)
     _LG.info('Done')
 
