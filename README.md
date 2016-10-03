@@ -48,6 +48,19 @@ You should be able to see the agent plays Space Invaders effectively.
 <img src="readme/space_invaders_2.gif" width="280">
 <img src="readme/space_invaders_3.gif" width="280">
 
+You can use Tensorboard to visualize the training.
+
+```bash
+tensorboard --logdir results
+```
+<img src="readme/space_invadors_training_model.png">
+
+
+<img src="readme/space_invadors_training_history.png">
+
+<img src="readme/space_invadors_training_distribution.png">
+
+
 You can modify the files to run experiments in different configuration. For example, you can change the game to run by editing `example/ALEEnvironment_train.yml`, network architecture by editing `example/vanilla_dqn.yml`, or Q Learning parameter by editing `example/DQNAgent_train.yml`.
 
 ### 2. Running a custom Agent
