@@ -3,7 +3,7 @@ from __future__ import print_function
 import os
 import setuptools
 
-ALE_ROM_DIR = os.path.join('env', 'rom', 'atari')
+ALE_ROM_DIR = os.path.join('env', 'ale', 'rom')
 
 
 def download(url):
@@ -77,7 +77,8 @@ setuptools.setup(
         'luchador.nn.core.theano',
         'luchador.nn.core.tensorflow',
         'luchador.agent',
-        'luchador.env',
+        'luchador.env.ale',
+        'luchador.env.flappy_bird',
     ],
     entry_points={
         'console_scripts': [
@@ -89,6 +90,7 @@ setuptools.setup(
         'Pillow',  # For scipy.misc.imresize
         'h5py',
         'pyyaml',
+        'pygame',
     ],
     package_data={
         'luchador': [
