@@ -31,7 +31,7 @@ def retrieve_variable(name):
 
 class Variable(BaseWrapper):
     """Wrap tf.Variable object for storing network parameters"""
-    def __init__(self, variable, name=None):
+    def __init__(self, variable, name=None, trainable=True):
         """Wrap Tensorflow Variable object.
 
         Args:
@@ -45,6 +45,7 @@ class Variable(BaseWrapper):
         super(Variable, self).__init__(
             tensor=variable, shape=shape, name=name, dtype=dtype)
         _register_variable(name, self)
+        self.trainable = trainable
 
 
 class Tensor(BaseWrapper):
