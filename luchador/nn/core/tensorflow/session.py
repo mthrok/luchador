@@ -171,7 +171,7 @@ class Session(BaseSession):
                         value = value[::-1, ::-1, :, :]
                     else:
                         raise ValueError(
-                            'Shapes are not incompatible. '
+                            'Shapes are not compatible. '
                             'Model shape: {}, Value shape: {}'
                             .format(src_shape, tgt_shape)
                         )

@@ -139,7 +139,6 @@ class Session(BaseSession):
                     # while, that of Tensorflow is
                     #  [height, width, #in-channel, #out-channel]
                     # we reshape the variable only when this condition is met
-
                     if (
                             len(tgt_shape) == len(src_shape) == 4 and
                             src_shape[:2] == tgt_shape[2:4] and  # h, w
@@ -151,7 +150,7 @@ class Session(BaseSession):
                         value = value[:, :, ::-1, ::-1]
                     else:
                         raise ValueError(
-                            'Shapes are not incompatible. '
+                            'Shapes are not compatible. '
                             'Model shape: {}, Value shape: {}'
                             .format(src_shape, tgt_shape)
                         )
