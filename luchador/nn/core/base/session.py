@@ -12,13 +12,13 @@ _LG = logging.getLogger(__name__)
 
 
 def _parse_dataset(h5group, prefix=''):
-    ignores = ['LUCHADOR_VERSION', 'LUCHADOR_NN_BACKEND',
-               'LUCHADOR_NN_CONV_FORMAT', 'LUCHADOR_NN_DTYPE']
+    meta_data = ['LUCHADOR_VERSION', 'LUCHADOR_NN_BACKEND',
+                 'LUCHADOR_NN_CONV_FORMAT', 'LUCHADOR_NN_DTYPE']
 
     ret = OrderedDict()
     for key, value in h5group.items():
-        if key in ignores:
-            _LG.info('  Skipping: {:25} {}'.format(key, np.asarray(value)))
+        if key in meta_data:
+            _LG.info('  {:25} {}'.format(key, np.asarray(value)))
             continue
 
         path = '{}/{}'.format(prefix, key) if prefix else key
@@ -56,15 +56,21 @@ class Session(object):
         )
 
     ###########################################################################
-    def load_from_file(self, filepath, var_names=None, cast=True):
+    def load_from_file(self, filepath, var_names=None, cast=True, strict=True):
         """Load variable values from HDF5 file.
 
         Args:
           filepath (str): File path
+
           var_names (None or list of str): List of variable names to retrieve
             from file. If None, it tries to retrieve and assign all variables
             in the file.
+
           cast (Bool): If True, cast dtype automatically.
+
+          strict (Bool): When True, if dataset contains a value for Variable
+            which is not defined, then ValueError exception is raised.
+            Otherwise it will be skipped.
         """
         f = h5py.File(filepath, 'r')
         try:
@@ -77,7 +83,7 @@ class Session(object):
         if var_names is not None:
             data_set = OrderedDict([(n, data_set[n]) for n in var_names])
 
-        self.load_dataset(data_set, cast=cast)
+        self.load_dataset(data_set, cast=cast, strict=strict)
 
     def load_dataset(self, dataset, cast=True):
         raise NotImplementedError(
