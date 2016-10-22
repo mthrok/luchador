@@ -2,9 +2,12 @@ from __future__ import absolute_import
 
 import logging
 
-from luchador.common import StoreMixin
+from luchador.common import get_subclasses, StoreMixin
 
-__all__ = ['SSE']
+__all__ = [
+    'BaseCost', 'get_cost',
+    'BaseSSE2',
+]
 
 _LG = logging.getLogger(__name__)
 
@@ -14,10 +17,10 @@ class BaseCost(StoreMixin, object):
 
     Actual Cost class must implement `build` method.
     """
-    def __init__(self, **args):
+    def __init__(self, elementwise=False, **args):
         """Validate args and set it as instance property. See CopyMixin"""
         super(BaseCost, self).__init__()
-        self._store_args(**args)
+        self._store_args(elementwise=elementwise, **args)
 
     def __call__(self, target, prediction):
         """Build cost between target and prediction
@@ -38,10 +41,19 @@ class BaseCost(StoreMixin, object):
         )
 
 
-class SSE(BaseCost):
+def get_cost(name):
+    for Class in get_subclasses(BaseCost):
+        if Class.__name__ == name:
+            return Class
+    raise ValueError('Unknown Cost: {}'.format(name))
+
+
+###############################################################################
+class BaseSSE2(BaseCost):
     """Sum-Squared Error
 
     Actual Cost class must implement `build` method.
     """
-    def __init__(self, max_delta=None, min_delta=None):
-        super(SSE, self).__init__(max_delta=max_delta, min_delta=min_delta)
+    def __init__(self, max_delta=None, min_delta=None, elementwise=False):
+        super(BaseSSE2, self).__init__(
+            max_delta=max_delta, min_delta=min_delta, elementwise=elementwise)
