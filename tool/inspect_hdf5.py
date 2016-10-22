@@ -78,10 +78,18 @@ class HDF5Editor(object):
         ap = AP(
             description='Inspect HDF5 Data'
         )
-        ap.add_argument('command', choices=['inspect', 'delete', 'rename', 'view'])
+        ap.add_argument('command')
 
+        valid_commands = ['inspect', 'delete', 'rename', 'view']
         args = ap.parse_args(sys.argv[1:2])
-        getattr(self, args.command)(sys.argv[2:])
+        if args.command not in valid_commands:
+            command = 'inspect'
+            argv = sys.argv[1:]
+        else:
+            command = args.command
+            argv = sys.argv[2:]
+
+        getattr(self, command)(argv)
 
     def inspect(self, argv):
         ap = AP(
@@ -155,36 +163,55 @@ class HDF5Editor(object):
         import matplotlib.pyplot as plt
 
         ap = AP(
-            description='Visualize output from convolution',
+            description='Visualize tensors',
         )
         ap.add_argument('input_file', help='Input H5 file.')
         ap.add_argument('key', help='Datasets to visualize')
         ap.add_argument(
             '--batch', type=int, default=0,
-            help='Batch number to visualize'
+            help='Batch number to visualize if dataset is 4D'
         )
         ap.add_argument(
             '--format', default='NCHW',
             help='Data format. Either NCHW or NHWC. Default: NCHW'
         )
+        ap.add_argument(
+            '--vmax', type=float,
+            help='Maximum luminance cut-off value'
+        )
+        ap.add_argument(
+            '--vmin', type=float,
+            help='Minimum luminance cut-off value'
+        )
         args = ap.parse_args(argv)
 
         f = load_hdf5(args.input_file, 'r')
         data = np.asarray(f[args.key])
-        if args.format == 'NHWC':
+
+        if data.ndim == 4 and args.format == 'NHWC':
             data.transpose((0, 3, 1, 2))
+
+        if data.ndim == 2:
+            batch = 0
+            data = data[None, None, :, :]
+        else:
+            batch = args.batch
 
         n_filters = data.shape[1]
         n_rows = np.floor(np.sqrt(n_filters))
         n_cols = np.ceil(n_filters / n_rows)
 
-        vmin, vmax = data.min(), data.max()
+        vmin = args.vmin if args.vmin else data.min()
+        vmax = args.vmax if args.vmax else data.max()
         fig = plt.figure()
-        fig.suptitle('{}\nBatch: {}'.format(args.input_file, args.batch))
-        for index, filter_ in enumerate(data[args.batch], start=1):
+        fig.suptitle('{}\nBatch: {}'.format(args.input_file, batch))
+        for index, filter_ in enumerate(data[batch], start=1):
             axis = fig.add_subplot(n_rows, n_cols, index)
-            axis.imshow(filter_, cmap='Greys', vmin=vmin, vmax=vmax)
+            img = axis.imshow(filter_, vmin=vmin, vmax=vmax,
+                              cmap='Greys', interpolation='nearest')
             axis.set_title('Filter: {}'.format(index))
+            if index == 1:
+                fig.colorbar(img, ax=axis)
         print('Plot ready')
         plt.show()
 
