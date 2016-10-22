@@ -32,7 +32,10 @@ _LG = logging.getLogger(__name__)
 
 __all__ = [
     'BaseLayer', 'get_layer',
-    'Dense', 'Conv2D', 'ReLU', 'Flatten', 'TrueDiv', 'BatchNormalization',
+    'Dense', 'Conv2D',
+    'ReLU', 'Sigmoid', 'Softmax',
+    'Flatten', 'TrueDiv',
+    'BatchNormalization',
     'NHWC2NCHW', 'NCHW2NHWC',
 ]
 
@@ -239,10 +242,26 @@ class Conv2D(TFLayerMixin, BaseConv2D):
 
 
 class ReLU(TFLayerMixin, BaseLayer):
-    """Applies Rectified Linear Unit"""
+    """Apply Rectified Linear Unit"""
     def build(self, input_tensor):
         _LG.debug('    Building {}: {}'.format(type(self).__name__, self.args))
         output = tf.nn.relu(input_tensor.unwrap(), 'ouptut')
+        return _wrap_output(output)
+
+
+class Sigmoid(TFLayerMixin, BaseLayer):
+    """Apply Sigmoid activation"""
+    def build(self, input_tensor):
+        _LG.debug('    Building {}: {}'.format(type(self).__name__, self.args))
+        output = tf.sigmoid(input_tensor.unwrap(), 'output')
+        return _wrap_output(output)
+
+
+class Softmax(TFLayerMixin, BaseLayer):
+    """Apply Softmax activation"""
+    def build(self, input_tensor):
+        _LG.debug('    Building {}: {}'.format(type(self).__name__, self.args))
+        output = tf.nn.softmax(input_tensor.unwrap())
         return _wrap_output(output)
 
 
