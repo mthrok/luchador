@@ -1,5 +1,6 @@
-from __future__ import absolute_import
+"""Atari Environment based on Arcade Learning Environment"""
 
+from __future__ import absolute_import
 
 import sys
 import os
@@ -21,6 +22,8 @@ _ROM_DIR = os.path.join(_DIR, 'rom')
 
 
 class ALEEnvironment(BaseEnvironment):
+    """Atari Environment"""
+
     @staticmethod
     def get_roms():
         """Get the list of ROMs available
@@ -308,7 +311,7 @@ class ALEEnvironment(BaseEnvironment):
 
         self.life_lost = False
         initial_lives = self._ale.lives()
-        for i in range(self.repeat_action):
+        for _ in range(self.repeat_action):
             reward += self._step(action)
 
             if not self._ale.lives() == initial_lives:

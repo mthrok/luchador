@@ -3,6 +3,10 @@ from __future__ import absolute_import
 
 import unittest
 
+# import theano
+# theano.config.optimizer = 'None'
+# theano.config.exception_verbosity = 'high'
+
 import luchador
 from luchador.nn import (
     Tensor,
@@ -12,14 +16,6 @@ from luchador.nn import (
     Adamax,
     scope as scp
 )
-
-'''
-import logging
-import theano
-theano.config.optimizer = 'None'
-theano.config.exception_verbosity = 'high'
-logging.getLogger('luchador').setLevel(logging.DEBUG)
-'''
 
 BE = luchador.get_nn_backend()
 
@@ -45,6 +41,7 @@ def get_slot_var(optimizer, slot_name, var_name=None):
 
 
 class AdamTest(unittest.TestCase):
+    """Test Adam Optimizer"""
     def test_beta_power_update(self):
         """Beta paramete is updated every time update is evaluated"""
         beta1, beta2, x_init_val, name = 0.9, 0.999, 3.0, 'Adam'

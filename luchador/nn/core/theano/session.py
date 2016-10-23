@@ -1,7 +1,6 @@
 from __future__ import absolute_import
 
 import logging
-import warnings
 from collections import OrderedDict
 
 import theano
@@ -35,13 +34,10 @@ def _parse_inputs(inputs):
     if not is_iteratable(inputs):
         inputs = [inputs]
 
-    if isinstance(inputs, dict):
-        for key, value in inputs.items():
+    try:
+        for key in inputs:
             inputs_.append(key.unwrap())
-    elif isinstance(inputs, list):
-        for key, value in inputs:
-            inputs_.append(key.unwrap())
-    else:
+    except Exception:
         raise ValueError(
             '`inputs` must be either dict or list of Tensor-value pair. '
             'Given: {}'.format(type(inputs)))
@@ -82,14 +78,16 @@ def _construct_function(inputs, outputs, updates, givens):
 
 
 class Session(BaseSession):
+    """Handles operations and computations in similar way as Tensorflow session
+    """
     def __init__(self, **kwargs):
+        super(Session, self).__init__()
         self.functions = {}
 
-    @property
-    def graph(self):
-        return None
-
-    def run(self, outputs=[], inputs={}, updates=None, givens=None, name=None):
+    def run(self, outputs=None, inputs=None,
+            updates=None, givens=None, name=None):
+        outputs = outputs if outputs else []
+        inputs = inputs if inputs else {}
         if name in self.functions:
             function = self.functions[name]
         else:
@@ -104,10 +102,11 @@ class Session(BaseSession):
         return values[0]
 
     def initialize(self):
+        """Compatibility for TF backend. Does nothing in Theano backend"""
         pass
 
     def close(self):
-        warnings.warn('`close` does nothing in Theano backend.')
+        """Compatibility for TF backend. Does nothing in Theano backend"""
         pass
 
     ###########################################################################
@@ -126,17 +125,17 @@ class Session(BaseSession):
             which is not defined, then ValueError exception is raised.
             Otherwise it will be skipped.
         """
-        op = OrderedDict()
+        ops = OrderedDict()
         with scope.variable_scope(scope.VariableScope(reuse=True, name='')):
             for name, value in dataset.items():
                 try:
                     variable = scope.get_variable(name=name)
-                    _LG.info('  Loading: {:10} {:24} {}'
-                             .format(value.dtype, value.shape, name))
+                    _LG.info('  Loading: %10s %-24s %s',
+                             value.dtype, value.shape, name)
                 except ValueError:
                     if strict:
                         raise
-                    _LG.info('  Variable `{}` does not exist.'.format(name))
+                    _LG.info('  Variable `%s` does not exist.', name)
                     continue
 
                 if cast:
@@ -154,8 +153,8 @@ class Session(BaseSession):
                             src_shape[:2] == tgt_shape[2:4] and  # h, w
                             src_shape[2:4] == tgt_shape[-3::-1]  # channels
                     ):
-                        _LG.info('    Reshaping variable: {} -> {}'
-                                 .format(src_shape, tgt_shape))
+                        _LG.info('    Reshaping variable: %s -> %s',
+                                 src_shape, tgt_shape)
                         value = value.transpose((3, 2, 0, 1))
                         value = value[:, :, ::-1, ::-1]
                     else:
@@ -164,5 +163,5 @@ class Session(BaseSession):
                             'Model shape: {}, Value shape: {}'
                             .format(src_shape, tgt_shape)
                         )
-                op[variable.unwrap()] = value
-        self.run(name=None, updates=Operation(op=op))
+                ops[variable.unwrap()] = value
+        self.run(name=None, updates=Operation(op=ops))

@@ -1,15 +1,29 @@
 from __future__ import absolute_import
 
+from luchador.common import get_subclasses
 from .core import scope as scp
 
-__all__ = ['Sequential']
+__all__ = [
+    'BaseModel', 'get_model', 'Sequential',
+]
 
 
 class BaseModel(object):
+    """Base Model class"""
     pass
 
 
+def get_model(name):
+    """Get Model class by name"""
+    for Class in get_subclasses(BaseModel):
+        if Class.__name__ == name:
+            return Class
+    raise ValueError('Unknown model: {}'.format(name))
+
+
+###############################################################################
 class LayerConfig(object):
+    """Class to hold complementary info for Layer class"""
     def __init__(self, layer, scope, input=None, output=None):
         self.layer = layer
         self.scope = scope
@@ -97,12 +111,12 @@ class Sequential(BaseModel):
 
     ###########################################################################
     # Functions for building actual computation graphs
-    def __call__(self, input):
-        return self.build(input)
+    def __call__(self, input_tensor):
+        return self.build(input_tensor)
 
-    def build(self, input):
+    def build(self, input_tensor):
         """Build the model on top of input tensor"""
-        tensor = self.input = input
+        tensor = self.input = input_tensor
         for cfg in self.layer_configs:
             cfg.input = tensor
             with scp.variable_scope(cfg.scope or scp.get_variable_scope()):

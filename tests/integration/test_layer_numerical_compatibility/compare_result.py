@@ -1,12 +1,8 @@
 from __future__ import division
-
-import logging
+from __future__ import print_function
 
 import h5py
 import numpy as np
-
-import luchador  # noqa
-_LG = logging.getLogger('luchador')
 
 
 def parse_command_line_args():
@@ -27,7 +23,7 @@ def parse_command_line_args():
     return ap.parse_args()
 
 
-def load_result(filepath):
+def _load_result(filepath):
     f = h5py.File(filepath, 'r')
     ret = np.asarray(f['output'])
     f.close()
@@ -35,41 +31,41 @@ def load_result(filepath):
 
 
 def print_stats(*arrs):
-    _LG.info('{sum:>10}  {max:>10}  {min:>10}  {mean:>10}'
-             .format(sum='sum', max='max', min='min', mean='mean'))
+    print('{sum:>10}  {max:>10}  {min:>10}  {mean:>10}'
+          .format(sum='sum', max='max', min='min', mean='mean'))
     for arr in arrs:
         sum_, max_, min_, mean = arr.sum(), arr.max(), arr.min(), arr.mean()
-        _LG.info('{sum:10.3E}  {max:10.3E}  {min:10.3E}  {mean:10.3E}'
-                 .format(sum=sum_, max=max_, min=min_, mean=mean))
-    _LG.info('')
+        print('{sum:10.3E}  {max:10.3E}  {min:10.3E}  {mean:10.3E}'
+              .format(sum=sum_, max=max_, min=min_, mean=mean))
+    print('')
 
 
 def check(arr1, arr2, abs_threshold=0.00015, relative_threshold=1e-1):
     print_stats(arr1, arr2)
     abs_diff = np.absolute(arr1 - arr2)
     rel_diff = abs(abs_diff / (arr1 + arr2 + 1))
-    _LG.info('  Ave absolute diff: {}'.format(abs_diff.mean()))
-    _LG.info('  Max absolute diff: {}'.format(abs_diff.max()))
-    _LG.info('  Min absolute diff: {}'.format(abs_diff.min()))
-    _LG.info('  Ave relative diff: {}'.format(rel_diff.mean()))
-    _LG.info('  Max relative diff: {}'.format(rel_diff.max()))
-    _LG.info('  Min relative diff: {}'.format(rel_diff.min()))
+    print('  Ave absolute diff: {}'.format(abs_diff.mean()))
+    print('  Max absolute diff: {}'.format(abs_diff.max()))
+    print('  Min absolute diff: {}'.format(abs_diff.min()))
+    print('  Ave relative diff: {}'.format(rel_diff.mean()))
+    print('  Max relative diff: {}'.format(rel_diff.max()))
+    print('  Min relative diff: {}'.format(rel_diff.min()))
     return (
             (abs_diff > abs_threshold).any() or
             (rel_diff > relative_threshold).any()
     )
 
 
-def main():
+def _main():
     args = parse_command_line_args()
-    _LG.info('Comparing {} and {}. (Threshold: {} [%])'
-             .format(args.input1, args.input2, 100 * args.threshold))
-    data1 = load_result(args.input1)
-    data2 = load_result(args.input2)
+    print('Comparing {} and {}. (Threshold: {} [%])'
+          .format(args.input1, args.input2, 100 * args.threshold))
+    data1 = _load_result(args.input1)
+    data2 = _load_result(args.input2)
 
     if check(data1, data2, relative_threshold=args.threshold):
         raise ValueError('Data are different')
-    _LG.info('Okay')
+    print('Okay')
 
 if __name__ == '__main__':
-    main()
+    _main()
