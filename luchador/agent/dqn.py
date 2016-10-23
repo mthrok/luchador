@@ -105,8 +105,8 @@ class DQNAgent(BaseAgent):
 
         def model_maker():
             dqn = make_model(model_def)
-            input = Input(shape=shape)
-            dqn(input())
+            input_tensor = Input(shape=shape)
+            dqn(input_tensor())
             return dqn
 
         self.ql = DeepQLearning(**cfg['args'])
@@ -121,7 +121,7 @@ class DQNAgent(BaseAgent):
         cfg = self.q_network_config
         self.session = Session()
         if cfg.get('parameter_file'):
-            _LG.info('Loading paramter from {}'.format(cfg['parameter_file']))
+            _LG.info('Loading paramter from %s', cfg['parameter_file'])
             self.session.load_from_file(cfg['parameter_file'])
         else:
             self.session.initialize()

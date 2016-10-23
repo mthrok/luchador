@@ -52,7 +52,7 @@ class TFLayerMixin(BaseLayer):
 
 class Dense(TFLayerMixin, BaseDense):
     def _instantiate_initializers(self):
-        init_cfg = self.args.get('initializers', {})
+        init_cfg = self.args.get('initializers') or {}
 
         cfg = init_cfg.get('weight')
         self.initializers['weight'] = (
@@ -101,40 +101,42 @@ def _map_padding(padding):
         return 'VALID'
 
 
-class Conv2D(TFLayerMixin, BaseConv2D):
-    def _validate_padding(self, padding):
-        msg = '`padding` must be either "SAME", "VALID", "full" or "half"'
-        if not isinstance(padding, str):
-            raise ValueError(msg)
+def _validate_padding(padding):
+    msg = '`padding` must be either "SAME", "VALID", "full" or "half"'
+    if not isinstance(padding, str):
+        raise ValueError(msg)
 
-        _padding = padding.lower()
-        if _padding not in ['full', 'half', 'same', 'valid']:
-            raise ValueError(msg)
+    _padding = padding.lower()
+    if _padding not in ['full', 'half', 'same', 'valid']:
+        raise ValueError(msg)
 
-        if _padding == 'full':
-            msg = ('"full" mode is not supported in tensorflow backend. '
-                   'It will be replaced by "valid"')
-            warnings.warn(msg)
+    if _padding == 'full':
+        msg = ('"full" mode is not supported in tensorflow backend. '
+               'It will be replaced by "valid"')
+        warnings.warn(msg)
 
-    def _validate_strides(self, strides):
-        if isinstance(strides, int):
+
+def _validate_strides(strides):
+    if isinstance(strides, int):
+        return
+    try:
+        if (
+                len(strides) in [2, 4] and
+                all([isinstance(s, int) for s in strides])
+        ):
             return
-        try:
-            if (
-                    len(strides) in [2, 4] and
-                    all(map(lambda s: isinstance(s, int), strides))
-            ):
-                return
-        except Exception:
-            pass
-        raise ValueError(
-            '`strides` must be either int, '
-            'tuple of two ints, or tuple of four ints'
-        )
+    except Exception:
+        pass
+    raise ValueError(
+        '`strides` must be either int, '
+        'tuple of two ints, or tuple of four ints'
+    )
 
+
+class Conv2D(TFLayerMixin, BaseConv2D):
     def _validate_args(self, args):
-        self._validate_padding(args['padding'])
-        self._validate_strides(args['strides'])
+        _validate_padding(args['padding'])
+        _validate_strides(args['strides'])
 
     ###########################################################################
     def _get_format(self):
@@ -187,7 +189,7 @@ class Conv2D(TFLayerMixin, BaseConv2D):
 
     ###########################################################################
     def _instantiate_initializers(self):
-        init_cfg = self.args.get('initializers', {})
+        init_cfg = self.args.get('initializers') or {}
 
         cfg = init_cfg.get('weight')
         self.initializers['weight'] = (

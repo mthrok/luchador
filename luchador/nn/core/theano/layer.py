@@ -52,7 +52,7 @@ class TheanoLayerMixin(object):
 
 class Dense(TheanoLayerMixin, BaseDense):
     def _instantiate_initializers(self):
-        init_cfg = self.args.get('initializers', {})
+        init_cfg = self.args.get('initializers') or {}
 
         cfg = init_cfg.get('weight')
         self.initializers['weight'] = (
@@ -116,47 +116,51 @@ def _map_border_mode(padding):
     return padding
 
 
-class Conv2D(TheanoLayerMixin, BaseConv2D):
-    def _validate_padding(self, padding):
-        msg = ('`padding` must be either str ("valid", "full", "half" or '
-               '"same"), int or tuple of two int')
+def _is_int_list(list_, length=2):
+    return (len(list_) == length and all([isinstance(e, int) for e in list_]))
 
-        if isinstance(padding, int):
+
+def _validate_padding(padding):
+    msg = ('`padding` must be either str ("valid", "full", "half" or '
+           '"same"), int or tuple of two int')
+
+    if isinstance(padding, int):
+        return
+
+    if isinstance(padding, str):
+        if padding.lower() in ['full', 'half', 'same', 'valid']:
             return
-
-        if isinstance(padding, str):
-            if padding.lower() in ['full', 'half', 'same', 'valid']:
-                return
-            raise ValueError(msg)
-
-        try:
-            p0, p1 = padding[0], padding[1]
-            if (isinstance(p0, int) and isinstance(p1, int)):
-                return
-        except Exception:
-            pass
-
         raise ValueError(msg)
 
-    def _validate_strides(self, strides):
-        if isinstance(strides, int):
+    try:
+        if _is_int_list(padding, length=2):
             return
-        try:
-            p0, p1 = strides[0], strides[1]
-            if (isinstance(p0, int) and isinstance(p1, int)):
-                return
-        except Exception:
-            pass
+    except Exception:
+        pass
 
-        raise ValueError('`strides` must be either int or tuple of two int')
+    raise ValueError(msg)
 
+
+def _validate_strides(strides):
+    if isinstance(strides, int):
+        return
+    try:
+        if _is_int_list(strides, length=2):
+            return
+    except Exception:
+        pass
+
+    raise ValueError('`strides` must be either int or tuple of two int')
+
+
+class Conv2D(TheanoLayerMixin, BaseConv2D):
     def _validate_args(self, args):
-        self._validate_padding(args['padding'])
-        self._validate_strides(args['strides'])
+        _validate_padding(args['padding'])
+        _validate_strides(args['strides'])
 
     ###########################################################################
     def _instantiate_initializers(self):
-        init_cfg = self.args.get('initializers', {})
+        init_cfg = self.args.get('initializers') or {}
 
         cfg = init_cfg.get('weight')
         self.initializers['weight'] = (

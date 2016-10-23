@@ -51,7 +51,8 @@ class TheanoOptimizerMixin(object):
         grads_and_vars = self.compute_gradients(loss, wrt)
         return self.apply_gradients(grads_and_vars)
 
-    def compute_gradients(self, loss, wrt, **kwargs):
+    @staticmethod
+    def compute_gradients(loss, wrt, **kwargs):
         """Compute gradient of loss with respect to wrt.
 
         This method works in similar way as Tensorflow Optimizers'
@@ -211,7 +212,7 @@ class Adamax(TheanoOptimizerMixin, BaseAdamax):
             u = self._create_slot_var(var, 'u').unwrap()
 
             new_m = m + (1.0 - b1) * (grad - m)
-            new_u = T.maximum(b2 * u,  abs(grad))
+            new_u = T.maximum(b2 * u, abs(grad))
             new_var = var - (new_m * alpha) / (new_u + ep)
 
             updates[m] = new_m
