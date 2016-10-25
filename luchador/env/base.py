@@ -1,6 +1,10 @@
+"""Define common interface for Environment"""
+
 from __future__ import absolute_import
 
-from luchador.common import get_subclasses
+import abc
+
+from luchador import common
 
 __all__ = ['BaseEnvironment', 'get_env']
 
@@ -8,11 +12,16 @@ __all__ = ['BaseEnvironment', 'get_env']
 class Outcome(object):
     """Outcome when taking a step in environment
 
-    Args:
-      reward (number): Reward of transitioning the environment state
-      observation: Observation of environmant state after transition
-      terminal (bool): True if environment is in terminal state
-      state (dict): Contains other environment-specific information
+    Parameters
+    ----------
+    reward : number
+        Reward of transitioning the environment state
+    observation
+        Observation of environmant state after transition
+    terminal : bool
+        True if environment is in terminal state
+    state : dict
+        Other environment-specific information
     """
     def __init__(self, reward, observation, terminal, state=None):
         self.reward = reward
@@ -22,35 +31,61 @@ class Outcome(object):
 
 
 class BaseEnvironment(object):
-    @property
-    def n_actions(self):
-        raise NotImplementedError(
-            '`n_actions` is not implemented for {}'.format(self.__class__)
-        )
+    """Define common interface for environment"""
+    __metaclass__ = abc.ABCMeta
 
+    @abc.abstractproperty
+    def n_actions(self):
+        """Return the number of actions agent can take"""
+        pass
+
+    @abc.abstractmethod
     def reset(self):
         """Reset the environment to start new episode
 
-        Returns:
-          Outcome: Outcome of resetting the state.
+        Returns
+        -------
+        Outcome
+            Outcome of resetting the state.
         """
-        raise NotImplementedError(
-            '`reset` method is not implemented for {}'.format(self.__class__)
-        )
+        pass
 
+    @abc.abstractmethod
     def step(self, action):
         """Advance environment one step
 
-        Returns:
-          Outcome: Outcome of taking the given action
+        Parameters
+        ----------
+        action : int
+            Action taken by an agent
+
+        Returns
+        -------
+        Outcome
+            Outcome of taking the given action
         """
-        raise NotImplementedError(
-            '`step` method is not implemented for {}'.format(self.__class__)
-        )
+        pass
 
 
 def get_env(name):
-    for class_ in get_subclasses(BaseEnvironment):
+    """Retrieve Environment class by name
+
+    Parameters
+    ----------
+    name : str
+        Name of Environment to retrieve
+
+    Returns
+    -------
+    type
+        Environment type found
+
+    Raises
+    ------
+    ValueError
+        When Environment with the given name is not found
+    """
+    for class_ in common.get_subclasses(BaseEnvironment):
         if class_.__name__ == name:
             return class_
     raise ValueError('Unknown Environment: {}'.format(name))
