@@ -1,0 +1,7 @@
+luchador
+========
+
+.. toctree::
+   :maxdepth: 4
+
+   luchador

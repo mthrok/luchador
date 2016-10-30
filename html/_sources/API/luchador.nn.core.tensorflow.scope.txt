@@ -1,0 +1,7 @@
+luchador.nn.core.tensorflow.scope module
+========================================
+
+.. automodule:: luchador.nn.core.tensorflow.scope
+    :members:
+    :undoc-members:
+    :show-inheritance:

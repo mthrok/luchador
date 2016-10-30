@@ -1,0 +1,7 @@
+luchador.configure module
+=========================
+
+.. automodule:: luchador.configure
+    :members:
+    :undoc-members:
+    :show-inheritance:

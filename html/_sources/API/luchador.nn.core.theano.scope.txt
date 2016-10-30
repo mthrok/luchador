@@ -1,0 +1,7 @@
+luchador.nn.core.theano.scope module
+====================================
+
+.. automodule:: luchador.nn.core.theano.scope
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,0 +1,282 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>luchador.nn.summary module &mdash; Luchador 0.2.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Luchador 0.2.0 documentation" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Luchador
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <!-- Local TOC -->
+                <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">luchador.nn.summary module</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Luchador</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>luchador.nn.summary module</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/API/luchador.nn.summary.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-luchador.nn.summary">
+<span id="luchador-nn-summary-module"></span><h1>luchador.nn.summary module<a class="headerlink" href="#module-luchador.nn.summary" title="Permalink to this headline">¶</a></h1>
+<p>Implement SummaryWriter</p>
+<dl class="class">
+<dt id="luchador.nn.summary.SummaryWriter">
+<em class="property">class </em><code class="descclassname">luchador.nn.summary.</code><code class="descname">SummaryWriter</code><span class="sig-paren">(</span><em>output_dir</em>, <em>graph=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.summary.SummaryWriter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Wrap tf.SummaryWriter for better flwexibility</p>
+<p>Unlike Tensorflow&#8217;s native SummaryWrite, this SummaryWriter accepts
+NumPy Arrays for summarization. Generation of summary protocol buffer
+is handled internally.</p>
+<dl class="method">
+<dt id="luchador.nn.summary.SummaryWriter.add_graph">
+<code class="descname">add_graph</code><span class="sig-paren">(</span><em>graph=None</em>, <em>global_step=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.summary.SummaryWriter.add_graph" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="luchador.nn.summary.SummaryWriter.register">
+<code class="descname">register</code><span class="sig-paren">(</span><em>summary_type</em>, <em>names</em>, <em>tag=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.summary.SummaryWriter.register" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="luchador.nn.summary.SummaryWriter.summarize">
+<code class="descname">summarize</code><span class="sig-paren">(</span><em>global_step</em>, <em>dataset</em>, <em>tag=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.summary.SummaryWriter.summarize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Summarize the dataset</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>global_step</strong> : int</p>
+<blockquote>
+<div><p>Global step used as surffix for output file name</p>
+</div></blockquote>
+<p><strong>dataset</strong> : (dict or list of values)</p>
+<blockquote>
+<div><p>When tag is not given this must be a dictionary mapping name of
+registered summary operation to summary value.
+When tag is given, summary operations registered with the tag are
+pulled, so only values are needed so dataset must be a list of
+values in the same order as the operations registered.</p>
+</div></blockquote>
+<p><strong>tag</strong> : str</p>
+<blockquote class="last">
+<div><p>See above</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.nn.summary.SummaryWriter.register_stats">
+<code class="descname">register_stats</code><span class="sig-paren">(</span><em>names</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.summary.SummaryWriter.register_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>For each name, create <code class="docutils literal"><span class="pre">name/[Average,</span> <span class="pre">Min,</span> <span class="pre">Max]</span></code> summary ops</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.nn.summary.SummaryWriter.summarize_stats">
+<code class="descname">summarize_stats</code><span class="sig-paren">(</span><em>global_step</em>, <em>dataset</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.summary.SummaryWriter.summarize_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Summarize statistics of dataset</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>global_step</strong> : int</p>
+<blockquote>
+<div><p>Global step used as surffix for output file name</p>
+</div></blockquote>
+<p><strong>dataset (dict):</strong></p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt>Key</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">str</span><dd><p class="first last">Names used in <a class="reference internal" href="#luchador.nn.summary.SummaryWriter.register_stats" title="luchador.nn.summary.SummaryWriter.register_stats"><code class="xref any py py-meth docutils literal"><span class="pre">register_stats</span></code></a></p>
+</dd>
+<dt>Value</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">list of floats, or NumPy Array</span><dd><p class="first last">Values to summarize stats</p>
+</dd>
+</dl>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, moto.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

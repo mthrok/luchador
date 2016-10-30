@@ -1,0 +1,411 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>luchador.nn.core.base.initializer module &mdash; Luchador 0.2.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Luchador 0.2.0 documentation" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Luchador
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <!-- Local TOC -->
+                <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">luchador.nn.core.base.initializer module</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Luchador</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>luchador.nn.core.base.initializer module</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/API/luchador.nn.core.base.initializer.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-luchador.nn.core.base.initializer">
+<span id="luchador-nn-core-base-initializer-module"></span><h1>luchador.nn.core.base.initializer module<a class="headerlink" href="#module-luchador.nn.core.base.initializer" title="Permalink to this headline">¶</a></h1>
+<p>Define the common interface for Initializer classes</p>
+<dl class="class">
+<dt id="luchador.nn.core.base.initializer.BaseInitializer">
+<em class="property">class </em><code class="descclassname">luchador.nn.core.base.initializer.</code><code class="descname">BaseInitializer</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.core.base.initializer.BaseInitializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="luchador.common.html#luchador.common.SerializeMixin" title="luchador.common.SerializeMixin"><code class="xref py py-class docutils literal"><span class="pre">luchador.common.SerializeMixin</span></code></a>, <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Define Common interface for Initializer classes</p>
+<dl class="method">
+<dt id="luchador.nn.core.base.initializer.BaseInitializer.sample">
+<code class="descname">sample</code><span class="sig-paren">(</span><em>shape</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.core.base.initializer.BaseInitializer.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sample random values in the given shape</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>shape</strong> : tuple</p>
+<blockquote>
+<div><p>shape of array to sample</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>[Theano backend]</strong> : Numpy Array</p>
+<blockquote>
+<div><p>Sampled value.</p>
+</div></blockquote>
+<p><strong>[Tensorflow backend]</strong> : None</p>
+<blockquote class="last">
+<div><p>In Tensorflow backend, sampling is handled by underlying native
+Initializers and this method is not used.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="luchador.nn.core.base.initializer.get_initializer">
+<code class="descclassname">luchador.nn.core.base.initializer.</code><code class="descname">get_initializer</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.core.base.initializer.get_initializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve Initializer class by name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>name</strong> : str</p>
+<blockquote>
+<div><p>Name of Initializer to retrieve</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">type</p>
+<blockquote>
+<div><p>Initializer type found</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>ValueError</strong></p>
+<blockquote class="last">
+<div><p>When Initializer with the given name is not found</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.nn.core.base.initializer.BaseConstant">
+<em class="property">class </em><code class="descclassname">luchador.nn.core.base.initializer.</code><code class="descname">BaseConstant</code><span class="sig-paren">(</span><em>value</em>, <em>dtype=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.core.base.initializer.BaseConstant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luchador.nn.core.base.initializer.BaseInitializer" title="luchador.nn.core.base.initializer.BaseInitializer"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.core.base.initializer.BaseInitializer</span></code></a></p>
+<p>Initialize Variale with constant value</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>value</strong> : number</p>
+<blockquote>
+<div><p>Value to initialize Variable</p>
+</div></blockquote>
+<p><strong>dtype</strong> : str or None</p>
+<blockquote class="last">
+<div><p>Data type to sample. If None, default dtype is used.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.nn.core.base.initializer.BaseUniform">
+<em class="property">class </em><code class="descclassname">luchador.nn.core.base.initializer.</code><code class="descname">BaseUniform</code><span class="sig-paren">(</span><em>minval=0.0</em>, <em>maxval=1.0</em>, <em>seed=None</em>, <em>dtype=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.core.base.initializer.BaseUniform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luchador.nn.core.base.initializer.BaseInitializer" title="luchador.nn.core.base.initializer.BaseInitializer"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.core.base.initializer.BaseInitializer</span></code></a></p>
+<p>Initialize Variale with samples from uniform distribution</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>minval, maxval</strong> : float</p>
+<blockquote>
+<div><p>Minimum/maximum value of sampling distribution</p>
+</div></blockquote>
+<p><strong>seed</strong> : int or None</p>
+<blockquote>
+<div><p>Seed value for random generator</p>
+</div></blockquote>
+<p><strong>dtype</strong> : str or None</p>
+<blockquote class="last">
+<div><p>Data type to sample. If None, default dtype is used.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.nn.core.base.initializer.BaseNormal">
+<em class="property">class </em><code class="descclassname">luchador.nn.core.base.initializer.</code><code class="descname">BaseNormal</code><span class="sig-paren">(</span><em>mean=0.0</em>, <em>stddev=1.0</em>, <em>seed=None</em>, <em>dtype=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.core.base.initializer.BaseNormal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luchador.nn.core.base.initializer.BaseInitializer" title="luchador.nn.core.base.initializer.BaseInitializer"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.core.base.initializer.BaseInitializer</span></code></a></p>
+<p>Initialize Variale with samples from normal distribution</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>mean, stddev</strong> : float</p>
+<blockquote>
+<div><p>Mean and standard dedviation of sampling distribution</p>
+</div></blockquote>
+<p><strong>seed</strong> : int or None</p>
+<blockquote>
+<div><p>Seed value for random generator</p>
+</div></blockquote>
+<p><strong>dtype</strong> : str or None</p>
+<blockquote class="last">
+<div><p>Data type to sample. If None, default dtype is used.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.nn.core.base.initializer.BaseXavier">
+<em class="property">class </em><code class="descclassname">luchador.nn.core.base.initializer.</code><code class="descname">BaseXavier</code><span class="sig-paren">(</span><em>uniform=True</em>, <em>seed=None</em>, <em>dtype=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.core.base.initializer.BaseXavier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luchador.nn.core.base.initializer.BaseInitializer" title="luchador.nn.core.base.initializer.BaseInitializer"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.core.base.initializer.BaseInitializer</span></code></a></p>
+<p>Implement Xavier initialization <a class="reference internal" href="#r1" id="id1">[R1]</a> in Tensorflow manner <a class="reference internal" href="#r2" id="id2">[R2]</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>uniform</strong> : Bool</p>
+<blockquote>
+<div><p>If True, uniform distribution is used. Otherwise normal distribution
+is used. See Notes.</p>
+</div></blockquote>
+<p><strong>seed</strong> : int or None</p>
+<blockquote>
+<div><p>Seed value for random generator</p>
+</div></blockquote>
+<p><strong>dtype</strong> : str or None</p>
+<blockquote class="last">
+<div><p>Data type to sample. If None, default dtype is used.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>The implementation of Xavier in Theano follows that of Tensorflow.[R2]_
+The underlying distribution is computed in the following way.</p>
+<p>when <code class="docutils literal"><span class="pre">uniform=True</span></code>,</p>
+<div class="math">
+\[\begin{split}a &amp;= \sqrt{\frac{6}{fan_{in}+fan_{out}}}\\
+W &amp;\sim U[-a, a]\end{split}\]</div>
+<p>When <code class="docutils literal"><span class="pre">uniform=False</span></code>,</p>
+<div class="math">
+\[\begin{split}\sigma &amp;= \sqrt{\frac{3}{fan_{in}+fan_{out}}}\\
+W &amp;\sim N(0, \sigma)\end{split}\]</div>
+<p class="rubric">References</p>
+<table class="docutils citation" frame="void" id="r1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[R1]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id3">2</a>)</em> Xavier Glorot and Yoshua Bengio (2010):
+Understanding the difficulty of training deep feedforward neural
+networks. International conference on artificial intelligence and
+statistics.</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="r2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[R2]</td><td><em>(<a class="fn-backref" href="#id2">1</a>, <a class="fn-backref" href="#id4">2</a>)</em> <a class="reference external" href="https://www.tensorflow.org/versions/r0.11/api_docs/python/contrib.layers.html#xavier_initializer">https://www.tensorflow.org/versions/r0.11/api_docs/python/contrib.layers.html#xavier_initializer</a></td></tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.nn.core.base.initializer.BaseKaiming">
+<em class="property">class </em><code class="descclassname">luchador.nn.core.base.initializer.</code><code class="descname">BaseKaiming</code><span class="sig-paren">(</span><em>uniform=True</em>, <em>seed=None</em>, <em>dtype=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.core.base.initializer.BaseKaiming" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luchador.nn.core.base.initializer.BaseInitializer" title="luchador.nn.core.base.initializer.BaseInitializer"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.core.base.initializer.BaseInitializer</span></code></a></p>
+<p>Implement Kaiming initialization</p>
+<p class="rubric">References</p>
+<table class="docutils citation" frame="void" id="r3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[R3]</a></td><td>Kaiming He et al. (2015):
+Delving deep into rectifiers: Surpassing human-level performance on
+imagenet classification. arXiv preprint arXiv:1502.01852.</td></tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, moto.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

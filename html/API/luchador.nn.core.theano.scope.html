@@ -1,0 +1,234 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>luchador.nn.core.theano.scope module &mdash; Luchador 0.2.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Luchador 0.2.0 documentation" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Luchador
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <!-- Local TOC -->
+                <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">luchador.nn.core.theano.scope module</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Luchador</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>luchador.nn.core.theano.scope module</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/API/luchador.nn.core.theano.scope.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-luchador.nn.core.theano.scope">
+<span id="luchador-nn-core-theano-scope-module"></span><h1>luchador.nn.core.theano.scope module<a class="headerlink" href="#module-luchador.nn.core.theano.scope" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="luchador.nn.core.theano.scope.NameScope">
+<em class="property">class </em><code class="descclassname">luchador.nn.core.theano.scope.</code><code class="descname">NameScope</code><a class="headerlink" href="#luchador.nn.core.theano.scope.NameScope" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.nn.core.theano.scope.VariableScope">
+<em class="property">class </em><code class="descclassname">luchador.nn.core.theano.scope.</code><code class="descname">VariableScope</code><span class="sig-paren">(</span><em>reuse</em>, <em>name=''</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.core.theano.scope.VariableScope" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="staticmethod">
+<dt id="luchador.nn.core.theano.scope.VariableScope.reuse_variables">
+<em class="property">static </em><code class="descname">reuse_variables</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.core.theano.scope.VariableScope.reuse_variables" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="luchador.nn.core.theano.scope.variable_scope">
+<code class="descclassname">luchador.nn.core.theano.scope.</code><code class="descname">variable_scope</code><span class="sig-paren">(</span><em>name_or_scope</em>, <em>reuse=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.core.theano.scope.variable_scope" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="luchador.nn.core.theano.scope.name_scope">
+<code class="descclassname">luchador.nn.core.theano.scope.</code><code class="descname">name_scope</code><span class="sig-paren">(</span><em>name</em>, <em>default_name=None</em>, <em>values=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.core.theano.scope.name_scope" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="luchador.nn.core.theano.scope.get_variable_scope">
+<code class="descclassname">luchador.nn.core.theano.scope.</code><code class="descname">get_variable_scope</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.core.theano.scope.get_variable_scope" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the current variable scope</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="luchador.nn.core.theano.scope.get_variable">
+<code class="descclassname">luchador.nn.core.theano.scope.</code><code class="descname">get_variable</code><span class="sig-paren">(</span><em>name</em>, <em>shape=None</em>, <em>dtype=None</em>, <em>initializer=None</em>, <em>regularizer=None</em>, <em>trainable=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.core.theano.scope.get_variable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, moto.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

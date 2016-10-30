@@ -1,0 +1,19 @@
+luchador.agent package
+======================
+
+Submodules
+----------
+
+.. toctree::
+
+   luchador.agent.base
+   luchador.agent.dqn
+   luchador.agent.recorder
+
+Module contents
+---------------
+
+.. automodule:: luchador.agent
+    :members:
+    :undoc-members:
+    :show-inheritance:

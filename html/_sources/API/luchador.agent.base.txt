@@ -1,0 +1,7 @@
+luchador.agent.base module
+==========================
+
+.. automodule:: luchador.agent.base
+    :members:
+    :undoc-members:
+    :show-inheritance:

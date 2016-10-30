@@ -1,0 +1,7 @@
+luchador.exercise module
+========================
+
+.. automodule:: luchador.exercise
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,0 +1,7 @@
+luchador.nn.core.theano.random module
+=====================================
+
+.. automodule:: luchador.nn.core.theano.random
+    :members:
+    :undoc-members:
+    :show-inheritance:

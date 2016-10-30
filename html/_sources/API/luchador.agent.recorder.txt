@@ -1,0 +1,7 @@
+luchador.agent.recorder module
+==============================
+
+.. automodule:: luchador.agent.recorder
+    :members:
+    :undoc-members:
+    :show-inheritance:

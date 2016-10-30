@@ -1,0 +1,7 @@
+luchador.agent.dqn module
+=========================
+
+.. automodule:: luchador.agent.dqn
+    :members:
+    :undoc-members:
+    :show-inheritance:

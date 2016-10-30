@@ -1,0 +1,7 @@
+luchador.nn.core.base.layer module
+==================================
+
+.. automodule:: luchador.nn.core.base.layer
+    :members:
+    :undoc-members:
+    :show-inheritance:

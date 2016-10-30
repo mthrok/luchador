@@ -1,0 +1,491 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>luchador.agent.recorder module &mdash; Luchador 0.2.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Luchador 0.2.0 documentation" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Luchador
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.2.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <!-- Local TOC -->
+                <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">luchador.agent.recorder module</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Luchador</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>luchador.agent.recorder module</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/API/luchador.agent.recorder.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-luchador.agent.recorder">
+<span id="luchador-agent-recorder-module"></span><h1>luchador.agent.recorder module<a class="headerlink" href="#module-luchador.agent.recorder" title="Permalink to this headline">¶</a></h1>
+<p>Provide efficient replay recorder</p>
+<p>In this module</p>
+<ul class="simple">
+<li><strong>observation</strong></li>
+</ul>
+<p>Referes to an observation of environment.</p>
+<ul class="simple">
+<li><strong>state</strong></li>
+</ul>
+<p>Referes to a set of observations combined together as a processing unit
+passed down to further processing pipeline.</p>
+<ul class="simple">
+<li><strong>transition</strong></li>
+</ul>
+<p>Refers to a set of (original state, action, reward,
+new state, terminal flag).</p>
+<dl class="class">
+<dt id="luchador.agent.recorder.EpisodeRecorder">
+<em class="property">class </em><code class="descclassname">luchador.agent.recorder.</code><code class="descname">EpisodeRecorder</code><span class="sig-paren">(</span><em>initial_observation</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.EpisodeRecorder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Class for recording a <strong>single</strong> episode.</p>
+<dl class="method">
+<dt id="luchador.agent.recorder.EpisodeRecorder.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>initial_observation</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.EpisodeRecorder.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize history</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>initial_observation</strong> : NumPy Array</p>
+<blockquote class="last">
+<div><p>Initial observation observed when environment is reset</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.agent.recorder.EpisodeRecorder._create_state">
+<code class="descname">_create_state</code><span class="sig-paren">(</span><em>index</em>, <em>length</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.EpisodeRecorder._create_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create state matrix from observations.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">NumPy Array</p>
+<blockquote class="last">
+<div><p>Where the length of the first axis equals to the given length, and
+the other axis corresponds to the shape observation.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.agent.recorder.EpisodeRecorder._create_transition">
+<code class="descname">_create_transition</code><span class="sig-paren">(</span><em>index</em>, <em>length</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.EpisodeRecorder._create_transition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a transition (pre_state, action -&gt; reward, post_state) from history</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>index</strong> : int</p>
+<blockquote>
+<div><p>Index of action history.</p>
+<p>For performance reason, argument validity check is omitted, but
+arguments must satisfy the following condition:</p>
+<blockquote>
+<div><p>0 &lt; length &lt;= index &lt; len(self.actions)</p>
+</div></blockquote>
+</div></blockquote>
+<p><strong>length</strong> : int</p>
+<blockquote>
+<div><p>The number of observations included in the state</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">dictionary :</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt>action</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">int</span><dd><p class="first last">The action stored at given index.</p>
+</dd>
+<dt>pre_state</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">NumPy Array with shape (n_observations, height, width)</span><dd><p class="first last">The state which contains the <cite>n_observations</cite> observations
+before the action is taken.</p>
+</dd>
+<dt>reward</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">float</span><dd><p class="first last">The reward achieved by the taken action and the post state
+reached.</p>
+</dd>
+<dt>post_state</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">NumPy Array with shape (n_observations, height, width)</span><dd><p class="first last">The states which includes the state reached by taking the
+action at pre_state, and <cite>n_observations - 1</cite> states before
+the action was taken.</p>
+</dd>
+<dt>terminal</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">Bool</span><dd><p class="first last">True if the <cite>post_state</cite> is the end of episode, otherwise False</p>
+</dd>
+</dl>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.agent.recorder.EpisodeRecorder.record">
+<code class="descname">record</code><span class="sig-paren">(</span><em>action</em>, <em>observation</em>, <em>reward</em>, <em>terminal</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.EpisodeRecorder.record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add the given values to history</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>action</strong> : int</p>
+<blockquote>
+<div><p>action taken</p>
+</div></blockquote>
+<p><strong>observation</strong> : NumPy Array</p>
+<blockquote>
+<div><p>Observation of environment after action is taken</p>
+</div></blockquote>
+<p><strong>reward</strong> : float</p>
+<blockquote>
+<div><p>Reward achieved by taking action and reaching observed state</p>
+</div></blockquote>
+<p><strong>terminal</strong> : bool</p>
+<blockquote class="last">
+<div><p>True if the episode was ended by this action.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.agent.recorder.EpisodeRecorder.sample">
+<code class="descname">sample</code><span class="sig-paren">(</span><em>state_length</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.EpisodeRecorder.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sample one transition from record</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>state_length</strong> : int</p>
+<blockquote>
+<div><p>The number of obervations to combine</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">dictionary :</p>
+<blockquote class="last">
+<div><dl class="docutils">
+<dt>action</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">int</span><dd><p class="first last">The action stored at given index.</p>
+</dd>
+<dt>pre_state</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">NumPy Array with shape (n_observations, height, width)</span><dd><p class="first last">The state which contains the <cite>n_observations</cite> observations
+before the action is taken.</p>
+</dd>
+<dt>reward</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">float</span><dd><p class="first last">The reward achieved by the taken action and the post state
+reached.</p>
+</dd>
+<dt>post_state</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">NumPy Array with shape (n_observations, height, width)</span><dd><p class="first last">The states which includes the state reached by taking the
+action at pre_state, and <cite>n_observations - 1</cite> states before
+the action was taken.</p>
+</dd>
+<dt>terminal</dt>
+ <span class="classifier-delimiter">:</span> <span class="classifier">Bool</span><dd><p class="first last">True if the <cite>post_state</cite> is the end of episode, otherwise False</p>
+</dd>
+</dl>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<dl class="last docutils">
+<dt><a class="reference internal" href="#luchador.agent.recorder.EpisodeRecorder._create_transition" title="luchador.agent.recorder.EpisodeRecorder._create_transition"><code class="xref any py py-meth docutils literal"><span class="pre">_create_transition</span></code></a></dt>
+<dd>Method to create transition</dd>
+</dl>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.agent.recorder.TransitionRecorder">
+<em class="property">class </em><code class="descclassname">luchador.agent.recorder.</code><code class="descname">TransitionRecorder</code><span class="sig-paren">(</span><em>memory_size=1000000</em>, <em>state_length=4</em>, <em>state_width=84</em>, <em>state_height=84</em>, <em>batch_size=32</em>, <em>data_format=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.TransitionRecorder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Class for recording and sampling state transition</p>
+<dl class="method">
+<dt id="luchador.agent.recorder.TransitionRecorder.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>memory_size=1000000</em>, <em>state_length=4</em>, <em>state_width=84</em>, <em>state_height=84</em>, <em>batch_size=32</em>, <em>data_format=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.TransitionRecorder.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize TransitionRecorder class</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>state_length</strong> : int</p>
+<blockquote>
+<div><p>The number of observations in state.</p>
+</div></blockquote>
+<p><strong>n_obaservations_to_retaion</strong> : int</p>
+<blockquote class="last">
+<div><p>The number of latest observations to keep in memory</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.agent.recorder.TransitionRecorder.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><em>initial_observation</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.TransitionRecorder.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize recorder with new EpisodeRecorder</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.agent.recorder.TransitionRecorder.record">
+<code class="descname">record</code><span class="sig-paren">(</span><em>action</em>, <em>observation</em>, <em>reward</em>, <em>terminal</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.TransitionRecorder.record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add the given values to history</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>action</strong> : int</p>
+<blockquote>
+<div><p>action taken</p>
+</div></blockquote>
+<p><strong>observation</strong> : NumPy Array</p>
+<blockquote>
+<div><p>Observation of environment after action is taken</p>
+</div></blockquote>
+<p><strong>reward</strong> : float</p>
+<blockquote>
+<div><p>Reward achieved by taking action and reaching observed state</p>
+</div></blockquote>
+<p><strong>terminal</strong> : bool</p>
+<blockquote class="last">
+<div><p>True if the episode was ended by this action.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.agent.recorder.TransitionRecorder.truncate">
+<code class="descname">truncate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.TransitionRecorder.truncate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retain only recorders containing the latest records</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.agent.recorder.TransitionRecorder.is_ready">
+<code class="descname">is_ready</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.TransitionRecorder.is_ready" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if the current episode recorder has sufficient records</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.agent.recorder.TransitionRecorder.get_current_state">
+<code class="descname">get_current_state</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.TransitionRecorder.get_current_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the latest state</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">NumPy Array with shape (state length, observation height, width)</p>
+<blockquote class="last">
+<div><p>The most recent state</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.agent.recorder.TransitionRecorder.sample">
+<code class="descname">sample</code><span class="sig-paren">(</span><em>n_samples</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.TransitionRecorder.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sample state transitions into given batch</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, moto.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.2.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
