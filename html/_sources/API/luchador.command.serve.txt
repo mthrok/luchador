@@ -1,0 +1,7 @@
+luchador.command.serve module
+=============================
+
+.. automodule:: luchador.command.serve
+    :members:
+    :undoc-members:
+    :show-inheritance:

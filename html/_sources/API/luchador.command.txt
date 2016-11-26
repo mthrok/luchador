@@ -1,0 +1,19 @@
+luchador.command package
+========================
+
+Submodules
+----------
+
+.. toctree::
+
+   luchador.command.exercise
+   luchador.command.main
+   luchador.command.serve
+
+Module contents
+---------------
+
+.. automodule:: luchador.command
+    :members:
+    :undoc-members:
+    :show-inheritance:
