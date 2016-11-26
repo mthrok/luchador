@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>luchador.agent.recorder module &mdash; Luchador v0.3.0-10-g8677e0e documentation</title>
+  <title>luchador.agent.recorder module &mdash; Luchador v0.3.0-11-g244e34e documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="Luchador v0.3.0-10-g8677e0e documentation" href="../index.html"/> 
+    <link rel="top" title="Luchador v0.3.0-11-g244e34e documentation" href="../index.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.3.0-10-g8677e0e
+                v0.3.0-11-g244e34e
               </div>
             
           
@@ -133,20 +133,28 @@
 <span id="luchador-agent-recorder-module"></span><h1>luchador.agent.recorder module<a class="headerlink" href="#module-luchador.agent.recorder" title="Permalink to this headline">¶</a></h1>
 <p>Provide efficient replay recorder</p>
 <p>In this module</p>
-<ul class="simple">
-<li><strong>observation</strong></li>
-</ul>
-<p>Referes to an observation of environment.</p>
-<ul class="simple">
-<li><strong>state</strong></li>
-</ul>
-<p>Referes to a set of observations combined together as a processing unit
+<ul>
+<li><dl class="first docutils">
+<dt><strong>observation</strong></dt>
+<dd><p class="first last">Referes to an observation of environment.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>state</strong></dt>
+<dd><p class="first last">Referes to a set of observations combined together as a processing unit
 passed down to further processing pipeline.</p>
-<ul class="simple">
-<li><strong>transition</strong></li>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><strong>transition</strong></dt>
+<dd><p class="first last">Refers to a set of (original state, action, reward, new state, terminal
+flag).</p>
+</dd>
+</dl>
+</li>
 </ul>
-<p>Refers to a set of (original state, action, reward,
-new state, terminal flag).</p>
 <dl class="class">
 <dt id="luchador.agent.recorder.EpisodeRecorder">
 <em class="property">class </em><code class="descclassname">luchador.agent.recorder.</code><code class="descname">EpisodeRecorder</code><span class="sig-paren">(</span><em>initial_observation</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.EpisodeRecorder" title="Permalink to this definition">¶</a></dt>
@@ -178,7 +186,23 @@ new state, terminal flag).</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">NumPy Array</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>index</strong> : int</p>
+<blockquote>
+<div><p>Index for the last observation to include in the
+resulting state.</p>
+<p>For performance reason, argument validity check is omitted, but
+arguments must satisfy the following condition:</p>
+<blockquote>
+<div><p>0 &lt;= length - 1 &lt;= index &lt; len(self.actions)</p>
+</div></blockquote>
+</div></blockquote>
+<p><strong>length</strong> : int</p>
+<blockquote>
+<div><p>The number of observations included in the state</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">NumPy Array</p>
 <blockquote class="last">
 <div><p>Where the length of the first axis equals to the given length, and
 the other axis corresponds to the shape observation.</p>
@@ -192,7 +216,7 @@ the other axis corresponds to the shape observation.</p>
 <dl class="method">
 <dt id="luchador.agent.recorder.EpisodeRecorder._create_transition">
 <code class="descname">_create_transition</code><span class="sig-paren">(</span><em>index</em>, <em>length</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.EpisodeRecorder._create_transition" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a transition (pre_state, action -&gt; reward, post_state) from history</p>
+<dd><p>Create a transition from history</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -460,7 +484,7 @@ the action was taken.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'v0.3.0-10-g8677e0e',
+            VERSION:'v0.3.0-11-g244e34e',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
