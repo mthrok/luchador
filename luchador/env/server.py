@@ -7,7 +7,7 @@ names and parameters are passed via POST method. Server can be created using
 
 >>> import luchador.env
 >>> env = luchador.env.get_env(name)(**args)
->>> app = luchador.env.server.create_app(env)
+>>> app = luchador.env.server.create_env_app(env)
 >>> server = luchador.env.server.create_server(app)
 >>> server.start()
 
@@ -84,6 +84,18 @@ Server API
 |Response   |                                                                 |
 +-----------+-----------------------------------------------------------------+
 
++---------+-------------------------------------------------------------------+
+|**Shut down this environment and stop the server**                           |
++---------+-------------------------------------------------------------------+
+|URL      |``/kill``                                                          |
++---------+-------------------------------------------------------------------+
+|Method   |``POST`` or ``GET``                                                |
++---------+-------------------------------------------------------------------+
+|Success  |**Code**: 200                                                      |
+|Response |                                                                   |
+|         |**Content (JSON)**:                                                |
+|         | ``result``: ``success`` or ``failed``                             |
++---------+-------------------------------------------------------------------+
 """
 from __future__ import absolute_import
 
@@ -102,7 +114,7 @@ def _jsonify(obj, code=200):
     return (json.dumps(obj), code, {'mimetype': 'application/json'})
 
 
-def create_app(env):
+def create_env_app(env):
     """Create Flask server for the given Environment
 
     See module documentation for the derail of API call
@@ -122,6 +134,7 @@ def create_app(env):
     attr = {
         'outcome': None,
         'env': env,
+        'server': None,
     }
 
     @app.route('/', methods=['POST', 'GET'])
@@ -156,6 +169,13 @@ def create_app(env):
         attr['outcome'] = env.step(params['action'])
         return _return_outcome()
 
+    @app.route('/kill', methods=['POST', 'GET'])
+    def _kill():
+        attr['server'].stop()
+        result = 'failed' if attr['server'].ready else 'killed'
+        return _jsonify({'result': result})
+
+    app.attr = attr
     _reset()
     return app
 
@@ -173,4 +193,6 @@ def create_server(app, port=5000, host='0.0.0.0'):
     WSGIServer object
     """
     dispatcher = wsgiserver.WSGIPathInfoDispatcher({'/': app})
-    return wsgiserver.CherryPyWSGIServer((host, port), dispatcher)
+    server = wsgiserver.CherryPyWSGIServer((host, port), dispatcher)
+    app.attr['server'] = server
+    return server
