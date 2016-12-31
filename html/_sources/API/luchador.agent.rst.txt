@@ -7,6 +7,7 @@ Submodules
 .. toctree::
 
    luchador.agent.base
+   luchador.agent.cart_pole
    luchador.agent.dqn
    luchador.agent.recorder
 
