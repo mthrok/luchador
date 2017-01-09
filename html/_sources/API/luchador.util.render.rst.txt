@@ -1,0 +1,7 @@
+luchador.util.render module
+===========================
+
+.. automodule:: luchador.util.render
+    :members:
+    :undoc-members:
+    :show-inheritance:
