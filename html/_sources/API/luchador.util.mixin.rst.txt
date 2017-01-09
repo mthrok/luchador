@@ -1,0 +1,7 @@
+luchador.util.mixin module
+==========================
+
+.. automodule:: luchador.util.mixin
+    :members:
+    :undoc-members:
+    :show-inheritance:

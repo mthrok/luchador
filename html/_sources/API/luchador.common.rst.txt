@@ -1,7 +1,0 @@
-luchador.common module
-======================
-
-.. automodule:: luchador.common
-    :members:
-    :undoc-members:
-    :show-inheritance:

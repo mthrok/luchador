@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>luchador.nn.core.theano.random module &mdash; Luchador v0.4.0-7-g3b539cc documentation</title>
+  <title>luchador.util.misc module &mdash; Luchador v0.4.0-7-g3b539cc documentation</title>
   
 
   
@@ -84,7 +84,7 @@
             
                 <!-- Local TOC -->
                 <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">luchador.nn.core.theano.random module</a></li>
+<li><a class="reference internal" href="#">luchador.util.misc module</a></li>
 </ul>
 </div>
             
@@ -115,11 +115,11 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../index.html">Docs</a> &raquo;</li>
       
-    <li>luchador.nn.core.theano.random module</li>
+    <li>luchador.util.misc module</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../_sources/API/luchador.nn.core.theano.random.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/API/luchador.util.misc.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -129,17 +129,41 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-luchador.nn.core.theano.random">
-<span id="luchador-nn-core-theano-random-module"></span><h1>luchador.nn.core.theano.random module<a class="headerlink" href="#module-luchador.nn.core.theano.random" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-luchador.util.misc">
+<span id="luchador-util-misc-module"></span><h1>luchador.util.misc module<a class="headerlink" href="#module-luchador.util.misc" title="Permalink to this headline">¶</a></h1>
+<p>Defines methods and mixins used acroos the submodules in Luchador</p>
 <dl class="function">
-<dt id="luchador.nn.core.theano.random.set_random_seed">
-<code class="descclassname">luchador.nn.core.theano.random.</code><code class="descname">set_random_seed</code><span class="sig-paren">(</span><em>seed</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.core.theano.random.set_random_seed" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="luchador.util.misc.is_iteratable">
+<code class="descclassname">luchador.util.misc.</code><code class="descname">is_iteratable</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.util.misc.is_iteratable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True if given object is iteratable</p>
+</dd></dl>
 
 <dl class="function">
-<dt id="luchador.nn.core.theano.random.get_rng">
-<code class="descclassname">luchador.nn.core.theano.random.</code><code class="descname">get_rng</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.core.theano.random.get_rng" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="luchador.util.misc.get_subclasses">
+<code class="descclassname">luchador.util.misc.</code><code class="descname">get_subclasses</code><span class="sig-paren">(</span><em>class_</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.util.misc.get_subclasses" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the list of all subclasses</p>
+<p>This function is intended to use in <code class="docutils literal"><span class="pre">get_*</span></code> functions such as
+<code class="docutils literal"><span class="pre">get_agent</span></code>, <code class="docutils literal"><span class="pre">get_env</span></code>, <code class="docutils literal"><span class="pre">get_layer</span></code>, <code class="docutils literal"><span class="pre">get_optimizer</span></code>,
+<code class="docutils literal"><span class="pre">get_initializer</span></code> etc. for flexible access.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>class_</strong> : type</p>
+<blockquote>
+<div><p>Class of which subclasses are searched</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list</p>
+<blockquote class="last">
+<div><p>List of subclasses of the given class</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </div>
 

@@ -1,5 +1,17 @@
-luchador.util module
-====================
+luchador.util package
+=====================
+
+Submodules
+----------
+
+.. toctree::
+
+   luchador.util.misc
+   luchador.util.mixin
+   luchador.util.yaml_util
+
+Module contents
+---------------
 
 .. automodule:: luchador.util
     :members:

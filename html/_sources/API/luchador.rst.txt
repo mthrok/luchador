@@ -10,17 +10,16 @@ Subpackages
     luchador.command
     luchador.env
     luchador.nn
+    luchador.util
 
 Submodules
 ----------
 
 .. toctree::
 
-   luchador.common
    luchador.configure
    luchador.episode_runner
    luchador.logging
-   luchador.util
    luchador.version
 
 Module contents
