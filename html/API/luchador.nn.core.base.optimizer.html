@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>luchador.nn.core.base.optimizer module &mdash; Luchador v0.4.0-10-g90770df documentation</title>
+  <title>luchador.nn.core.base.optimizer module &mdash; Luchador v0.4.0-11-g4e0d000 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="Luchador v0.4.0-10-g90770df documentation" href="../index.html"/> 
+    <link rel="top" title="Luchador v0.4.0-11-g4e0d000 documentation" href="../index.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.0-10-g90770df
+                v0.4.0-11-g4e0d000
               </div>
             
           
@@ -320,7 +320,7 @@ Virtually has no effect in SGD</p>
 <dd><p>Bases: <a class="reference internal" href="#luchador.nn.core.base.optimizer.BaseOptimizer" title="luchador.nn.core.base.optimizer.BaseOptimizer"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.core.base.optimizer.BaseOptimizer</span></code></a></p>
 <p>Tensorflow style RMSProp with momentum</p>
 <p>Scale learning rates by dividing with the moving average of the root mean
-squared (RMS) gradients. See <a class="reference internal" href="#r9" id="id1">[R9]</a> for further description.</p>
+squared (RMS) gradients. See <a class="reference internal" href="#r11" id="id1">[R11]</a> for further description.</p>
 <p>This implementation mimics TF native RMSProp, which updates parameters as</p>
 <div class="math">
 \[\begin{split}rms_t &amp;= \rho * rms_{t-1} + (1- \rho) * grad ^2 \\
@@ -362,10 +362,10 @@ coefficient.</p>
 </tbody>
 </table>
 <p class="rubric">References</p>
-<table class="docutils citation" frame="void" id="r9" rules="none">
+<table class="docutils citation" frame="void" id="r11" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label">[R9]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id2">2</a>)</em> Tieleman, T. and Hinton, G. (2012):
+<tr><td class="label">[R11]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id2">2</a>)</em> Tieleman, T. and Hinton, G. (2012):
 Neural Networks for Machine Learning, Lecture 6.5 - rmsprop.
 Coursera. <a class="reference external" href="http://www.youtube.com/watch?v=O3sxAc4hxZU">http://www.youtube.com/watch?v=O3sxAc4hxZU</a> (formula &#64;5:20)</td></tr>
 </tbody>
@@ -413,10 +413,10 @@ var_t &amp;= var_{t-1} - lr * grad  \\\end{split}\]</div>
 </tbody>
 </table>
 <p class="rubric">References</p>
-<table class="docutils citation" frame="void" id="r10" rules="none">
+<table class="docutils citation" frame="void" id="r12" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id3">[R10]</a></td><td>Tieleman, T. and Hinton, G. (2012):
+<tr><td class="label"><a class="fn-backref" href="#id3">[R12]</a></td><td>Tieleman, T. and Hinton, G. (2012):
 Neural Networks for Machine Learning, Lecture 6.5 - rmsprop.
 Coursera. <a class="reference external" href="http://www.youtube.com/watch?v=O3sxAc4hxZU">http://www.youtube.com/watch?v=O3sxAc4hxZU</a> (formula &#64;5:20)</td></tr>
 </tbody>
@@ -427,21 +427,21 @@ Coursera. <a class="reference external" href="http://www.youtube.com/watch?v=O3s
 <dt id="luchador.nn.core.base.optimizer.BaseGravesRMSProp">
 <em class="property">class </em><code class="descclassname">luchador.nn.core.base.optimizer.</code><code class="descname">BaseGravesRMSProp</code><span class="sig-paren">(</span><em>learning_rate</em>, <em>decay1=0.95</em>, <em>decay2=0.95</em>, <em>epsilon=0.01</em>, <em>name='GravesRMSProp'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.core.base.optimizer.BaseGravesRMSProp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#luchador.nn.core.base.optimizer.BaseOptimizer" title="luchador.nn.core.base.optimizer.BaseOptimizer"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.core.base.optimizer.BaseOptimizer</span></code></a></p>
-<p>RMSProp used in DQN paper <a class="reference internal" href="#r11" id="id4">[R11]</a> and described in A.Graves paper <a class="reference internal" href="#r12" id="id5">[R12]</a></p>
+<p>RMSProp used in DQN paper <a class="reference internal" href="#r13" id="id4">[R13]</a> and described in A.Graves paper <a class="reference internal" href="#r14" id="id5">[R14]</a></p>
 <p class="rubric">References</p>
-<table class="docutils citation" frame="void" id="r11" rules="none">
+<table class="docutils citation" frame="void" id="r13" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label">[R11]</td><td><em>(<a class="fn-backref" href="#id4">1</a>, <a class="fn-backref" href="#id6">2</a>)</em> Mnih, V et. al (2015)
+<tr><td class="label">[R13]</td><td><em>(<a class="fn-backref" href="#id4">1</a>, <a class="fn-backref" href="#id6">2</a>)</em> Mnih, V et. al (2015)
 Human-level control through deep reinforcement learning
 <a class="reference external" href="https://storage.googleapis.com/deepmind-media/dqn/DQNNaturePaper.pdf">https://storage.googleapis.com/deepmind-media/dqn/DQNNaturePaper.pdf</a>
 <a class="reference external" href="https://github.com/kuz/DeepMind-Atari-Deep-Q-Learner/blob/4b9f5a79b03ea0cfc512ed1c11f1b00bc875bc57/dqn/NeuralQLearner.lua#L265">https://github.com/kuz/DeepMind-Atari-Deep-Q-Learner/blob/4b9f5a79b03ea0cfc512ed1c11f1b00bc875bc57/dqn/NeuralQLearner.lua#L265</a></td></tr>
 </tbody>
 </table>
-<table class="docutils citation" frame="void" id="r12" rules="none">
+<table class="docutils citation" frame="void" id="r14" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label">[R12]</td><td><em>(<a class="fn-backref" href="#id5">1</a>, <a class="fn-backref" href="#id7">2</a>)</em> Graves, A. (2014):
+<tr><td class="label">[R14]</td><td><em>(<a class="fn-backref" href="#id5">1</a>, <a class="fn-backref" href="#id7">2</a>)</em> Graves, A. (2014):
 Generating Sequences With Recurrent Neural Networks
 <a class="reference external" href="http://arxiv.org/pdf/1308.0850v5.pdf">http://arxiv.org/pdf/1308.0850v5.pdf</a></td></tr>
 </tbody>
@@ -494,7 +494,7 @@ Generating Sequences With Recurrent Neural Networks
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'v0.4.0-10-g90770df',
+            VERSION:'v0.4.0-11-g4e0d000',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

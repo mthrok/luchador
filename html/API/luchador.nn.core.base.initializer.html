@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>luchador.nn.core.base.initializer module &mdash; Luchador v0.4.0-10-g90770df documentation</title>
+  <title>luchador.nn.core.base.initializer module &mdash; Luchador v0.4.0-11-g4e0d000 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="Luchador v0.4.0-10-g90770df documentation" href="../index.html"/> 
+    <link rel="top" title="Luchador v0.4.0-11-g4e0d000 documentation" href="../index.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.0-10-g90770df
+                v0.4.0-11-g4e0d000
               </div>
             
           
@@ -279,7 +279,7 @@ Initializers and this method is not used.</p>
 <dt id="luchador.nn.core.base.initializer.BaseXavier">
 <em class="property">class </em><code class="descclassname">luchador.nn.core.base.initializer.</code><code class="descname">BaseXavier</code><span class="sig-paren">(</span><em>uniform=True</em>, <em>seed=None</em>, <em>dtype=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.core.base.initializer.BaseXavier" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#luchador.nn.core.base.initializer.BaseInitializer" title="luchador.nn.core.base.initializer.BaseInitializer"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.core.base.initializer.BaseInitializer</span></code></a></p>
-<p>Implement Xavier initialization <a class="reference internal" href="#r5" id="id1">[R5]</a> in Tensorflow manner <a class="reference internal" href="#r6" id="id2">[R6]</a></p>
+<p>Implement Xavier initialization <a class="reference internal" href="#r7" id="id1">[R7]</a> in Tensorflow manner <a class="reference internal" href="#r8" id="id2">[R8]</a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -302,7 +302,7 @@ is used. See Notes.</p>
 </tbody>
 </table>
 <p class="rubric">Notes</p>
-<p>The implementation of Xavier in Theano follows that of Tensorflow.[R6]_
+<p>The implementation of Xavier in Theano follows that of Tensorflow.[R8]_
 The underlying distribution is computed in the following way.</p>
 <p>when <code class="docutils literal"><span class="pre">uniform=True</span></code>,</p>
 <div class="math">
@@ -313,19 +313,19 @@ W &amp;\sim U[-a, a]\end{split}\]</div>
 \[\begin{split}\sigma &amp;= \sqrt{\frac{3}{fan_{in}+fan_{out}}}\\
 W &amp;\sim N(0, \sigma)\end{split}\]</div>
 <p class="rubric">References</p>
-<table class="docutils citation" frame="void" id="r5" rules="none">
+<table class="docutils citation" frame="void" id="r7" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label">[R5]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id3">2</a>)</em> Xavier Glorot and Yoshua Bengio (2010):
+<tr><td class="label">[R7]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id3">2</a>)</em> Xavier Glorot and Yoshua Bengio (2010):
 Understanding the difficulty of training deep feedforward neural
 networks. International conference on artificial intelligence and
 statistics.</td></tr>
 </tbody>
 </table>
-<table class="docutils citation" frame="void" id="r6" rules="none">
+<table class="docutils citation" frame="void" id="r8" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label">[R6]</td><td><em>(<a class="fn-backref" href="#id2">1</a>, <a class="fn-backref" href="#id4">2</a>)</em> <a class="reference external" href="https://www.tensorflow.org/versions/r0.11/api_docs/python/contrib.layers.html#xavier_initializer">https://www.tensorflow.org/versions/r0.11/api_docs/python/contrib.layers.html#xavier_initializer</a></td></tr>
+<tr><td class="label">[R8]</td><td><em>(<a class="fn-backref" href="#id2">1</a>, <a class="fn-backref" href="#id4">2</a>)</em> <a class="reference external" href="https://www.tensorflow.org/versions/r0.11/api_docs/python/contrib.layers.html#xavier_initializer">https://www.tensorflow.org/versions/r0.11/api_docs/python/contrib.layers.html#xavier_initializer</a></td></tr>
 </tbody>
 </table>
 </dd></dl>
@@ -336,10 +336,10 @@ statistics.</td></tr>
 <dd><p>Bases: <a class="reference internal" href="#luchador.nn.core.base.initializer.BaseInitializer" title="luchador.nn.core.base.initializer.BaseInitializer"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.core.base.initializer.BaseInitializer</span></code></a></p>
 <p>Implement Kaiming initialization</p>
 <p class="rubric">References</p>
-<table class="docutils citation" frame="void" id="r7" rules="none">
+<table class="docutils citation" frame="void" id="r9" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id5">[R7]</a></td><td>Kaiming He et al. (2015):
+<tr><td class="label"><a class="fn-backref" href="#id5">[R9]</a></td><td>Kaiming He et al. (2015):
 Delving deep into rectifiers: Surpassing human-level performance on
 imagenet classification. arXiv preprint arXiv:1502.01852.</td></tr>
 </tbody>
@@ -380,7 +380,7 @@ imagenet classification. arXiv preprint arXiv:1502.01852.</td></tr>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'v0.4.0-10-g90770df',
+            VERSION:'v0.4.0-11-g4e0d000',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

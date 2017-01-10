@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>luchador.agent.dqn module &mdash; Luchador v0.4.0-10-g90770df documentation</title>
+  <title>luchador.agent.dqn module &mdash; Luchador v0.4.0-11-g4e0d000 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="Luchador v0.4.0-10-g90770df documentation" href="../index.html"/> 
+    <link rel="top" title="Luchador v0.4.0-11-g4e0d000 documentation" href="../index.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.0-10-g90770df
+                v0.4.0-11-g4e0d000
               </div>
             
           
@@ -84,7 +84,10 @@
             
                 <!-- Local TOC -->
                 <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">luchador.agent.dqn module</a></li>
+<li><a class="reference internal" href="#">luchador.agent.dqn module</a><ul>
+<li><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
 </ul>
 </div>
             
@@ -131,10 +134,33 @@
             
   <div class="section" id="module-luchador.agent.dqn">
 <span id="luchador-agent-dqn-module"></span><h1>luchador.agent.dqn module<a class="headerlink" href="#module-luchador.agent.dqn" title="Permalink to this headline">¶</a></h1>
+<p>Vanilla DQNAgent from <a class="reference internal" href="#r1" id="id1">[R1]</a>:</p>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<table class="docutils citation" frame="void" id="r1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[R1]</a></td><td>Mnih, V et. al (2015)
+Human-level control through deep reinforcement learning
+<a class="reference external" href="https://storage.googleapis.com/deepmind-media/dqn/DQNNaturePaper.pdf">https://storage.googleapis.com/deepmind-media/dqn/DQNNaturePaper.pdf</a></td></tr>
+</tbody>
+</table>
 <dl class="class">
 <dt id="luchador.agent.dqn.DQNAgent">
 <em class="property">class </em><code class="descclassname">luchador.agent.dqn.</code><code class="descname">DQNAgent</code><span class="sig-paren">(</span><em>recorder_config</em>, <em>q_network_config</em>, <em>optimizer_config</em>, <em>action_config</em>, <em>training_config</em>, <em>save_config</em>, <em>summary_config</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.dqn.DQNAgent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="luchador.agent.base.html#luchador.agent.base.BaseAgent" title="luchador.agent.base.BaseAgent"><code class="xref py py-class docutils literal"><span class="pre">luchador.agent.base.BaseAgent</span></code></a></p>
+<p>Implement Vanilla DQNAgent from <a class="reference internal" href="#r2" id="id2">[R2]</a>:</p>
+<p class="rubric">References</p>
+<table class="docutils citation" frame="void" id="r2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[R2]</td><td><em>(<a class="fn-backref" href="#id2">1</a>, <a class="fn-backref" href="#id3">2</a>)</em> <p>Mnih, V et. al (2015)
+Human-level control through deep reinforcement learning</p>
+<blockquote class="last">
+<div><a class="reference external" href="https://storage.googleapis.com/deepmind-media/dqn/DQNNaturePaper.pdf">https://storage.googleapis.com/deepmind-media/dqn/DQNNaturePaper.pdf</a></div></blockquote>
+</td></tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="luchador.agent.dqn.DQNAgent.init">
 <code class="descname">init</code><span class="sig-paren">(</span><em>env</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.dqn.DQNAgent.init" title="Permalink to this definition">¶</a></dt>
@@ -162,6 +188,7 @@
 
 </dd></dl>
 
+</div>
 </div>
 
 
@@ -196,7 +223,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'v0.4.0-10-g90770df',
+            VERSION:'v0.4.0-11-g4e0d000',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
