@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>luchador.nn.core.base.wrapper module &mdash; Luchador v0.4.0-8-g24d89d5 documentation</title>
+  <title>luchador.nn.core.base.wrapper module &mdash; Luchador v0.4.0-10-g90770df documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="Luchador v0.4.0-8-g24d89d5 documentation" href="../index.html"/> 
+    <link rel="top" title="Luchador v0.4.0-10-g90770df documentation" href="../index.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.0-8-g24d89d5
+                v0.4.0-10-g90770df
               </div>
             
           
@@ -131,6 +131,7 @@
             
   <div class="section" id="module-luchador.nn.core.base.wrapper">
 <span id="luchador-nn-core-base-wrapper-module"></span><h1>luchador.nn.core.base.wrapper module<a class="headerlink" href="#module-luchador.nn.core.base.wrapper" title="Permalink to this headline">¶</a></h1>
+<p>Module to define common interface for Tensor/Operation wrapping</p>
 <dl class="class">
 <dt id="luchador.nn.core.base.wrapper.BaseTensor">
 <em class="property">class </em><code class="descclassname">luchador.nn.core.base.wrapper.</code><code class="descname">BaseTensor</code><span class="sig-paren">(</span><em>tensor</em>, <em>shape</em>, <em>name</em>, <em>dtype</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.core.base.wrapper.BaseTensor" title="Permalink to this definition">¶</a></dt>
@@ -161,7 +162,8 @@ while having the common interface for both Theano and Tensorflow.
 <dl class="method">
 <dt id="luchador.nn.core.base.wrapper.Operation.unwrap">
 <code class="descname">unwrap</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.core.base.wrapper.Operation.unwrap" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the underlying backend-specific operation object</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -199,7 +201,7 @@ while having the common interface for both Theano and Tensorflow.
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'v0.4.0-8-g24d89d5',
+            VERSION:'v0.4.0-10-g90770df',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
