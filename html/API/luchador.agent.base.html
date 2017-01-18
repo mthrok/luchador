@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>luchador.agent.base module &mdash; Luchador v0.4.0-16-g7c4a6a4 documentation</title>
+  <title>luchador.agent.base module &mdash; Luchador v0.4.0-17-g281a80c documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="Luchador v0.4.0-16-g7c4a6a4 documentation" href="../index.html"/> 
+    <link rel="top" title="Luchador v0.4.0-17-g281a80c documentation" href="../index.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.0-16-g7c4a6a4
+                v0.4.0-17-g281a80c
               </div>
             
           
@@ -158,20 +158,36 @@ such as the number of action the agent can take, from environment.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="luchador.agent.base.BaseAgent.observe">
-<code class="descname">observe</code><span class="sig-paren">(</span><em>action</em>, <em>outcome</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.base.BaseAgent.observe" title="Permalink to this definition">¶</a></dt>
+<dt id="luchador.agent.base.BaseAgent.learn">
+<code class="descname">learn</code><span class="sig-paren">(</span><em>state0</em>, <em>action</em>, <em>reward</em>, <em>state1</em>, <em>terminal</em>, <em>info</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.base.BaseAgent.learn" title="Permalink to this definition">¶</a></dt>
 <dd><p>Observe the action and it&#8217;s outcome.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>action</strong> : int</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>state0</strong></p>
 <blockquote>
-<div><p>The action that this agent previously took.</p>
+<div><p>Environment state before taking action</p>
 </div></blockquote>
-<p><strong>oucome</strong> : Outome</p>
+<p><strong>action</strong></p>
+<blockquote>
+<div><p>The action taken</p>
+</div></blockquote>
+<p><strong>reward</strong> : float</p>
+<blockquote>
+<div><p>Reward acquired by taking action</p>
+</div></blockquote>
+<p><strong>state1</strong></p>
+<blockquote>
+<div><p>Environment state after taking action</p>
+</div></blockquote>
+<p><strong>terminal</strong> : Bool</p>
+<blockquote>
+<div><p>True if state1 is terminal state</p>
+</div></blockquote>
+<p><strong>info</strong></p>
 <blockquote class="last">
-<div><p>Outcome of taking the action</p>
+<div><p>Supplemental information of environment</p>
 </div></blockquote>
 </td>
 </tr>
@@ -227,8 +243,8 @@ such as the number of action the agent can take, from environment.</p>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="luchador.agent.base.NoOpAgent.observe">
-<code class="descname">observe</code><span class="sig-paren">(</span><em>action</em>, <em>outcome</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.base.NoOpAgent.observe" title="Permalink to this definition">¶</a></dt>
+<dt id="luchador.agent.base.NoOpAgent.learn">
+<code class="descname">learn</code><span class="sig-paren">(</span><em>state0</em>, <em>action</em>, <em>reward</em>, <em>state1</em>, <em>terminal</em>, <em>info=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.base.NoOpAgent.learn" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -302,7 +318,7 @@ such as the number of action the agent can take, from environment.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'v0.4.0-16-g7c4a6a4',
+            VERSION:'v0.4.0-17-g281a80c',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
