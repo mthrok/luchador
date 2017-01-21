@@ -114,7 +114,7 @@ def _setup():
             'pygame',
             'pyglet',
             'flask',
-            'cherrypy',
+            'cheroot',
         ],
         package_data={
             'luchador': [
