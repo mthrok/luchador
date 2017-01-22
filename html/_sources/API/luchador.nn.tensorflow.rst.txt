@@ -9,6 +9,7 @@ Submodules
    luchador.nn.tensorflow.cost
    luchador.nn.tensorflow.initializer
    luchador.nn.tensorflow.layer
+   luchador.nn.tensorflow.misc
    luchador.nn.tensorflow.optimizer
    luchador.nn.tensorflow.q_learning
    luchador.nn.tensorflow.scope

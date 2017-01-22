@@ -9,6 +9,7 @@ Submodules
    luchador.nn.theano.cost
    luchador.nn.theano.initializer
    luchador.nn.theano.layer
+   luchador.nn.theano.misc
    luchador.nn.theano.optimizer
    luchador.nn.theano.q_learning
    luchador.nn.theano.random

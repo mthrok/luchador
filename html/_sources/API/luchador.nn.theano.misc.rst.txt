@@ -1,0 +1,7 @@
+luchador.nn.theano.misc module
+==============================
+
+.. automodule:: luchador.nn.theano.misc
+    :members:
+    :undoc-members:
+    :show-inheritance:

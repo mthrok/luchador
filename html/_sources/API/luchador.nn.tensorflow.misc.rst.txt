@@ -1,0 +1,7 @@
+luchador.nn.tensorflow.misc module
+==================================
+
+.. automodule:: luchador.nn.tensorflow.misc
+    :members:
+    :undoc-members:
+    :show-inheritance:
