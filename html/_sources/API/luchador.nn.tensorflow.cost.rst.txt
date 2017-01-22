@@ -1,0 +1,7 @@
+luchador.nn.tensorflow.cost module
+==================================
+
+.. automodule:: luchador.nn.tensorflow.cost
+    :members:
+    :undoc-members:
+    :show-inheritance:

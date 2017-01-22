@@ -1,0 +1,7 @@
+luchador.nn.tensorflow.wrapper module
+=====================================
+
+.. automodule:: luchador.nn.tensorflow.wrapper
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,0 +1,293 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>luchador.nn.tensorflow.layer module &mdash; Luchador v0.4.0-22-g28f20cc documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Luchador v0.4.0-22-g28f20cc documentation" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Luchador
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                v0.4.0-22-g28f20cc
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <!-- Local TOC -->
+                <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">luchador.nn.tensorflow.layer module</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Luchador</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>luchador.nn.tensorflow.layer module</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/API/luchador.nn.tensorflow.layer.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-luchador.nn.tensorflow.layer">
+<span id="luchador-nn-tensorflow-layer-module"></span><h1>luchador.nn.tensorflow.layer module<a class="headerlink" href="#module-luchador.nn.tensorflow.layer" title="Permalink to this headline">¶</a></h1>
+<p>Implement Layer classes in Tensorflow</p>
+<dl class="class">
+<dt id="luchador.nn.tensorflow.layer.LayerMixin">
+<em class="property">class </em><code class="descclassname">luchador.nn.tensorflow.layer.</code><code class="descname">LayerMixin</code><a class="headerlink" href="#luchador.nn.tensorflow.layer.LayerMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Implement the following common Layer methods in Tensorflow</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">_get_update_operation</span></code></li>
+</ul>
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.nn.tensorflow.layer.Dense">
+<em class="property">class </em><code class="descclassname">luchador.nn.tensorflow.layer.</code><code class="descname">Dense</code><span class="sig-paren">(</span><em>n_nodes</em>, <em>initializers=None</em>, <em>with_bias=True</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.layer.Dense" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luchador.nn.tensorflow.layer.LayerMixin" title="luchador.nn.tensorflow.layer.LayerMixin"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.tensorflow.layer.LayerMixin</span></code></a>, <a class="reference internal" href="luchador.nn.base.layer.html#luchador.nn.base.layer.BaseDense" title="luchador.nn.base.layer.BaseDense"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.base.layer.BaseDense</span></code></a></p>
+<p>Implement Dense layer in Tensorflow.</p>
+<p>See <a class="reference internal" href="luchador.nn.base.layer.html#luchador.nn.base.layer.BaseDense" title="luchador.nn.base.layer.BaseDense"><code class="xref any py py-class docutils literal"><span class="pre">BaseDense</span></code></a> for detail.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.nn.tensorflow.layer.Conv2D">
+<em class="property">class </em><code class="descclassname">luchador.nn.tensorflow.layer.</code><code class="descname">Conv2D</code><span class="sig-paren">(</span><em>filter_height</em>, <em>filter_width</em>, <em>n_filters</em>, <em>strides</em>, <em>padding='VALID'</em>, <em>initializers=None</em>, <em>with_bias=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.layer.Conv2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luchador.nn.tensorflow.layer.LayerMixin" title="luchador.nn.tensorflow.layer.LayerMixin"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.tensorflow.layer.LayerMixin</span></code></a>, <a class="reference internal" href="luchador.nn.base.layer.html#luchador.nn.base.layer.BaseConv2D" title="luchador.nn.base.layer.BaseConv2D"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.base.layer.BaseConv2D</span></code></a></p>
+<p>Implement Conv2D layer in Tensorflow.</p>
+<p>See <a class="reference internal" href="luchador.nn.base.layer.html#luchador.nn.base.layer.BaseConv2D" title="luchador.nn.base.layer.BaseConv2D"><code class="xref any py py-class docutils literal"><span class="pre">BaseConv2D</span></code></a> for detail.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.nn.tensorflow.layer.ReLU">
+<em class="property">class </em><code class="descclassname">luchador.nn.tensorflow.layer.</code><code class="descname">ReLU</code><a class="headerlink" href="#luchador.nn.tensorflow.layer.ReLU" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luchador.nn.tensorflow.layer.LayerMixin" title="luchador.nn.tensorflow.layer.LayerMixin"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.tensorflow.layer.LayerMixin</span></code></a>, <a class="reference internal" href="luchador.nn.base.layer.html#luchador.nn.base.layer.BaseReLU" title="luchador.nn.base.layer.BaseReLU"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.base.layer.BaseReLU</span></code></a></p>
+<p>Implement ReLU in Tensorflow.</p>
+<p>See <a class="reference internal" href="luchador.nn.base.layer.html#luchador.nn.base.layer.BaseReLU" title="luchador.nn.base.layer.BaseReLU"><code class="xref any py py-class docutils literal"><span class="pre">BaseReLU</span></code></a> for detail.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.nn.tensorflow.layer.Sigmoid">
+<em class="property">class </em><code class="descclassname">luchador.nn.tensorflow.layer.</code><code class="descname">Sigmoid</code><a class="headerlink" href="#luchador.nn.tensorflow.layer.Sigmoid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luchador.nn.tensorflow.layer.LayerMixin" title="luchador.nn.tensorflow.layer.LayerMixin"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.tensorflow.layer.LayerMixin</span></code></a>, <a class="reference internal" href="luchador.nn.base.layer.html#luchador.nn.base.layer.BaseSigmoid" title="luchador.nn.base.layer.BaseSigmoid"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.base.layer.BaseSigmoid</span></code></a></p>
+<p>Implement Sigmoid in Tensorflow.</p>
+<p>See <a class="reference internal" href="luchador.nn.base.layer.html#luchador.nn.base.layer.BaseSigmoid" title="luchador.nn.base.layer.BaseSigmoid"><code class="xref any py py-class docutils literal"><span class="pre">BaseSigmoid</span></code></a> for detail.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.nn.tensorflow.layer.Softmax">
+<em class="property">class </em><code class="descclassname">luchador.nn.tensorflow.layer.</code><code class="descname">Softmax</code><a class="headerlink" href="#luchador.nn.tensorflow.layer.Softmax" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luchador.nn.tensorflow.layer.LayerMixin" title="luchador.nn.tensorflow.layer.LayerMixin"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.tensorflow.layer.LayerMixin</span></code></a>, <a class="reference internal" href="luchador.nn.base.layer.html#luchador.nn.base.layer.BaseSoftmax" title="luchador.nn.base.layer.BaseSoftmax"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.base.layer.BaseSoftmax</span></code></a></p>
+<p>Implement Softmax in Tensorflow.</p>
+<p>See <a class="reference internal" href="luchador.nn.base.layer.html#luchador.nn.base.layer.BaseSoftmax" title="luchador.nn.base.layer.BaseSoftmax"><code class="xref any py py-class docutils literal"><span class="pre">BaseSoftmax</span></code></a> for detail.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.nn.tensorflow.layer.Flatten">
+<em class="property">class </em><code class="descclassname">luchador.nn.tensorflow.layer.</code><code class="descname">Flatten</code><a class="headerlink" href="#luchador.nn.tensorflow.layer.Flatten" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luchador.nn.tensorflow.layer.LayerMixin" title="luchador.nn.tensorflow.layer.LayerMixin"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.tensorflow.layer.LayerMixin</span></code></a>, <a class="reference internal" href="luchador.nn.base.layer.html#luchador.nn.base.layer.BaseFlatten" title="luchador.nn.base.layer.BaseFlatten"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.base.layer.BaseFlatten</span></code></a></p>
+<p>Implement Flatten in Tensorflow.</p>
+<p>See <a class="reference internal" href="luchador.nn.base.layer.html#luchador.nn.base.layer.BaseFlatten" title="luchador.nn.base.layer.BaseFlatten"><code class="xref any py py-class docutils literal"><span class="pre">BaseFlatten</span></code></a> for detail.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.nn.tensorflow.layer.Concat">
+<em class="property">class </em><code class="descclassname">luchador.nn.tensorflow.layer.</code><code class="descname">Concat</code><span class="sig-paren">(</span><em>var_list</em>, <em>axis=1</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.layer.Concat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luchador.nn.tensorflow.layer.LayerMixin" title="luchador.nn.tensorflow.layer.LayerMixin"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.tensorflow.layer.LayerMixin</span></code></a>, <a class="reference internal" href="luchador.nn.base.layer.html#luchador.nn.base.layer.BaseConcat" title="luchador.nn.base.layer.BaseConcat"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.base.layer.BaseConcat</span></code></a></p>
+<p>Implement Concat in Tensorflow.</p>
+<p>See <code class="xref any docutils literal"><span class="pre">BaseConcate</span></code> for detail.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.nn.tensorflow.layer.TrueDiv">
+<em class="property">class </em><code class="descclassname">luchador.nn.tensorflow.layer.</code><code class="descname">TrueDiv</code><span class="sig-paren">(</span><em>denom</em>, <em>dtype=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.layer.TrueDiv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luchador.nn.tensorflow.layer.LayerMixin" title="luchador.nn.tensorflow.layer.LayerMixin"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.tensorflow.layer.LayerMixin</span></code></a>, <a class="reference internal" href="luchador.nn.base.layer.html#luchador.nn.base.layer.BaseTrueDiv" title="luchador.nn.base.layer.BaseTrueDiv"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.base.layer.BaseTrueDiv</span></code></a></p>
+<p>Implement TrueDiv in Tensorflow.</p>
+<p>See <a class="reference internal" href="luchador.nn.base.layer.html#luchador.nn.base.layer.BaseTrueDiv" title="luchador.nn.base.layer.BaseTrueDiv"><code class="xref any py py-class docutils literal"><span class="pre">BaseTrueDiv</span></code></a> for detail.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.nn.tensorflow.layer.BatchNormalization">
+<em class="property">class </em><code class="descclassname">luchador.nn.tensorflow.layer.</code><code class="descname">BatchNormalization</code><span class="sig-paren">(</span><em>scale=1.0</em>, <em>offset=0.0</em>, <em>epsilon=0.0001</em>, <em>learn=True</em>, <em>decay=0.999</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.layer.BatchNormalization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luchador.nn.tensorflow.layer.LayerMixin" title="luchador.nn.tensorflow.layer.LayerMixin"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.tensorflow.layer.LayerMixin</span></code></a>, <a class="reference internal" href="luchador.nn.base.layer.html#luchador.nn.base.layer.BaseBatchNormalization" title="luchador.nn.base.layer.BaseBatchNormalization"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.base.layer.BaseBatchNormalization</span></code></a></p>
+<p>Implement BatchNormalization in Tensorflow.</p>
+<p>See <a class="reference internal" href="luchador.nn.base.layer.html#luchador.nn.base.layer.BaseBatchNormalization" title="luchador.nn.base.layer.BaseBatchNormalization"><code class="xref any py py-class docutils literal"><span class="pre">BaseBatchNormalization</span></code></a> for detail.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.nn.tensorflow.layer.NHWC2NCHW">
+<em class="property">class </em><code class="descclassname">luchador.nn.tensorflow.layer.</code><code class="descname">NHWC2NCHW</code><a class="headerlink" href="#luchador.nn.tensorflow.layer.NHWC2NCHW" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luchador.nn.tensorflow.layer.LayerMixin" title="luchador.nn.tensorflow.layer.LayerMixin"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.tensorflow.layer.LayerMixin</span></code></a>, <a class="reference internal" href="luchador.nn.base.layer.html#luchador.nn.base.layer.BaseNHWC2NCHW" title="luchador.nn.base.layer.BaseNHWC2NCHW"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.base.layer.BaseNHWC2NCHW</span></code></a></p>
+<p>See <a class="reference internal" href="luchador.nn.base.layer.html#luchador.nn.base.layer.BaseNHWC2NCHW" title="luchador.nn.base.layer.BaseNHWC2NCHW"><code class="xref any py py-class docutils literal"><span class="pre">BaseNHWC2NCHW</span></code></a> for detail.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.nn.tensorflow.layer.NCHW2NHWC">
+<em class="property">class </em><code class="descclassname">luchador.nn.tensorflow.layer.</code><code class="descname">NCHW2NHWC</code><a class="headerlink" href="#luchador.nn.tensorflow.layer.NCHW2NHWC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luchador.nn.tensorflow.layer.LayerMixin" title="luchador.nn.tensorflow.layer.LayerMixin"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.tensorflow.layer.LayerMixin</span></code></a>, <a class="reference internal" href="luchador.nn.base.layer.html#luchador.nn.base.layer.BaseNCHW2NHWC" title="luchador.nn.base.layer.BaseNCHW2NHWC"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.base.layer.BaseNCHW2NHWC</span></code></a></p>
+<p>See <a class="reference internal" href="luchador.nn.base.layer.html#luchador.nn.base.layer.BaseNCHW2NHWC" title="luchador.nn.base.layer.BaseNCHW2NHWC"><code class="xref any py py-class docutils literal"><span class="pre">BaseNCHW2NHWC</span></code></a> for detail.</p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, moto.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'v0.4.0-22-g28f20cc',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

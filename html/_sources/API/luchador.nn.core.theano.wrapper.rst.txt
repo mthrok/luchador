@@ -1,7 +1,0 @@
-luchador.nn.core.theano.wrapper module
-======================================
-
-.. automodule:: luchador.nn.core.theano.wrapper
-    :members:
-    :undoc-members:
-    :show-inheritance:

@@ -1,0 +1,7 @@
+luchador.nn.tensorflow.initializer module
+=========================================
+
+.. automodule:: luchador.nn.tensorflow.initializer
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,0 +1,7 @@
+luchador.nn.base.wrapper module
+===============================
+
+.. automodule:: luchador.nn.base.wrapper
+    :members:
+    :undoc-members:
+    :show-inheritance:

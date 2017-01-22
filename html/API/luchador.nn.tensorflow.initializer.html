@@ -1,0 +1,251 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>luchador.nn.tensorflow.initializer module &mdash; Luchador v0.4.0-22-g28f20cc documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Luchador v0.4.0-22-g28f20cc documentation" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Luchador
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                v0.4.0-22-g28f20cc
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <!-- Local TOC -->
+                <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">luchador.nn.tensorflow.initializer module</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Luchador</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>luchador.nn.tensorflow.initializer module</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/API/luchador.nn.tensorflow.initializer.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-luchador.nn.tensorflow.initializer">
+<span id="luchador-nn-tensorflow-initializer-module"></span><h1>luchador.nn.tensorflow.initializer module<a class="headerlink" href="#module-luchador.nn.tensorflow.initializer" title="Permalink to this headline">¶</a></h1>
+<p>Implement Initializer module in Tensorflow backend</p>
+<p>See <code class="xref py py-mod docutils literal"><span class="pre">luchador.nn.core.base.initializer</span></code> for the interface.</p>
+<dl class="class">
+<dt id="luchador.nn.tensorflow.initializer.InitializerMixin">
+<em class="property">class </em><code class="descclassname">luchador.nn.tensorflow.initializer.</code><code class="descname">InitializerMixin</code><a class="headerlink" href="#luchador.nn.tensorflow.initializer.InitializerMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Provide TF-specific Initializer methods</p>
+<dl class="method">
+<dt id="luchador.nn.tensorflow.initializer.InitializerMixin.unwrap">
+<code class="descname">unwrap</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.initializer.InitializerMixin.unwrap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the underlying TF native initializer</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.nn.tensorflow.initializer.Constant">
+<em class="property">class </em><code class="descclassname">luchador.nn.tensorflow.initializer.</code><code class="descname">Constant</code><span class="sig-paren">(</span><em>value</em>, <em>dtype=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.initializer.Constant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luchador.nn.tensorflow.initializer.InitializerMixin" title="luchador.nn.tensorflow.initializer.InitializerMixin"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.tensorflow.initializer.InitializerMixin</span></code></a>, <a class="reference internal" href="luchador.nn.base.initializer.html#luchador.nn.base.initializer.BaseConstant" title="luchador.nn.base.initializer.BaseConstant"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.base.initializer.BaseConstant</span></code></a></p>
+<p>Implement Constant in Tensorflow backend.</p>
+<p>See <a class="reference internal" href="luchador.nn.base.initializer.html#luchador.nn.base.initializer.BaseConstant" title="luchador.nn.base.initializer.BaseConstant"><code class="xref any py py-class docutils literal"><span class="pre">BaseConstant</span></code></a> for detail.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.nn.tensorflow.initializer.Uniform">
+<em class="property">class </em><code class="descclassname">luchador.nn.tensorflow.initializer.</code><code class="descname">Uniform</code><span class="sig-paren">(</span><em>minval=0.0</em>, <em>maxval=1.0</em>, <em>seed=None</em>, <em>dtype=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.initializer.Uniform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luchador.nn.tensorflow.initializer.InitializerMixin" title="luchador.nn.tensorflow.initializer.InitializerMixin"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.tensorflow.initializer.InitializerMixin</span></code></a>, <a class="reference internal" href="luchador.nn.base.initializer.html#luchador.nn.base.initializer.BaseUniform" title="luchador.nn.base.initializer.BaseUniform"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.base.initializer.BaseUniform</span></code></a></p>
+<p>Implement Uniform in Tensorflow backend.</p>
+<p>See <a class="reference internal" href="luchador.nn.base.initializer.html#luchador.nn.base.initializer.BaseUniform" title="luchador.nn.base.initializer.BaseUniform"><code class="xref any py py-class docutils literal"><span class="pre">BaseUniform</span></code></a> for detail.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.nn.tensorflow.initializer.Normal">
+<em class="property">class </em><code class="descclassname">luchador.nn.tensorflow.initializer.</code><code class="descname">Normal</code><span class="sig-paren">(</span><em>mean=0.0</em>, <em>stddev=1.0</em>, <em>seed=None</em>, <em>dtype=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.initializer.Normal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luchador.nn.tensorflow.initializer.InitializerMixin" title="luchador.nn.tensorflow.initializer.InitializerMixin"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.tensorflow.initializer.InitializerMixin</span></code></a>, <a class="reference internal" href="luchador.nn.base.initializer.html#luchador.nn.base.initializer.BaseNormal" title="luchador.nn.base.initializer.BaseNormal"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.base.initializer.BaseNormal</span></code></a></p>
+<p>Implement Normal in Tensorflow backend.</p>
+<p>See <a class="reference internal" href="luchador.nn.base.initializer.html#luchador.nn.base.initializer.BaseNormal" title="luchador.nn.base.initializer.BaseNormal"><code class="xref any py py-class docutils literal"><span class="pre">BaseNormal</span></code></a> for detail.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.nn.tensorflow.initializer.Xavier">
+<em class="property">class </em><code class="descclassname">luchador.nn.tensorflow.initializer.</code><code class="descname">Xavier</code><span class="sig-paren">(</span><em>uniform=True</em>, <em>seed=None</em>, <em>dtype=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.initializer.Xavier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luchador.nn.tensorflow.initializer.InitializerMixin" title="luchador.nn.tensorflow.initializer.InitializerMixin"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.tensorflow.initializer.InitializerMixin</span></code></a>, <a class="reference internal" href="luchador.nn.base.initializer.html#luchador.nn.base.initializer.BaseXavier" title="luchador.nn.base.initializer.BaseXavier"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.base.initializer.BaseXavier</span></code></a></p>
+<p>Implement Xavier in Tensorflow backend.</p>
+<p>See <a class="reference internal" href="luchador.nn.base.initializer.html#luchador.nn.base.initializer.BaseXavier" title="luchador.nn.base.initializer.BaseXavier"><code class="xref any py py-class docutils literal"><span class="pre">BaseXavier</span></code></a> for detail.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.nn.tensorflow.initializer.Kaiming">
+<em class="property">class </em><code class="descclassname">luchador.nn.tensorflow.initializer.</code><code class="descname">Kaiming</code><span class="sig-paren">(</span><em>uniform=True</em>, <em>seed=None</em>, <em>dtype=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.initializer.Kaiming" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luchador.nn.tensorflow.initializer.InitializerMixin" title="luchador.nn.tensorflow.initializer.InitializerMixin"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.tensorflow.initializer.InitializerMixin</span></code></a>, <a class="reference internal" href="luchador.nn.base.initializer.html#luchador.nn.base.initializer.BaseKaiming" title="luchador.nn.base.initializer.BaseKaiming"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.base.initializer.BaseKaiming</span></code></a></p>
+<p>Implement Kaiming He initializer in Tensorflow backend.</p>
+<p>See <a class="reference internal" href="luchador.nn.base.initializer.html#luchador.nn.base.initializer.BaseKaiming" title="luchador.nn.base.initializer.BaseKaiming"><code class="xref any py py-class docutils literal"><span class="pre">BaseKaiming</span></code></a> for detail.</p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, moto.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'v0.4.0-22-g28f20cc',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

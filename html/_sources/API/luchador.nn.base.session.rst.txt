@@ -1,0 +1,7 @@
+luchador.nn.base.session module
+===============================
+
+.. automodule:: luchador.nn.base.session
+    :members:
+    :undoc-members:
+    :show-inheritance:

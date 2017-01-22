@@ -1,7 +1,0 @@
-luchador.nn.core.theano.cost module
-===================================
-
-.. automodule:: luchador.nn.core.theano.cost
-    :members:
-    :undoc-members:
-    :show-inheritance:

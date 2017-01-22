@@ -1,5 +1,16 @@
-luchador.nn.model module
-========================
+luchador.nn.model package
+=========================
+
+Submodules
+----------
+
+.. toctree::
+
+   luchador.nn.model.model
+   luchador.nn.model.util
+
+Module contents
+---------------
 
 .. automodule:: luchador.nn.model
     :members:

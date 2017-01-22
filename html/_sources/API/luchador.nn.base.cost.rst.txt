@@ -1,0 +1,7 @@
+luchador.nn.base.cost module
+============================
+
+.. automodule:: luchador.nn.base.cost
+    :members:
+    :undoc-members:
+    :show-inheritance:

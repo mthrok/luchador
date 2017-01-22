@@ -1,0 +1,25 @@
+luchador.nn.theano package
+==========================
+
+Submodules
+----------
+
+.. toctree::
+
+   luchador.nn.theano.cost
+   luchador.nn.theano.initializer
+   luchador.nn.theano.layer
+   luchador.nn.theano.optimizer
+   luchador.nn.theano.q_learning
+   luchador.nn.theano.random
+   luchador.nn.theano.scope
+   luchador.nn.theano.session
+   luchador.nn.theano.wrapper
+
+Module contents
+---------------
+
+.. automodule:: luchador.nn.theano
+    :members:
+    :undoc-members:
+    :show-inheritance:

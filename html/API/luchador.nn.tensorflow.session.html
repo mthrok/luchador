@@ -1,0 +1,257 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>luchador.nn.tensorflow.session module &mdash; Luchador v0.4.0-22-g28f20cc documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Luchador v0.4.0-22-g28f20cc documentation" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Luchador
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                v0.4.0-22-g28f20cc
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <!-- Local TOC -->
+                <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">luchador.nn.tensorflow.session module</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Luchador</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>luchador.nn.tensorflow.session module</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/API/luchador.nn.tensorflow.session.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-luchador.nn.tensorflow.session">
+<span id="luchador-nn-tensorflow-session-module"></span><h1>luchador.nn.tensorflow.session module<a class="headerlink" href="#module-luchador.nn.tensorflow.session" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="luchador.nn.tensorflow.session.Session">
+<em class="property">class </em><code class="descclassname">luchador.nn.tensorflow.session.</code><code class="descname">Session</code><span class="sig-paren">(</span><em>graph=None</em>, <em>config=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.session.Session" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="luchador.nn.base.session.html#luchador.nn.base.session.BaseSession" title="luchador.nn.base.session.BaseSession"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.base.session.BaseSession</span></code></a></p>
+<p>Wrap Tensorflow Session class to work with luchador API</p>
+<dl class="attribute">
+<dt id="luchador.nn.tensorflow.session.Session.graph">
+<code class="descname">graph</code><a class="headerlink" href="#luchador.nn.tensorflow.session.Session.graph" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="luchador.nn.tensorflow.session.Session.run">
+<code class="descname">run</code><span class="sig-paren">(</span><em>outputs=None</em>, <em>inputs=None</em>, <em>updates=None</em>, <em>givens=None</em>, <em>name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.session.Session.run" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Args:</dt>
+<dd><p class="first">outputs (list of Tensors): Tensors of which values are fetched</p>
+<dl class="docutils">
+<dt>inputs (dict): Keys are the input Tensors required to compute values</dt>
+<dd>of output Tensors. Values are actual values to feed
+to Tensors.</dd>
+</dl>
+<p>updates (Operation or list of Operations):</p>
+<p>givens (dict):</p>
+<p class="last">name (str): Not used. Compatibility for theano backend</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.nn.tensorflow.session.Session.close">
+<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.session.Session.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close this session and frees all associated resources</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.nn.tensorflow.session.Session.initialize">
+<code class="descname">initialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.session.Session.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize all variables</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.nn.tensorflow.session.Session.load_dataset">
+<code class="descname">load_dataset</code><span class="sig-paren">(</span><em>dataset</em>, <em>cast=True</em>, <em>strict=True</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.session.Session.load_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the value of Variables with the given values</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>dataset(Dict): The keys are the names of Variables to be set, values</dt>
+<dd>are the NumPy arrays with which value are used.</dd>
+<dt>cast (Bool): Not used in Tensorflow backend as it casts dtype</dt>
+<dd>internally.</dd>
+<dt>strict (Bool): When True, if dataset contains a value for Variable</dt>
+<dd>which is not defined, then ValueError exception is raised.
+Otherwise it will be skipped.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, moto.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'v0.4.0-22-g28f20cc',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

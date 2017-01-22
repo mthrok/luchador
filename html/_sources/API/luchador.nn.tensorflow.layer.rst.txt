@@ -1,0 +1,7 @@
+luchador.nn.tensorflow.layer module
+===================================
+
+.. automodule:: luchador.nn.tensorflow.layer
+    :members:
+    :undoc-members:
+    :show-inheritance:

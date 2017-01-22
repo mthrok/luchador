@@ -1,0 +1,7 @@
+luchador.nn.model.model module
+==============================
+
+.. automodule:: luchador.nn.model.model
+    :members:
+    :undoc-members:
+    :show-inheritance:

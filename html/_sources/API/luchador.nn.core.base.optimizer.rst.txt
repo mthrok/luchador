@@ -1,7 +1,0 @@
-luchador.nn.core.base.optimizer module
-======================================
-
-.. automodule:: luchador.nn.core.base.optimizer
-    :members:
-    :undoc-members:
-    :show-inheritance:

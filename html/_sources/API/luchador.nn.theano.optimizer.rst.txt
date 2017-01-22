@@ -1,0 +1,7 @@
+luchador.nn.theano.optimizer module
+===================================
+
+.. automodule:: luchador.nn.theano.optimizer
+    :members:
+    :undoc-members:
+    :show-inheritance:

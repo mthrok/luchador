@@ -1,0 +1,7 @@
+luchador.nn.base.initializer module
+===================================
+
+.. automodule:: luchador.nn.base.initializer
+    :members:
+    :undoc-members:
+    :show-inheritance:

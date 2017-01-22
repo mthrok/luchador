@@ -1,0 +1,7 @@
+luchador.nn.theano.layer module
+===============================
+
+.. automodule:: luchador.nn.theano.layer
+    :members:
+    :undoc-members:
+    :show-inheritance:

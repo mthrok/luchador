@@ -1,0 +1,525 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>luchador.nn.base.optimizer module &mdash; Luchador v0.4.0-22-g28f20cc documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Luchador v0.4.0-22-g28f20cc documentation" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Luchador
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                v0.4.0-22-g28f20cc
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <!-- Local TOC -->
+                <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">luchador.nn.base.optimizer module</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Luchador</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>luchador.nn.base.optimizer module</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/API/luchador.nn.base.optimizer.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-luchador.nn.base.optimizer">
+<span id="luchador-nn-base-optimizer-module"></span><h1>luchador.nn.base.optimizer module<a class="headerlink" href="#module-luchador.nn.base.optimizer" title="Permalink to this headline">¶</a></h1>
+<p>Define common interface of Optimizer</p>
+<dl class="class">
+<dt id="luchador.nn.base.optimizer.BaseOptimizer">
+<em class="property">class </em><code class="descclassname">luchador.nn.base.optimizer.</code><code class="descname">BaseOptimizer</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.base.optimizer.BaseOptimizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="luchador.util.mixin.html#luchador.util.mixin.SerializeMixin" title="luchador.util.mixin.SerializeMixin"><code class="xref py py-class docutils literal"><span class="pre">luchador.util.mixin.SerializeMixin</span></code></a></p>
+<p>Define common interface of Optimizer</p>
+<dl class="method">
+<dt id="luchador.nn.base.optimizer.BaseOptimizer.minimize">
+<code class="descname">minimize</code><span class="sig-paren">(</span><em>loss</em>, <em>wrt</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.base.optimizer.BaseOptimizer.minimize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create operation to minimization loss w.r.t. given variables</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>loss</strong> : Tensor</p>
+<blockquote>
+<div><p>Tensor holding loss value to be minimized</p>
+</div></blockquote>
+<p><strong>wrt</strong> : [list of] Variable</p>
+<blockquote>
+<div><p>Variables with which loss is minimzied. Variables marked
+as not trainable are ignored.</p>
+</div></blockquote>
+<p><strong>kwargs</strong></p>
+<blockquote>
+<div><p>[Tensorflow only] Other arguments passed to either
+compute_gradients or apply_gradients of Tenasorflow native
+Optimizer.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Operation</p>
+<blockquote class="last">
+<div><p>Minimization operation</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.nn.base.optimizer.BaseOptimizer.compute_gradients">
+<code class="descname">compute_gradients</code><span class="sig-paren">(</span><em>loss</em>, <em>wrt</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.base.optimizer.BaseOptimizer.compute_gradients" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute gradient of loss with respect to wrt.</p>
+<p>This method works in similar way as Tensorflow Optimizers&#8217;
+compute_gradient method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>loss</strong> : Tensor</p>
+<blockquote>
+<div><p>Tensor holding loss value to be minimized</p>
+</div></blockquote>
+<p><strong>wrt</strong> : [list of] Tensors:</p>
+<blockquote>
+<div><p>Variables with which gradients of loss are computed. Variables
+marked as not trainable are ignored.</p>
+</div></blockquote>
+<p><strong>kwargs</strong></p>
+<blockquote>
+<div><p>[Tensorflow only] Other arguments passed to compute_gradients of
+underlying Tenasorflow native Optimizer.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of Tensor pairs</p>
+<blockquote class="last">
+<div><p>Gradient and corresponding variable pairs. Each tensor is
+not wrapped with Luchador&#8217;s Variable but bare TensorVariable
+native to backend.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.nn.base.optimizer.BaseOptimizer.apply_gradients">
+<code class="descname">apply_gradients</code><span class="sig-paren">(</span><em>grads_and_vars</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.base.optimizer.BaseOptimizer.apply_gradients" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply gradients to variables</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>grads_and_vars</strong> : list of Tensor pairs</p>
+<blockquote>
+<div><p>Valued returned from compute_gradient method.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Operation</p>
+<blockquote class="last">
+<div><p>Operation which updates parameter variables</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.nn.base.optimizer.BaseOptimizer.get_parameter_variables">
+<code class="descname">get_parameter_variables</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.base.optimizer.BaseOptimizer.get_parameter_variables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the list of parameter variables used by optimizers</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">OrderedDict</p>
+<blockquote class="last">
+<div><p>Keys are the names of parameter variables and value are Tensors</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="luchador.nn.base.optimizer.get_optimizer">
+<code class="descclassname">luchador.nn.base.optimizer.</code><code class="descname">get_optimizer</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.base.optimizer.get_optimizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve Optimizer class by name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>name</strong> : str</p>
+<blockquote>
+<div><p>Name of Optimizer to retrieve</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">type</p>
+<blockquote>
+<div><p>Optimizer type found</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>ValueError</strong></p>
+<blockquote class="last">
+<div><p>When Optimizer with the given name is not found</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.nn.base.optimizer.BaseSGD">
+<em class="property">class </em><code class="descclassname">luchador.nn.base.optimizer.</code><code class="descname">BaseSGD</code><span class="sig-paren">(</span><em>learning_rate</em>, <em>name='SGD'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.base.optimizer.BaseSGD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luchador.nn.base.optimizer.BaseOptimizer" title="luchador.nn.base.optimizer.BaseOptimizer"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.base.optimizer.BaseOptimizer</span></code></a></p>
+<p>Implement Stochastic Gradient Descent</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>learning_rate</strong> : float</p>
+<blockquote>
+<div><p>The learning rate controlling the size of update steps</p>
+</div></blockquote>
+<p><strong>name</strong> : str</p>
+<blockquote>
+<div><p>Used to create scope which contains parameter variables.
+Virtually has no effect in SGD</p>
+</div></blockquote>
+<p><strong>kwargs</strong></p>
+<blockquote class="last">
+<div><ul class="simple">
+<li>use_lock : [TF only] passed to underlying TF native optimizer</li>
+</ul>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.nn.base.optimizer.BaseRMSProp">
+<em class="property">class </em><code class="descclassname">luchador.nn.base.optimizer.</code><code class="descname">BaseRMSProp</code><span class="sig-paren">(</span><em>learning_rate</em>, <em>decay=0.95</em>, <em>momentum=0.0</em>, <em>epsilon=0.01</em>, <em>name='RMSProp'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.base.optimizer.BaseRMSProp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luchador.nn.base.optimizer.BaseOptimizer" title="luchador.nn.base.optimizer.BaseOptimizer"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.base.optimizer.BaseOptimizer</span></code></a></p>
+<p>Tensorflow style RMSProp with momentum</p>
+<p>Scale learning rates by dividing with the moving average of the root mean
+squared (RMS) gradients. See <a class="reference internal" href="#r11" id="id1">[R11]</a> for further description.</p>
+<p>This implementation mimics TF native RMSProp, which updates parameters as</p>
+<div class="math">
+\[\begin{split}rms_t &amp;= \rho * rms_{t-1} + (1- \rho) * grad ^2 \\
+lr_t &amp;= \frac{lr}{\sqrt{rms_t + \epsilon}} \\
+mom_t &amp;= \gamma * mom_{t-1} + lr * grad  \\
+var_t &amp;= var_{t-1} - mom_t\end{split}\]</div>
+<p>where <span class="math">\(\rho\)</span> is decay ratio and <span class="math">\(\gamma\)</span> is momentum
+coefficient.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>learning_rate</strong> : float</p>
+<blockquote>
+<div><p>The learning rate controlling the size of update steps</p>
+</div></blockquote>
+<p><strong>decay</strong> : float</p>
+<blockquote>
+<div><p>Decay factor at which rate accumurated RMS decays.</p>
+</div></blockquote>
+<p><strong>momentum</strong> : float</p>
+<blockquote>
+<div><p>Momentum coefficient at which rate parameter update is accumurated.</p>
+</div></blockquote>
+<p><strong>epsilon</strong> : float</p>
+<blockquote>
+<div><p>Small value added for numerical stability</p>
+</div></blockquote>
+<p><strong>name</strong> : str</p>
+<blockquote>
+<div><p>Used to create scope which contains parameter variables</p>
+</div></blockquote>
+<p><strong>kwargs</strong></p>
+<blockquote class="last">
+<div><p>use_lock : [Tensorflow only] passed to underlying TF native optimizer</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">References</p>
+<table class="docutils citation" frame="void" id="r11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[R11]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id2">2</a>)</em> Tieleman, T. and Hinton, G. (2012):
+Neural Networks for Machine Learning, Lecture 6.5 - rmsprop.
+Coursera. <a class="reference external" href="http://www.youtube.com/watch?v=O3sxAc4hxZU">http://www.youtube.com/watch?v=O3sxAc4hxZU</a> (formula &#64;5:20)</td></tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.nn.base.optimizer.BaseNeonRMSProp">
+<em class="property">class </em><code class="descclassname">luchador.nn.base.optimizer.</code><code class="descname">BaseNeonRMSProp</code><span class="sig-paren">(</span><em>learning_rate</em>, <em>decay=0.95</em>, <em>epsilon=1e-06</em>, <em>name='NeonRMSProp'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.base.optimizer.BaseNeonRMSProp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luchador.nn.base.optimizer.BaseOptimizer" title="luchador.nn.base.optimizer.BaseOptimizer"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.base.optimizer.BaseOptimizer</span></code></a></p>
+<p>Neon style RMSProp</p>
+<p>The update rule is similar to <a class="reference internal" href="#luchador.nn.base.optimizer.BaseRMSProp" title="luchador.nn.base.optimizer.BaseRMSProp"><code class="xref any py py-class docutils literal"><span class="pre">BaseRMSProp</span></code></a> without moemntum, but
+epsilon appears twice.</p>
+<div class="math">
+\[\begin{split}rms_t &amp;= \rho * rms_{t-1} + (1- \rho) * grad ^2 \\
+lr_t &amp;= \frac{lr}{\sqrt{rms_t + \epsilon} + \epsilon} \\
+var_t &amp;= var_{t-1} - lr * grad  \\\end{split}\]</div>
+<p>where <span class="math">\(\rho\)</span> is decay ratio</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>learning_rate</strong> : float</p>
+<blockquote>
+<div><p>The learning rate controlling the size of update steps</p>
+</div></blockquote>
+<p><strong>decay</strong> : float</p>
+<blockquote>
+<div><p>Decay factor at which rate accumurated RMS decays.</p>
+</div></blockquote>
+<p><strong>epsilon</strong> : float</p>
+<blockquote>
+<div><p>Small value added for numerical stability</p>
+</div></blockquote>
+<p><strong>name</strong> : str</p>
+<blockquote>
+<div><p>Used to create scope which contains parameter variables</p>
+</div></blockquote>
+<p><strong>kwargs</strong></p>
+<blockquote class="last">
+<div><p>use_lock : [Tensorflow only] passed to underlying TF native optimizer</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">References</p>
+<table class="docutils citation" frame="void" id="r12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[R12]</a></td><td>Tieleman, T. and Hinton, G. (2012):
+Neural Networks for Machine Learning, Lecture 6.5 - rmsprop.
+Coursera. <a class="reference external" href="http://www.youtube.com/watch?v=O3sxAc4hxZU">http://www.youtube.com/watch?v=O3sxAc4hxZU</a> (formula &#64;5:20)</td></tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.nn.base.optimizer.BaseGravesRMSProp">
+<em class="property">class </em><code class="descclassname">luchador.nn.base.optimizer.</code><code class="descname">BaseGravesRMSProp</code><span class="sig-paren">(</span><em>learning_rate</em>, <em>decay1=0.95</em>, <em>decay2=0.95</em>, <em>epsilon=0.01</em>, <em>name='GravesRMSProp'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.base.optimizer.BaseGravesRMSProp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luchador.nn.base.optimizer.BaseOptimizer" title="luchador.nn.base.optimizer.BaseOptimizer"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.base.optimizer.BaseOptimizer</span></code></a></p>
+<p>RMSProp used in DQN paper <a class="reference internal" href="#r13" id="id4">[R13]</a> and described in A.Graves paper <a class="reference internal" href="#r14" id="id5">[R14]</a></p>
+<p class="rubric">References</p>
+<table class="docutils citation" frame="void" id="r13" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[R13]</td><td><em>(<a class="fn-backref" href="#id4">1</a>, <a class="fn-backref" href="#id6">2</a>)</em> Mnih, V et. al (2015)
+Human-level control through deep reinforcement learning
+<a class="reference external" href="https://storage.googleapis.com/deepmind-media/dqn/DQNNaturePaper.pdf">https://storage.googleapis.com/deepmind-media/dqn/DQNNaturePaper.pdf</a>
+<a class="reference external" href="https://github.com/kuz/DeepMind-Atari-Deep-Q-Learner/blob/4b9f5a79b03ea0cfc512ed1c11f1b00bc875bc57/dqn/NeuralQLearner.lua#L265">https://github.com/kuz/DeepMind-Atari-Deep-Q-Learner/blob/4b9f5a79b03ea0cfc512ed1c11f1b00bc875bc57/dqn/NeuralQLearner.lua#L265</a></td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="r14" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[R14]</td><td><em>(<a class="fn-backref" href="#id5">1</a>, <a class="fn-backref" href="#id7">2</a>)</em> Graves, A. (2014):
+Generating Sequences With Recurrent Neural Networks
+<a class="reference external" href="http://arxiv.org/pdf/1308.0850v5.pdf">http://arxiv.org/pdf/1308.0850v5.pdf</a></td></tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.nn.base.optimizer.BaseAdam">
+<em class="property">class </em><code class="descclassname">luchador.nn.base.optimizer.</code><code class="descname">BaseAdam</code><span class="sig-paren">(</span><em>learning_rate</em>, <em>beta1=0.9</em>, <em>beta2=0.999</em>, <em>epsilon=1e-08</em>, <em>name='Adam'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.base.optimizer.BaseAdam" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luchador.nn.base.optimizer.BaseOptimizer" title="luchador.nn.base.optimizer.BaseOptimizer"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.base.optimizer.BaseOptimizer</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.nn.base.optimizer.BaseAdamax">
+<em class="property">class </em><code class="descclassname">luchador.nn.base.optimizer.</code><code class="descname">BaseAdamax</code><span class="sig-paren">(</span><em>learning_rate</em>, <em>beta1=0.9</em>, <em>beta2=0.999</em>, <em>epsilon=1e-08</em>, <em>name='Adamax'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.base.optimizer.BaseAdamax" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luchador.nn.base.optimizer.BaseOptimizer" title="luchador.nn.base.optimizer.BaseOptimizer"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.base.optimizer.BaseOptimizer</span></code></a></p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, moto.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'v0.4.0-22-g28f20cc',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

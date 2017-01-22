@@ -1,0 +1,7 @@
+luchador.nn.tensorflow.session module
+=====================================
+
+.. automodule:: luchador.nn.tensorflow.session
+    :members:
+    :undoc-members:
+    :show-inheritance:

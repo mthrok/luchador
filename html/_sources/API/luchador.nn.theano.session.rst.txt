@@ -1,0 +1,7 @@
+luchador.nn.theano.session module
+=================================
+
+.. automodule:: luchador.nn.theano.session
+    :members:
+    :undoc-members:
+    :show-inheritance:

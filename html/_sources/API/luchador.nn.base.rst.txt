@@ -1,0 +1,23 @@
+luchador.nn.base package
+========================
+
+Submodules
+----------
+
+.. toctree::
+
+   luchador.nn.base.cost
+   luchador.nn.base.initializer
+   luchador.nn.base.layer
+   luchador.nn.base.optimizer
+   luchador.nn.base.q_learning
+   luchador.nn.base.session
+   luchador.nn.base.wrapper
+
+Module contents
+---------------
+
+.. automodule:: luchador.nn.base
+    :members:
+    :undoc-members:
+    :show-inheritance:

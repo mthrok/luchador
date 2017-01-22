@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>luchador.nn.model module &mdash; Luchador v0.4.0-21-g92a3e1b documentation</title>
+  <title>luchador.nn.model package &mdash; Luchador v0.4.0-22-g28f20cc documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="Luchador v0.4.0-21-g92a3e1b documentation" href="../index.html"/> 
+    <link rel="top" title="Luchador v0.4.0-22-g28f20cc documentation" href="../index.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.0-21-g92a3e1b
+                v0.4.0-22-g28f20cc
               </div>
             
           
@@ -84,7 +84,11 @@
             
                 <!-- Local TOC -->
                 <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">luchador.nn.model module</a></li>
+<li><a class="reference internal" href="#">luchador.nn.model package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-luchador.nn.model">Module contents</a></li>
+</ul>
+</li>
 </ul>
 </div>
             
@@ -115,7 +119,7 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../index.html">Docs</a> &raquo;</li>
       
-    <li>luchador.nn.model module</li>
+    <li>luchador.nn.model package</li>
       <li class="wy-breadcrumbs-aside">
         
           
@@ -129,222 +133,21 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-luchador.nn.model">
-<span id="luchador-nn-model-module"></span><h1>luchador.nn.model module<a class="headerlink" href="#module-luchador.nn.model" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="luchador.nn.model.BaseModel">
-<em class="property">class </em><code class="descclassname">luchador.nn.model.</code><code class="descname">BaseModel</code><a class="headerlink" href="#luchador.nn.model.BaseModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Base Model class</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="luchador.nn.model.get_model">
-<code class="descclassname">luchador.nn.model.</code><code class="descname">get_model</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.model.get_model" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get Model class by name</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>name</strong> : str</p>
-<blockquote>
-<div><p>Name of Model to get</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">type</p>
-<blockquote>
-<div><p>Class found with the given name</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>ValueError</strong></p>
-<blockquote class="last">
-<div><p>When Model class with the given name is not found</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="class">
-<dt id="luchador.nn.model.Sequential">
-<em class="property">class </em><code class="descclassname">luchador.nn.model.</code><code class="descname">Sequential</code><a class="headerlink" href="#luchador.nn.model.Sequential" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#luchador.nn.model.BaseModel" title="luchador.nn.model.BaseModel"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.model.BaseModel</span></code></a></p>
-<p>Network architecture which produces single output from single input</p>
-<p class="rubric">Examples</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">luchador</span> <span class="k">import</span> <span class="n">nn</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">cnn</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">cnn</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">scope</span><span class="o">=</span><span class="s1">&#39;layer1&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">cnn</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">scope</span><span class="o">=</span><span class="s1">&#39;layer2&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">cnn</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Flatten</span><span class="p">(),</span> <span class="n">scope</span><span class="o">=</span><span class="s1">&#39;layer3&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">cnn</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">256</span><span class="p">),</span> <span class="n">scope</span><span class="o">=</span><span class="s1">&#39;layer4&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">cnn</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">scope</span><span class="o">=</span><span class="s1">&#39;layer5&#39;</span><span class="p">)</span>
-</pre></div>
+  <div class="section" id="luchador-nn-model-package">
+<h1>luchador.nn.model package<a class="headerlink" href="#luchador-nn-model-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="luchador.nn.model.model.html">luchador.nn.model.model module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="luchador.nn.model.util.html">luchador.nn.model.util module</a></li>
+</ul>
 </div>
-<p>The above defines nerwork with two convolution layers followed by
-two affin transformation layers. You can use <code class="docutils literal"><span class="pre">nn.Input</span></code> to define
-input to the network.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">input_tensor</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">84</span><span class="p">,</span> <span class="mi">84</span><span class="p">))</span>
-</pre></div>
 </div>
-<p><cite>input_tensor</cite> has shape with batch size 32, 4 channels and 84x84 image
-size. (This assumes NCHW format.)</p>
-<p>By passing input Variable, Sequential model instantiate internal
-parameters and return output from the model.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">output_tensor</span> <span class="o">=</span> <span class="n">cnn</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">)</span>
-</pre></div>
+<div class="section" id="module-luchador.nn.model">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-luchador.nn.model" title="Permalink to this headline">¶</a></h2>
+<p>Defined Network model architecture and utility tools for build</p>
 </div>
-<p>You can inspect <cite>output_tensor</cite> to check the shape of the tensor.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">output_tensor</span><span class="o">.</span><span class="n">get_shape</span><span class="p">())</span>
-<span class="go">(-1, 10)</span>
-</pre></div>
-</div>
-<p>To retrieve parameter variables of layers (if there is), use
-<code class="docutils literal"><span class="pre">get_parameter_variables</span></code> method.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cnn</span><span class="o">.</span><span class="n">get_parameter_variables</span><span class="p">()</span>
-<span class="go">[{&#39;name&#39;: &#39;layer1/weight&#39;, &#39;shape&#39;: (4, 4, 8, 8)},</span>
-<span class="go"> {&#39;name&#39;: &#39;layer1/bias&#39;,   &#39;shape&#39;: (4,)},</span>
-<span class="go"> {&#39;name&#39;: &#39;layer2/weight&#39;, &#39;shape&#39;: (16, 4, 4, 4)},</span>
-<span class="go"> {&#39;name&#39;: &#39;layer2/bias&#39;,   &#39;shape&#39;: (16,)},</span>
-<span class="go"> {&#39;name&#39;: &#39;layer4/weight&#39;, &#39;shape&#39;: (1296, 256)},</span>
-<span class="go"> {&#39;name&#39;: &#39;layer4/bias&#39;,   &#39;shape&#39;: (256,)},</span>
-<span class="go"> {&#39;name&#39;: &#39;layer5/weight&#39;, &#39;shape&#39;: (256, 10)},</span>
-<span class="go"> {&#39;name&#39;: &#39;layer5/bias&#39;,   &#39;shape&#39;: (10,)}]</span>
-</pre></div>
-</div>
-<p>To retrieve output tensors from each layers, use
-<code class="docutils literal"><span class="pre">get_output_tensors</span></code> method</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cnn</span><span class="o">.</span><span class="n">get_output_tensors</span><span class="p">()</span>
-<span class="go">[{&#39;name&#39;: &#39;layer1/output&#39;, &#39;shape&#39;: (32, 4, 20, 20)},</span>
-<span class="go"> {&#39;name&#39;: &#39;layer2/output&#39;, &#39;shape&#39;: (32, 16, 9, 9)},</span>
-<span class="go"> {&#39;name&#39;: &#39;layer3/output&#39;, &#39;shape&#39;: (32, 1296)},</span>
-<span class="go"> {&#39;name&#39;: &#39;layer4/output&#39;, &#39;shape&#39;: (32, 256)},</span>
-<span class="go"> {&#39;name&#39;: &#39;layer5/output&#39;, &#39;shape&#39;: (32, 10)}]</span>
-</pre></div>
-</div>
-<dl class="method">
-<dt id="luchador.nn.model.Sequential.add_layer">
-<code class="descname">add_layer</code><span class="sig-paren">(</span><em>layer</em>, <em>scope=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.model.Sequential.add_layer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add layer to model</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>layer</strong> : Layer</p>
-<blockquote>
-<div><p>Layer instance to add to model</p>
-</div></blockquote>
-<p><strong>scope</strong> : str</p>
-<blockquote class="last">
-<div><p>Variable scope used when instantiating layer. Layers parmeters are
-instantiated under this scope.</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="luchador.nn.model.Sequential.build">
-<code class="descname">build</code><span class="sig-paren">(</span><em>input_tensor</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.model.Sequential.build" title="Permalink to this definition">¶</a></dt>
-<dd><p>Build the model on top of input tensor.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>input_tensor</strong> : Tensor</p>
-<blockquote>
-<div><p>Input to this model</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Tensor</p>
-<blockquote class="last">
-<div><p>Output from the last layer</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="luchador.nn.model.Sequential.get_parameter_variables">
-<code class="descname">get_parameter_variables</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.model.Sequential.get_parameter_variables" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get Variable objects consisting the parameters of this model</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list</p>
-<blockquote class="last">
-<div><p>List of Variables from layer parameters</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="luchador.nn.model.Sequential.get_output_tensors">
-<code class="descname">get_output_tensors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.model.Sequential.get_output_tensors" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get Tensor objects which represent the output of each layer</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list</p>
-<blockquote class="last">
-<div><p>List of Tensors each of which hold output from layer</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="luchador.nn.model.Sequential.get_update_operations">
-<code class="descname">get_update_operations</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.model.Sequential.get_update_operations" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get update opretaions from each layer</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list</p>
-<blockquote class="last">
-<div><p>List of update operations from each layer</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="luchador.nn.model.Sequential.serialize">
-<code class="descname">serialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.model.Sequential.serialize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Serialize model configuration</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">dict</p>
-<blockquote class="last">
-<div><p>Seiralized model data</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
 </div>
 
 
@@ -379,7 +182,7 @@ instantiated under this scope.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'v0.4.0-21-g92a3e1b',
+            VERSION:'v0.4.0-22-g28f20cc',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

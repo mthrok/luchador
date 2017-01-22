@@ -1,7 +1,0 @@
-luchador.nn.core.theano.initializer module
-==========================================
-
-.. automodule:: luchador.nn.core.theano.initializer
-    :members:
-    :undoc-members:
-    :show-inheritance:

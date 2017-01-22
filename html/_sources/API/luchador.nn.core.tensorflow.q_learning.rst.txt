@@ -1,7 +1,0 @@
-luchador.nn.core.tensorflow.q_learning module
-=============================================
-
-.. automodule:: luchador.nn.core.tensorflow.q_learning
-    :members:
-    :undoc-members:
-    :show-inheritance:

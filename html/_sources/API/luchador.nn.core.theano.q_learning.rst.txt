@@ -1,7 +1,0 @@
-luchador.nn.core.theano.q_learning module
-=========================================
-
-.. automodule:: luchador.nn.core.theano.q_learning
-    :members:
-    :undoc-members:
-    :show-inheritance:

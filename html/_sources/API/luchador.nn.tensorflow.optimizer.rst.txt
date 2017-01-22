@@ -1,0 +1,7 @@
+luchador.nn.tensorflow.optimizer module
+=======================================
+
+.. automodule:: luchador.nn.tensorflow.optimizer
+    :members:
+    :undoc-members:
+    :show-inheritance:
