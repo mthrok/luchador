@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>luchador.agent.recorder module &mdash; Luchador v0.4.0-29-g176de66 documentation</title>
+  <title>luchador.agent.recorder module &mdash; Luchador v0.4.0-30-gebd0b59 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="Luchador v0.4.0-29-g176de66 documentation" href="../index.html"/> 
+    <link rel="top" title="Luchador v0.4.0-30-gebd0b59 documentation" href="../index.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.0-29-g176de66
+                v0.4.0-30-gebd0b59
               </div>
             
           
@@ -131,318 +131,211 @@
             
   <div class="section" id="module-luchador.agent.recorder">
 <span id="luchador-agent-recorder-module"></span><h1>luchador.agent.recorder module<a class="headerlink" href="#module-luchador.agent.recorder" title="Permalink to this headline">¶</a></h1>
-<p>Provide efficient replay recorder</p>
-<p>In this module</p>
-<ul class="simple">
-<li><dl class="first docutils">
-<dt><strong>observation</strong></dt>
-<dd>Referes to an observation of environment.</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt><strong>state</strong></dt>
-<dd>Referes to a set of observations combined together as a processing unit
-passed down to further processing pipeline.</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt><strong>transition</strong></dt>
-<dd>Refers to a set of (original state, action, reward, new state, terminal
-flag).</dd>
-</dl>
-</li>
-</ul>
+<p>Module for implelemting customizable ReplayMemory mechanism</p>
+<dl class="class">
+<dt id="luchador.agent.recorder.Buffer">
+<em class="property">class </em><code class="descclassname">luchador.agent.recorder.</code><code class="descname">Buffer</code><span class="sig-paren">(</span><em>stack</em>, <em>transition</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.Buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Handles recording and sampling of data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>stack</strong> : int</p>
+<blockquote>
+<div><p>The number of datum included in one stack</p>
+</div></blockquote>
+<p><strong>stansition</strong> : int</p>
+<blockquote class="last">
+<div><p>The number of stacked data to fetch</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="luchador.agent.recorder.Buffer.put">
+<code class="descname">put</code><span class="sig-paren">(</span><em>datum</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.Buffer.put" title="Permalink to this definition">¶</a></dt>
+<dd><p>Append data to the end</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.agent.recorder.Buffer.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>index</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.Buffer.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch multiple stacked data from buffer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>index</strong> : int</p>
+<blockquote class="last">
+<div><p>Index for the last datum to include in the first data to be
+fetched.</p>
+<p>This index has stronger restriction than <code class="docutils literal"><span class="pre">_get</span></code> method,
+as this method fetches multiple stacked data.</p>
+<blockquote>
+<div><p>0 &lt;= stack - 1 &lt;= index &lt; len(self.data) - self.transition</p>
+</div></blockquote>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.agent.recorder.Buffer.get_last_stack">
+<code class="descname">get_last_stack</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.Buffer.get_last_stack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch the latest data and stack if necessary</p>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="class">
 <dt id="luchador.agent.recorder.EpisodeRecorder">
-<em class="property">class </em><code class="descclassname">luchador.agent.recorder.</code><code class="descname">EpisodeRecorder</code><span class="sig-paren">(</span><em>initial_observation</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.EpisodeRecorder" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">luchador.agent.recorder.</code><code class="descname">EpisodeRecorder</code><span class="sig-paren">(</span><em>buffer_configs</em>, <em>initial_data</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.EpisodeRecorder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Class for recording a <strong>single</strong> episode.</p>
-<dl class="method">
-<dt id="luchador.agent.recorder.EpisodeRecorder.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>initial_observation</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.EpisodeRecorder.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize history</p>
+<p>Record/Sample multiple data stream for an episode</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>initial_observation</strong> : NumPy Array</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>buffer_configs</strong> : dict</p>
+<blockquote>
+<div><p>key is the name of data to record, value is dict containing
+&#8216;stack&#8217; and &#8216;transition&#8217;, which are passed to Buffer constructor</p>
+</div></blockquote>
+<p><strong>initial_data</strong> : dict</p>
 <blockquote class="last">
-<div><p>Initial observation observed when environment is reset</p>
+<div><p>Initial data to stored in recorders. key is the name of recorder</p>
 </div></blockquote>
 </td>
 </tr>
 </tbody>
 </table>
+<dl class="method">
+<dt id="luchador.agent.recorder.EpisodeRecorder.put">
+<code class="descname">put</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.EpisodeRecorder.put" title="Permalink to this definition">¶</a></dt>
+<dd><p>Put data to underlying buffers</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="luchador.agent.recorder.EpisodeRecorder._create_state">
-<code class="descname">_create_state</code><span class="sig-paren">(</span><em>index</em>, <em>length</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.EpisodeRecorder._create_state" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create state matrix from observations.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>index</strong> : int</p>
-<blockquote>
-<div><p>Index for the last observation to include in the
-resulting state.</p>
-<p>For performance reason, argument validity check is omitted, but
-arguments must satisfy the following condition:</p>
-<blockquote>
-<div><p>0 &lt;= length - 1 &lt;= index &lt; len(self.actions)</p>
-</div></blockquote>
-</div></blockquote>
-<p><strong>length</strong> : int</p>
-<blockquote>
-<div><p>The number of observations included in the state</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">NumPy Array</p>
-<blockquote class="last">
-<div><p>Where the length of the first axis equals to the given length, and
-the other axis corresponds to the shape observation.</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
+<dt id="luchador.agent.recorder.EpisodeRecorder.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>index</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.EpisodeRecorder.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get data from underlying buffers</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="luchador.agent.recorder.EpisodeRecorder._create_transition">
-<code class="descname">_create_transition</code><span class="sig-paren">(</span><em>index</em>, <em>length</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.EpisodeRecorder._create_transition" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a transition from history</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>index</strong> : int</p>
-<blockquote>
-<div><p>Index of action history.</p>
-<p>For performance reason, argument validity check is omitted, but
-arguments must satisfy the following condition:</p>
-<blockquote>
-<div><p>0 &lt; length &lt;= index &lt; len(self.actions)</p>
-</div></blockquote>
-</div></blockquote>
-<p><strong>length</strong> : int</p>
-<blockquote>
-<div><p>The number of observations included in the state</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">dictionary :</p>
-<blockquote class="last">
-<div><dl class="docutils">
-<dt>action <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
-<dd><p class="first last">The action stored at given index.</p>
-</dd>
-<dt>pre_state <span class="classifier-delimiter">:</span> <span class="classifier">NumPy Array with shape (n_observations, height, width)</span></dt>
-<dd><p class="first last">The state which contains the <cite>n_observations</cite> observations
-before the action is taken.</p>
-</dd>
-<dt>reward <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">The reward achieved by the taken action and the post state
-reached.</p>
-</dd>
-<dt>post_state <span class="classifier-delimiter">:</span> <span class="classifier">NumPy Array with shape (n_observations, height, width)</span></dt>
-<dd><p class="first last">The states which includes the state reached by taking the
-action at pre_state, and <cite>n_observations - 1</cite> states before
-the action was taken.</p>
-</dd>
-<dt>terminal <span class="classifier-delimiter">:</span> <span class="classifier">Bool</span></dt>
-<dd><p class="first last">True if the <cite>post_state</cite> is the end of episode, otherwise False</p>
-</dd>
-</dl>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="luchador.agent.recorder.EpisodeRecorder.record">
-<code class="descname">record</code><span class="sig-paren">(</span><em>action</em>, <em>observation</em>, <em>reward</em>, <em>terminal</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.EpisodeRecorder.record" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add the given values to history</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>action</strong> : int</p>
-<blockquote>
-<div><p>action taken</p>
-</div></blockquote>
-<p><strong>observation</strong> : NumPy Array</p>
-<blockquote>
-<div><p>Observation of environment after action is taken</p>
-</div></blockquote>
-<p><strong>reward</strong> : float</p>
-<blockquote>
-<div><p>Reward achieved by taking action and reaching observed state</p>
-</div></blockquote>
-<p><strong>terminal</strong> : bool</p>
-<blockquote class="last">
-<div><p>True if the episode was ended by this action.</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
+<dt id="luchador.agent.recorder.EpisodeRecorder.enough_data">
+<code class="descname">enough_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.EpisodeRecorder.enough_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if there is enough data to create transition</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="luchador.agent.recorder.EpisodeRecorder.sample">
-<code class="descname">sample</code><span class="sig-paren">(</span><em>state_length</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.EpisodeRecorder.sample" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sample one transition from record</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>state_length</strong> : int</p>
-<blockquote>
-<div><p>The number of obervations to combine</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">dictionary :</p>
-<blockquote class="last">
-<div><dl class="docutils">
-<dt>action <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
-<dd><p class="first last">The action stored at given index.</p>
-</dd>
-<dt>pre_state <span class="classifier-delimiter">:</span> <span class="classifier">NumPy Array with shape (n_observations, height, width)</span></dt>
-<dd><p class="first last">The state which contains the <cite>n_observations</cite> observations
-before the action is taken.</p>
-</dd>
-<dt>reward <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
-<dd><p class="first last">The reward achieved by the taken action and the post state
-reached.</p>
-</dd>
-<dt>post_state <span class="classifier-delimiter">:</span> <span class="classifier">NumPy Array with shape (n_observations, height, width)</span></dt>
-<dd><p class="first last">The states which includes the state reached by taking the
-action at pre_state, and <cite>n_observations - 1</cite> states before
-the action was taken.</p>
-</dd>
-<dt>terminal <span class="classifier-delimiter">:</span> <span class="classifier">Bool</span></dt>
-<dd><p class="first last">True if the <cite>post_state</cite> is the end of episode, otherwise False</p>
-</dd>
-</dl>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-<div class="admonition seealso">
-<p class="first admonition-title">See also</p>
-<dl class="last docutils">
-<dt><a class="reference internal" href="#luchador.agent.recorder.EpisodeRecorder._create_transition" title="luchador.agent.recorder.EpisodeRecorder._create_transition"><code class="xref any py py-meth docutils literal"><span class="pre">_create_transition</span></code></a></dt>
-<dd>Method to create transition</dd>
-</dl>
-</div>
+<code class="descname">sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.EpisodeRecorder.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sample transition randomly</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.agent.recorder.EpisodeRecorder.get_last_stack">
+<code class="descname">get_last_stack</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.EpisodeRecorder.get_last_stack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the latest transition</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="luchador.agent.recorder.TransitionRecorder">
-<em class="property">class </em><code class="descclassname">luchador.agent.recorder.</code><code class="descname">TransitionRecorder</code><span class="sig-paren">(</span><em>memory_size=1000000</em>, <em>state_length=4</em>, <em>state_width=84</em>, <em>state_height=84</em>, <em>batch_size=32</em>, <em>data_format=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.TransitionRecorder" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">luchador.agent.recorder.</code><code class="descname">TransitionRecorder</code><span class="sig-paren">(</span><em>memory_size</em>, <em>buffer_config</em>, <em>batch_size=32</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.TransitionRecorder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Class for recording and sampling state transition</p>
-<dl class="method">
-<dt id="luchador.agent.recorder.TransitionRecorder.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>memory_size=1000000</em>, <em>state_length=4</em>, <em>state_width=84</em>, <em>state_height=84</em>, <em>batch_size=32</em>, <em>data_format=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.TransitionRecorder.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize TransitionRecorder class</p>
+<p>Record/Sample records across episodes</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>state_length</strong> : int</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>memory_size</strong> : int</p>
 <blockquote>
-<div><p>The number of observations in state.</p>
+<div><p>The number of records to retain.</p>
 </div></blockquote>
-<p><strong>n_obaservations_to_retaion</strong> : int</p>
+<p><strong>buffer_config</strong> : dict</p>
+<blockquote>
+<div><p>See <a class="reference internal" href="#luchador.agent.recorder.EpisodeRecorder" title="luchador.agent.recorder.EpisodeRecorder"><code class="xref py py-class docutils literal"><span class="pre">EpisodeRecorder</span></code></a></p>
+</div></blockquote>
+<p><strong>batch_size</strong> : int</p>
 <blockquote class="last">
-<div><p>The number of latest observations to keep in memory</p>
+<div><p>Buffer size for sampling</p>
 </div></blockquote>
 </td>
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
 <dl class="method">
 <dt id="luchador.agent.recorder.TransitionRecorder.reset">
-<code class="descname">reset</code><span class="sig-paren">(</span><em>initial_observation</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.TransitionRecorder.reset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize recorder with new EpisodeRecorder</p>
+<code class="descname">reset</code><span class="sig-paren">(</span><em>initial_data</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.TransitionRecorder.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Renew recorder for the current episode</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="luchador.agent.recorder.TransitionRecorder.record">
-<code class="descname">record</code><span class="sig-paren">(</span><em>action</em>, <em>observation</em>, <em>reward</em>, <em>terminal</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.TransitionRecorder.record" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add the given values to history</p>
+<code class="descname">record</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.TransitionRecorder.record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Record data</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>action</strong> : int</p>
-<blockquote>
-<div><p>action taken</p>
-</div></blockquote>
-<p><strong>observation</strong> : NumPy Array</p>
-<blockquote>
-<div><p>Observation of environment after action is taken</p>
-</div></blockquote>
-<p><strong>reward</strong> : float</p>
-<blockquote>
-<div><p>Reward achieved by taking action and reaching observed state</p>
-</div></blockquote>
-<p><strong>terminal</strong> : bool</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>data</strong> : dict</p>
 <blockquote class="last">
-<div><p>True if the episode was ended by this action.</p>
+<div><p>keys are the name of buffers and
+values are the actual data to put in buffer</p>
 </div></blockquote>
 </td>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="luchador.agent.recorder.TransitionRecorder.n_records">
+<code class="descname">n_records</code><a class="headerlink" href="#luchador.agent.recorder.TransitionRecorder.n_records" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number of records in archive. Not include current episode</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="luchador.agent.recorder.TransitionRecorder.truncate">
 <code class="descname">truncate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.TransitionRecorder.truncate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retain only recorders containing the latest records</p>
+<dd><p>Put current recorder in archive and discard old recordes
+which surpasses the defined memory size</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.agent.recorder.TransitionRecorder.sample">
+<code class="descname">sample</code><span class="sig-paren">(</span><em>n_samples</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.TransitionRecorder.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sample transitions from the past episodes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>n_samples</strong> : int</p>
+<blockquote class="last">
+<div><p>Must be smaller than or equal to batch size</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.agent.recorder.TransitionRecorder.get_last_stack">
+<code class="descname">get_last_stack</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.TransitionRecorder.get_last_stack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the latest state</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="luchador.agent.recorder.TransitionRecorder.is_ready">
 <code class="descname">is_ready</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.TransitionRecorder.is_ready" title="Permalink to this definition">¶</a></dt>
 <dd><p>True if the current episode recorder has sufficient records</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="luchador.agent.recorder.TransitionRecorder.get_current_state">
-<code class="descname">get_current_state</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.TransitionRecorder.get_current_state" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the latest state</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">NumPy Array with shape (state length, observation height, width)</p>
-<blockquote class="last">
-<div><p>The most recent state</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="luchador.agent.recorder.TransitionRecorder.sample">
-<code class="descname">sample</code><span class="sig-paren">(</span><em>n_samples</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.recorder.TransitionRecorder.sample" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sample state transitions into given batch</p>
 </dd></dl>
 
 </dd></dl>
@@ -481,7 +374,7 @@ the action was taken.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'v0.4.0-29-g176de66',
+            VERSION:'v0.4.0-30-gebd0b59',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
