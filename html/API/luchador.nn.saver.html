@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>luchador.nn.saver module &mdash; Luchador v0.4.0-35-gc27d436 documentation</title>
+  <title>luchador.nn.saver module &mdash; Luchador v0.4.0-36-gd68dfb2 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="Luchador v0.4.0-35-gc27d436 documentation" href="../index.html"/> 
+    <link rel="top" title="Luchador v0.4.0-36-gd68dfb2 documentation" href="../index.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.0-35-gc27d436
+                v0.4.0-36-gd68dfb2
               </div>
             
           
@@ -131,14 +131,63 @@
             
   <div class="section" id="module-luchador.nn.saver">
 <span id="luchador-nn-saver-module"></span><h1>luchador.nn.saver module<a class="headerlink" href="#module-luchador.nn.saver" title="Permalink to this headline">¶</a></h1>
+<p>Implements parameter saver</p>
 <dl class="class">
 <dt id="luchador.nn.saver.Saver">
 <em class="property">class </em><code class="descclassname">luchador.nn.saver.</code><code class="descname">Saver</code><span class="sig-paren">(</span><em>output_dir</em>, <em>max_to_keep=5</em>, <em>keep_every_n_hours=1.0</em>, <em>prefix='save'</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.saver.Saver" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Save set of NumPy arrays into HDF5 format</p>
+<p>Works in the way similar to tensorflow Saver</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>output_dir</strong> : str</p>
+<blockquote>
+<div><p>Directory to save the resulting data</p>
+</div></blockquote>
+<p><strong>max_to_keep</strong> : int</p>
+<blockquote>
+<div><p>The number of the latest save data to keep</p>
+</div></blockquote>
+<p><strong>keep_every_n_hours</strong> : float</p>
+<blockquote>
+<div><p>Keep file every this hour</p>
+</div></blockquote>
+<p><strong>prefix</strong> : str</p>
+<blockquote class="last">
+<div><p>file name prefix</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="luchador.nn.saver.Saver.save">
 <code class="descname">save</code><span class="sig-paren">(</span><em>data</em>, <em>global_step</em>, <em>now=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.saver.Saver.save" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Save data to HDF5 file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>data</strong> : dict</p>
+<blockquote>
+<div><p>keys are the name of variables
+values are NumPy data</p>
+</div></blockquote>
+<p><strong>global_step</strong> : int</p>
+<blockquote>
+<div><p>global step at the time this data was created</p>
+</div></blockquote>
+<p><strong>now</strong> : int</p>
+<blockquote class="last">
+<div><p>unix time. only used for test</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </dd></dl>
 
@@ -176,7 +225,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'v0.4.0-35-gc27d436',
+            VERSION:'v0.4.0-36-gd68dfb2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

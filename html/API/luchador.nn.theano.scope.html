@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>luchador.nn.theano.scope module &mdash; Luchador v0.4.0-35-gc27d436 documentation</title>
+  <title>luchador.nn.theano.scope module &mdash; Luchador v0.4.0-36-gd68dfb2 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="Luchador v0.4.0-35-gc27d436 documentation" href="../index.html"/> 
+    <link rel="top" title="Luchador v0.4.0-36-gd68dfb2 documentation" href="../index.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.0-35-gc27d436
+                v0.4.0-36-gd68dfb2
               </div>
             
           
@@ -131,6 +131,7 @@
             
   <div class="section" id="module-luchador.nn.theano.scope">
 <span id="luchador-nn-theano-scope-module"></span><h1>luchador.nn.theano.scope module<a class="headerlink" href="#module-luchador.nn.theano.scope" title="Permalink to this headline">¶</a></h1>
+<p>Scoping mechanism similar to Tensorflow</p>
 <dl class="function">
 <dt id="luchador.nn.theano.scope.name_scope">
 <code class="descclassname">luchador.nn.theano.scope.</code><code class="descname">name_scope</code><span class="sig-paren">(</span><em>name</em>, <em>default_name=None</em>, <em>values=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.theano.scope.name_scope" title="Permalink to this definition">¶</a></dt>
@@ -141,17 +142,20 @@
 <dt id="luchador.nn.theano.scope.VariableScope">
 <em class="property">class </em><code class="descclassname">luchador.nn.theano.scope.</code><code class="descname">VariableScope</code><span class="sig-paren">(</span><em>reuse</em>, <em>name=''</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.theano.scope.VariableScope" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Mock Tensorflow&#8217;s VariableScope to provide variable name space</p>
 <dl class="staticmethod">
 <dt id="luchador.nn.theano.scope.VariableScope.reuse_variables">
 <em class="property">static </em><code class="descname">reuse_variables</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.theano.scope.VariableScope.reuse_variables" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Set reuse flag to True</p>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="function">
 <dt id="luchador.nn.theano.scope.variable_scope">
 <code class="descclassname">luchador.nn.theano.scope.</code><code class="descname">variable_scope</code><span class="sig-paren">(</span><em>name_or_scope</em>, <em>reuse=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.theano.scope.variable_scope" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Create new VariableScope object</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="luchador.nn.theano.scope.get_variable_scope">
@@ -162,7 +166,9 @@
 <dl class="function">
 <dt id="luchador.nn.theano.scope.get_variable">
 <code class="descclassname">luchador.nn.theano.scope.</code><code class="descname">get_variable</code><span class="sig-paren">(</span><em>name</em>, <em>shape=None</em>, <em>dtype=None</em>, <em>initializer=None</em>, <em>regularizer=None</em>, <em>trainable=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.theano.scope.get_variable" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Create/Fetch variable in the current scope</p>
+<p>regularizer is not supported and has no effect.</p>
+</dd></dl>
 
 </div>
 
@@ -198,7 +204,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'v0.4.0-35-gc27d436',
+            VERSION:'v0.4.0-36-gd68dfb2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
