@@ -26,6 +26,10 @@ __all__ = ['DQNAgent']
 _LG = logging.getLogger(__name__)
 
 
+def _transpose(state):
+    return state.transpose((0, 2, 3, 1))
+
+
 class DQNAgent(BaseAgent):
     """Implement Vanilla DQNAgent from [1]_:
 
@@ -150,7 +154,8 @@ class DQNAgent(BaseAgent):
     ###########################################################################
     # Methods for `reset`
     def reset(self, initial_observation):
-        self.recorder.reset(initial_observation)
+        self.recorder.reset(
+            initial_data={'state': initial_observation})
 
     ###########################################################################
     # Methods for `act`
@@ -175,7 +180,9 @@ class DQNAgent(BaseAgent):
 
     def _predict_q(self):
         # _LG.debug('Predicting Q value from NN')
-        state = self.recorder.get_current_state()
+        state = self.recorder.get_last_stack()['state'][None, ...]
+        if luchador.get_nn_conv_format() == 'NHWC':
+            state = _transpose(state)
         q_val = self.session.run(
             outputs=self.ql.predicted_q,
             inputs={self.ql.pre_states: state},
@@ -186,9 +193,9 @@ class DQNAgent(BaseAgent):
     ###########################################################################
     # Methods for `learn`
     def learn(self, state0, action, reward, state1, terminal, info=None):
-        self.recorder.record(
-            action=action, reward=reward,
-            observation=state1, terminal=terminal)
+        self.recorder.record({
+            'action': action, 'reward': reward,
+            'state': state1, 'terminal': terminal})
         self.n_total_observations += 1
 
         cfg, n_obs = self.training_config, self.n_total_observations
@@ -224,14 +231,20 @@ class DQNAgent(BaseAgent):
         samples = self.recorder.sample(n_samples)
         updates = self.ql.pre_trans_net.get_update_operations() + [
             self.minimize_op]
+
+        pre_state = samples['state'][0]
+        post_state = samples['state'][1]
+        if luchador.get_nn_conv_format() == 'NHWC':
+            pre_state = _transpose(pre_state)
+            post_state = _transpose(post_state)
         error = self.session.run(
             outputs=self.ql.error,
             inputs={
-                self.ql.pre_states: samples['pre_states'],
-                self.ql.actions: samples['actions'],
-                self.ql.rewards: samples['rewards'],
-                self.ql.post_states: samples['post_states'],
-                self.ql.terminals: samples['terminals'],
+                self.ql.pre_states: pre_state,
+                self.ql.actions: samples['action'],
+                self.ql.rewards: samples['reward'],
+                self.ql.post_states: post_state,
+                self.ql.terminals: samples['terminal'],
             },
             updates=updates,
             name='minibatch_training',
@@ -280,9 +293,13 @@ class DQNAgent(BaseAgent):
     def _summarize_layer_outputs(self, episode):
         sample = self.recorder.sample(32)
         outputs = self.ql.pre_trans_net.get_output_tensors()
+
+        state = sample['state'][0]
+        if luchador.get_nn_conv_format() == 'NHWC':
+            state = _transpose(state)
         output_vals = self.session.run(
             outputs=outputs,
-            inputs={self.ql.pre_states: sample['pre_states']},
+            inputs={self.ql.pre_states: state},
             name='pre_trans_outputs'
         )
         output_data = {
