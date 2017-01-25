@@ -1,0 +1,7 @@
+luchador.agent.misc module
+==========================
+
+.. automodule:: luchador.agent.misc
+    :members:
+    :undoc-members:
+    :show-inheritance:

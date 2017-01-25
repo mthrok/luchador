@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>luchador.agent package &mdash; Luchador v0.4.0-37-g3e2ba99 documentation</title>
+  <title>luchador.agent.misc module &mdash; Luchador v0.4.0-37-g3e2ba99 documentation</title>
   
 
   
@@ -84,11 +84,7 @@
             
                 <!-- Local TOC -->
                 <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">luchador.agent package</a><ul>
-<li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-luchador.agent">Module contents</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#">luchador.agent.misc module</a></li>
 </ul>
 </div>
             
@@ -119,11 +115,11 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../index.html">Docs</a> &raquo;</li>
       
-    <li>luchador.agent package</li>
+    <li>luchador.agent.misc module</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../_sources/API/luchador.agent.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/API/luchador.agent.misc.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -133,27 +129,52 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="luchador-agent-package">
-<h1>luchador.agent package<a class="headerlink" href="#luchador-agent-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="luchador.agent.base.html">luchador.agent.base module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="luchador.agent.cart_pole.html">luchador.agent.cart_pole module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="luchador.agent.dqn.html">luchador.agent.dqn module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="luchador.agent.dqn.html#references">References</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="luchador.agent.misc.html">luchador.agent.misc module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="luchador.agent.recorder.html">luchador.agent.recorder module</a></li>
-</ul>
-</div>
-</div>
-<div class="section" id="module-luchador.agent">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-luchador.agent" title="Permalink to this headline">¶</a></h2>
-<p>Module for definig BaseAgent, getter mechanism and custom agents</p>
-</div>
+  <div class="section" id="module-luchador.agent.misc">
+<span id="luchador-agent-misc-module"></span><h1>luchador.agent.misc module<a class="headerlink" href="#module-luchador.agent.misc" title="Permalink to this headline">¶</a></h1>
+<p>Module to implement funcamental RL concepts</p>
+<dl class="class">
+<dt id="luchador.agent.misc.EGreedy">
+<em class="property">class </em><code class="descclassname">luchador.agent.misc.</code><code class="descname">EGreedy</code><span class="sig-paren">(</span><em>epsilon_init</em>, <em>epsilon_term</em>, <em>duration</em>, <em>method='linear'</em>, <em>seed=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.misc.EGreedy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Linearly anneal exploration probability</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>epsilon_init</strong> : float</p>
+<blockquote>
+<div><p>Initial epsilon</p>
+</div></blockquote>
+<p><strong>epsilon_term</strong> : float</p>
+<blockquote>
+<div><p>Terminal epsilon</p>
+</div></blockquote>
+<p><strong>duration</strong> : int</p>
+<blockquote>
+<div><p>Duration to anneal epsilon</p>
+</div></blockquote>
+<p><strong>method</strong> : str</p>
+<blockquote class="last">
+<div><p>Annealing method. Only &#8216;linear&#8217; is supported</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="luchador.agent.misc.EGreedy.epsilon">
+<code class="descname">epsilon</code><a class="headerlink" href="#luchador.agent.misc.EGreedy.epsilon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Current epsilon value</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.agent.misc.EGreedy.act_random">
+<code class="descname">act_random</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.misc.EGreedy.act_random" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decide weather to take random action</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
