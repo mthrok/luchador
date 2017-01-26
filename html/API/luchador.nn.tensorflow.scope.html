@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>luchador.nn.tensorflow.scope module &mdash; Luchador v0.4.0-42-g51e9c9f documentation</title>
+  <title>luchador.nn.tensorflow.scope module &mdash; Luchador v0.4.0-43-gd9e7fdb documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="Luchador v0.4.0-42-g51e9c9f documentation" href="../index.html"/> 
+    <link rel="top" title="Luchador v0.4.0-43-gd9e7fdb documentation" href="../index.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.4.0-42-g51e9c9f
+                v0.4.0-43-gd9e7fdb
               </div>
             
           
@@ -150,6 +150,13 @@
 <dd><p>Wrap Tensorflow get_variable_scope function</p>
 </dd></dl>
 
+<dl class="class">
+<dt id="luchador.nn.tensorflow.scope.VariableScope">
+<em class="property">class </em><code class="descclassname">luchador.nn.tensorflow.scope.</code><code class="descname">VariableScope</code><span class="sig-paren">(</span><em>reuse</em>, <em>name=''</em>, <em>initializer=None</em>, <em>regularizer=None</em>, <em>caching_device=None</em>, <em>partitioner=None</em>, <em>custom_getter=None</em>, <em>name_scope=''</em>, <em>dtype=tf.float32</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.scope.VariableScope" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tensorflow.python.ops.variable_scope.VariableScope</span></code></p>
+<p>Wrap Tensorflow VariableScope class.</p>
+</dd></dl>
+
 <dl class="function">
 <dt id="luchador.nn.tensorflow.scope.get_variable">
 <code class="descclassname">luchador.nn.tensorflow.scope.</code><code class="descname">get_variable</code><span class="sig-paren">(</span><em>name</em>, <em>shape=None</em>, <em>dtype=None</em>, <em>initializer=None</em>, <em>regularizer=None</em>, <em>trainable=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.scope.get_variable" title="Permalink to this definition">¶</a></dt>
@@ -190,123 +197,6 @@ See
 </table>
 </dd></dl>
 
-<dl class="class">
-<dt id="luchador.nn.tensorflow.scope.VariableScope">
-<em class="property">class </em><code class="descclassname">luchador.nn.tensorflow.scope.</code><code class="descname">VariableScope</code><span class="sig-paren">(</span><em>reuse</em>, <em>name=''</em>, <em>initializer=None</em>, <em>regularizer=None</em>, <em>caching_device=None</em>, <em>partitioner=None</em>, <em>custom_getter=None</em>, <em>name_scope=''</em>, <em>dtype=tf.float32</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.scope.VariableScope" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Variable scope object to carry defaults to provide to get_variable.</p>
-<p>Many of the arguments we need for get_variable in a variable store are most
-easily handled with a context. This object is used for the defaults.</p>
-<dl class="docutils">
-<dt>Attributes:</dt>
-<dd><p class="first">name: name of the current scope, used as prefix in get_variable.
-initializer: default initializer passed to get_variable.
-regularizer: default regularizer passed to get_variable.
-reuse: Boolean or None, setting the reuse in get_variable.
-caching_device: string, callable, or None: the caching device passed to</p>
-<blockquote>
-<div>get_variable.</div></blockquote>
-<p class="last">partitioner: callable or <cite>None</cite>: the partitioner passed to <cite>get_variable</cite>.
-custom_getter: default custom getter passed to get_variable.
-name_scope: The name passed to <cite>tf.name_scope</cite>.
-dtype: default type passed to get_variable (defaults to DT_FLOAT).</p>
-</dd>
-</dl>
-<dl class="attribute">
-<dt id="luchador.nn.tensorflow.scope.VariableScope.caching_device">
-<code class="descname">caching_device</code><a class="headerlink" href="#luchador.nn.tensorflow.scope.VariableScope.caching_device" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="luchador.nn.tensorflow.scope.VariableScope.custom_getter">
-<code class="descname">custom_getter</code><a class="headerlink" href="#luchador.nn.tensorflow.scope.VariableScope.custom_getter" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="luchador.nn.tensorflow.scope.VariableScope.dtype">
-<code class="descname">dtype</code><a class="headerlink" href="#luchador.nn.tensorflow.scope.VariableScope.dtype" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="luchador.nn.tensorflow.scope.VariableScope.get_variable">
-<code class="descname">get_variable</code><span class="sig-paren">(</span><em>var_store</em>, <em>name</em>, <em>shape=None</em>, <em>dtype=None</em>, <em>initializer=None</em>, <em>regularizer=None</em>, <em>trainable=True</em>, <em>collections=None</em>, <em>caching_device=None</em>, <em>partitioner=None</em>, <em>validate_shape=True</em>, <em>custom_getter=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.scope.VariableScope.get_variable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets an existing variable with this name or create a new one.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="luchador.nn.tensorflow.scope.VariableScope.initializer">
-<code class="descname">initializer</code><a class="headerlink" href="#luchador.nn.tensorflow.scope.VariableScope.initializer" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="luchador.nn.tensorflow.scope.VariableScope.name">
-<code class="descname">name</code><a class="headerlink" href="#luchador.nn.tensorflow.scope.VariableScope.name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="luchador.nn.tensorflow.scope.VariableScope.original_name_scope">
-<code class="descname">original_name_scope</code><a class="headerlink" href="#luchador.nn.tensorflow.scope.VariableScope.original_name_scope" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="luchador.nn.tensorflow.scope.VariableScope.partitioner">
-<code class="descname">partitioner</code><a class="headerlink" href="#luchador.nn.tensorflow.scope.VariableScope.partitioner" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="luchador.nn.tensorflow.scope.VariableScope.regularizer">
-<code class="descname">regularizer</code><a class="headerlink" href="#luchador.nn.tensorflow.scope.VariableScope.regularizer" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="luchador.nn.tensorflow.scope.VariableScope.reuse">
-<code class="descname">reuse</code><a class="headerlink" href="#luchador.nn.tensorflow.scope.VariableScope.reuse" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="luchador.nn.tensorflow.scope.VariableScope.reuse_variables">
-<code class="descname">reuse_variables</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.scope.VariableScope.reuse_variables" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reuse variables in this scope.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="luchador.nn.tensorflow.scope.VariableScope.set_caching_device">
-<code class="descname">set_caching_device</code><span class="sig-paren">(</span><em>caching_device</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.scope.VariableScope.set_caching_device" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set caching_device for this scope.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="luchador.nn.tensorflow.scope.VariableScope.set_custom_getter">
-<code class="descname">set_custom_getter</code><span class="sig-paren">(</span><em>custom_getter</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.scope.VariableScope.set_custom_getter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set custom getter for this scope.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="luchador.nn.tensorflow.scope.VariableScope.set_dtype">
-<code class="descname">set_dtype</code><span class="sig-paren">(</span><em>dtype</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.scope.VariableScope.set_dtype" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set data type for this scope.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="luchador.nn.tensorflow.scope.VariableScope.set_initializer">
-<code class="descname">set_initializer</code><span class="sig-paren">(</span><em>initializer</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.scope.VariableScope.set_initializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set initializer for this scope.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="luchador.nn.tensorflow.scope.VariableScope.set_partitioner">
-<code class="descname">set_partitioner</code><span class="sig-paren">(</span><em>partitioner</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.scope.VariableScope.set_partitioner" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set partitioner for this scope.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="luchador.nn.tensorflow.scope.VariableScope.set_regularizer">
-<code class="descname">set_regularizer</code><span class="sig-paren">(</span><em>regularizer</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.scope.VariableScope.set_regularizer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set regularizer for this scope.</p>
-</dd></dl>
-
-</dd></dl>
-
 </div>
 
 
@@ -341,7 +231,7 @@ dtype: default type passed to get_variable (defaults to DT_FLOAT).</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'v0.4.0-42-g51e9c9f',
+            VERSION:'v0.4.0-43-gd9e7fdb',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
