@@ -1,0 +1,7 @@
+luchador.util.logging module
+============================
+
+.. automodule:: luchador.util.logging
+    :members:
+    :undoc-members:
+    :show-inheritance:

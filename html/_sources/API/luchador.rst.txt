@@ -19,7 +19,6 @@ Submodules
 
    luchador.configure
    luchador.episode_runner
-   luchador.logging
    luchador.version
 
 Module contents
