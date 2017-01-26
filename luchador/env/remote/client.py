@@ -4,7 +4,7 @@ from __future__ import absolute_import
 import json
 import requests
 
-from . import base as base_env
+import luchador.env.base as base_env
 
 
 def _extract_outcome(response):
@@ -41,6 +41,7 @@ class RemoteEnv(base_env.BaseEnvironment):
         res = requests.post('{}/info'.format(self._url))
         return json.loads(res.json()['environment'])
 
+    @property
     def n_actions(self):
         """Get #valid actions by calling ``/n_actions`` route
 
@@ -96,3 +97,6 @@ class RemoteEnv(base_env.BaseEnvironment):
         """
         res = requests.post('{}/kill'.format(self._url))
         return res.json()['result'] == 'success'
+
+    def __str__(self):
+        return 'RemoteEnv: Host: {}, Port: {}'.format(self.host, self.port)
