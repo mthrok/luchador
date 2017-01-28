@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>luchador.nn.tensorflow.misc module &mdash; Luchador v0.5.0-1-g42d0bc0 documentation</title>
+  <title>luchador.nn.tensorflow.misc module &mdash; Luchador v0.5.0-2-g7e384ba documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="Luchador v0.5.0-1-g42d0bc0 documentation" href="../index.html"/> 
+    <link rel="top" title="Luchador v0.5.0-2-g7e384ba documentation" href="../index.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.5.0-1-g42d0bc0
+                v0.5.0-2-g7e384ba
               </div>
             
           
@@ -134,8 +134,33 @@
 <p>Module for providing backend-common interface for misc task</p>
 <dl class="function">
 <dt id="luchador.nn.tensorflow.misc.build_sync_op">
-<code class="descclassname">luchador.nn.tensorflow.misc.</code><code class="descname">build_sync_op</code><span class="sig-paren">(</span><em>source_vars</em>, <em>target_vars</em>, <em>name='sync'</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.misc.build_sync_op" title="Permalink to this definition">¶</a></dt>
-<dd><p>Build operation to copy values</p>
+<code class="descclassname">luchador.nn.tensorflow.misc.</code><code class="descname">build_sync_op</code><span class="sig-paren">(</span><em>source_vars</em>, <em>target_vars</em>, <em>tau=None</em>, <em>name='sync'</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.misc.build_sync_op" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build operation to copy values from source variables to target variables</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>source_vars</strong> : list</p>
+<blockquote>
+<div><p>list of source variables from which values are copied</p>
+</div></blockquote>
+<p><strong>target_vars: list</strong></p>
+<blockquote>
+<div><p>list of target variables from which values are copied</p>
+</div></blockquote>
+<p><strong>tau</strong> : float or None</p>
+<blockquote class="last">
+<div><p>Soft assignment parameter. Take weighted sum between target variables
+and source variables;</p>
+<div class="math">
+\[target = \tau source + ( 1 - \tau)  target\]</div>
+<p>tau must satisfy 0 &lt;= tau &lt;= 1</p>
+<p>tau == 1 is practically same with tau == None</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -172,7 +197,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'v0.5.0-1-g42d0bc0',
+            VERSION:'v0.5.0-2-g7e384ba',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
