@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>luchador.agent.misc module &mdash; Luchador v0.5.0-2-g7e384ba documentation</title>
+  <title>luchador.agent.misc module &mdash; Luchador v0.5.0-3-g3f1d29b documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="Luchador v0.5.0-2-g7e384ba documentation" href="../index.html"/> 
+    <link rel="top" title="Luchador v0.5.0-3-g3f1d29b documentation" href="../index.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                v0.5.0-2-g7e384ba
+                v0.5.0-3-g3f1d29b
               </div>
             
           
@@ -175,6 +175,93 @@
 
 </dd></dl>
 
+<dl class="class">
+<dt id="luchador.agent.misc.WienerNoise">
+<em class="property">class </em><code class="descclassname">luchador.agent.misc.</code><code class="descname">WienerNoise</code><span class="sig-paren">(</span><em>shape</em>, <em>delta</em>, <em>dt</em>, <em>seed=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.misc.WienerNoise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Generate noise with Wiener process, i.e. gaussian noise</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>shape</strong> : tuple</p>
+<blockquote>
+<div><p>Shape of the noise to generate</p>
+</div></blockquote>
+<p><strong>delta, dt</strong> : float</p>
+<blockquote>
+<div><p>Parameters to controll the process.
+<code class="docutils literal"><span class="pre">dt</span></code> represents the time difference between calls to <a class="reference internal" href="#luchador.agent.misc.WienerNoise.sample" title="luchador.agent.misc.WienerNoise.sample"><code class="xref py py-func docutils literal"><span class="pre">sample()</span></code></a>
+<code class="docutils literal"><span class="pre">delta</span></code> represents standard deviation</p>
+<div class="math">
+\[x \sim \mathcal{N} (\mu=0, \sigma=delta^2 * dt)\]</div>
+</div></blockquote>
+<p><strong>seed</strong></p>
+<blockquote class="last">
+<div><p>Seed for random generator</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="luchador.agent.misc.WienerNoise.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.misc.WienerNoise.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset internal state. Do nothing for WienerNoise</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.agent.misc.WienerNoise.sample">
+<code class="descname">sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.misc.WienerNoise.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sample noise</p>
+<p>See <a class="reference internal" href="#luchador.agent.misc.WienerNoise" title="luchador.agent.misc.WienerNoise"><code class="xref py py-func docutils literal"><span class="pre">WienerNoise()</span></code></a> constructor for the value sampled.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.agent.misc.OUNoise">
+<em class="property">class </em><code class="descclassname">luchador.agent.misc.</code><code class="descname">OUNoise</code><span class="sig-paren">(</span><em>shape</em>, <em>mu</em>, <em>sigma</em>, <em>theta</em>, <em>seed=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.misc.OUNoise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luchador.agent.misc.WienerNoise" title="luchador.agent.misc.WienerNoise"><code class="xref py py-class docutils literal"><span class="pre">luchador.agent.misc.WienerNoise</span></code></a></p>
+<p>Generate temporally correlated noise with Ornstein-Uhlenbeck process</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>shape</strong> : tuple</p>
+<blockquote>
+<div><p>Shape of the noise to generate</p>
+</div></blockquote>
+<p><strong>mu, sigma, theta</strong> : float</p>
+<blockquote>
+<div><p>Parameters to controll the process.</p>
+<div class="math">
+\[ \begin{align}\begin{aligned}x &amp;\leftarrow \mu\\dx &amp;\sim \theta * (\mu - x) +
+\sigma * \mathcal{N} (\mu=0, \sigma=1)\\x &amp;\leftarrow x + dx\end{aligned}\end{align} \]</div>
+</div></blockquote>
+<p><strong>seed</strong></p>
+<blockquote class="last">
+<div><p>Seed for random generator</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="luchador.agent.misc.OUNoise.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.misc.OUNoise.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the internal state to <span class="math">\(mu\)</span></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.agent.misc.OUNoise.sample">
+<code class="descname">sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.misc.OUNoise.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sample noise</p>
+<p>See <a class="reference internal" href="#luchador.agent.misc.OUNoise" title="luchador.agent.misc.OUNoise"><code class="xref py py-func docutils literal"><span class="pre">OUNoise()</span></code></a> constructor for the value sampled.</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
@@ -209,7 +296,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'v0.5.0-2-g7e384ba',
+            VERSION:'v0.5.0-3-g3f1d29b',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
