@@ -1,0 +1,7 @@
+luchador.command.parser module
+==============================
+
+.. automodule:: luchador.command.parser
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -8,6 +8,7 @@ Submodules
 
    luchador.command.exercise
    luchador.command.main
+   luchador.command.parser
    luchador.command.serve
 
 Module contents
