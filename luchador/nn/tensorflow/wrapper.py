@@ -197,6 +197,31 @@ class TensorMixin(object):  # pylint: disable=too-few-public-methods
         _tensor = tf.reshape(self._tensor, shape=new_shape)
         return Tensor(tensor=_tensor, name=name)
 
+    def tile(self, pattern, name=None):
+        """Tile tensor.
+
+        Parameters
+        ----------
+        pattern : tuple
+            tile pattern
+
+        Note
+        ----
+        Currently only constant pattern is allowed.
+        """
+        if not luchador.util.is_iteratable(pattern):
+            raise ValueError('`pattern` must be iteratable')
+        pattern = tuple(pattern)
+
+        if len(pattern) > self.n_dim:
+            prepend = (1, ) * (len(pattern) - self.n_dim)
+            tensor = self.reshape(prepend + self.shape).unwrap()
+        else:
+            prepend = (1, ) * (self.n_dim - len(pattern))
+            pattern = prepend + pattern
+            tensor = self.unwrap()
+        return Tensor(tf.tile(tensor, pattern, name), name=name)
+
 
 class Variable(TensorMixin, base_wrapper.BaseTensor):
     """Wrap tf.Variable object for storing network parameters"""

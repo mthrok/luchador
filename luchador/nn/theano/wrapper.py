@@ -32,7 +32,7 @@ def _is_same_shape(shape1, shape2):
         return False
 
     for dim1, dim2 in zip(shape1, shape2):
-        if dim1 in [None, -1] or dim2 in [None, -1]:
+        if dim1 is None or dim2 is None:
             continue
         if not dim1 == dim2:
             return False
@@ -49,6 +49,20 @@ def _compute_reduced_shape(axis, shape, keep_dims):
     return [
         dim for i, dim in enumerate(shape)
         if i not in axis]
+
+
+def _compute_tile_shape(shape, pattern):
+    if len(shape) > len(pattern):
+        return _compute_tile_shape(pattern, shape)
+
+    _shape = list(pattern)
+    offset = len(pattern) - len(shape)
+    for i, val in enumerate(shape):
+        if _shape[offset + i] is None:
+            continue
+        if val is not None:
+            _shape[offset + i] *= val
+    return _shape
 
 
 class TensorMixin(object):  # pylint: disable=too-few-public-methods
@@ -216,6 +230,33 @@ class TensorMixin(object):  # pylint: disable=too-few-public-methods
         _tensor = T.reshape(self._tensor, newshape=new_shape)
         return Tensor(tensor=_tensor, shape=new_shape, name=name)
 
+    def tile(self, pattern, name=None):
+        """Tile tensor.
+
+        Parameters
+        ----------
+        pattern : tuple
+            tile pattern
+
+        name : str
+             Name of operation
+
+        Returns
+        -------
+        Tensor
+            Resulting tensor.
+
+        Note
+        ----
+        Currently only constant pattern is allowed.
+        """
+        if not luchador.util.is_iteratable(pattern):
+            raise ValueError('`pattern` must be iteratable')
+
+        _shape = _compute_tile_shape(pattern, self.shape)
+        _tensor = T.tile(self._tensor, pattern)
+        return Tensor(tensor=_tensor, shape=_shape, name=name)
+
 
 class Variable(TensorMixin, base_wrapper.BaseTensor):
     """Wrap SharedVariable object for storing network parameters"""
@@ -246,6 +287,8 @@ class Tensor(TensorMixin, base_wrapper.BaseTensor):
           shape (list): Shape of the tensor being wrapped.
           name (str or None): Name of the resulting wrapper for convenience.
         """
+        if -1 in shape:
+            shape = [None if val < 0 else val for val in shape]
         super(Tensor, self).__init__(
             tensor=tensor, shape=shape, name=name, dtype=tensor.dtype)
 
