@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>luchador.agent.dqn module &mdash; Luchador 0.5.0 documentation</title>
+  <title>luchador.agent.dqn module &mdash; Luchador 0.6.0 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="Luchador 0.5.0 documentation" href="../index.html"/> 
+    <link rel="top" title="Luchador 0.6.0 documentation" href="../index.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.5.0
+                0.6.0
               </div>
             
           
@@ -147,9 +147,58 @@ Human-level control through deep reinforcement learning
 </table>
 <dl class="class">
 <dt id="luchador.agent.dqn.DQNAgent">
-<em class="property">class </em><code class="descclassname">luchador.agent.dqn.</code><code class="descname">DQNAgent</code><span class="sig-paren">(</span><em>recorder_config</em>, <em>q_network_config</em>, <em>save_config</em>, <em>summary_config</em>, <em>action_config</em>, <em>training_config</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.dqn.DQNAgent" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">luchador.agent.dqn.</code><code class="descname">DQNAgent</code><span class="sig-paren">(</span><em>recorder_config</em>, <em>q_network_config</em>, <em>action_config</em>, <em>training_config</em>, <em>saver_config</em>, <em>save_config</em>, <em>summary_writer_config</em>, <em>summary_config</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.dqn.DQNAgent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="luchador.util.mixin.html#luchador.util.mixin.StoreMixin" title="luchador.util.mixin.StoreMixin"><code class="xref py py-class docutils literal"><span class="pre">luchador.util.mixin.StoreMixin</span></code></a>, <a class="reference internal" href="luchador.agent.base.html#luchador.agent.base.BaseAgent" title="luchador.agent.base.BaseAgent"><code class="xref py py-class docutils literal"><span class="pre">luchador.agent.base.BaseAgent</span></code></a></p>
 <p>Implement Vanilla DQNAgent from <a class="reference internal" href="#r2" id="id2">[R2]</a>:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>recorder_config</strong> : dict</p>
+<blockquote>
+<div><p>Constructor arguments for
+<a class="reference internal" href="luchador.agent.recorder.html#luchador.agent.recorder.TransitionRecorder" title="luchador.agent.recorder.TransitionRecorder"><code class="xref py py-class docutils literal"><span class="pre">luchador.agent.recorder.TransitionRecorder</span></code></a></p>
+</div></blockquote>
+<p><strong>q_network_config</strong> : dict</p>
+<blockquote>
+<div><p>Constructor arguments for
+<a class="reference internal" href="luchador.agent.rl.q_learning.html#luchador.agent.rl.q_learning.DeepQLearning" title="luchador.agent.rl.q_learning.DeepQLearning"><code class="xref py py-class docutils literal"><span class="pre">luchador.agent.rl.q_learning.DeepQLearning</span></code></a></p>
+</div></blockquote>
+<p><strong>saver_config</strong> : dict</p>
+<blockquote>
+<div><p>Constructor arguments for <a class="reference internal" href="luchador.nn.saver.html#luchador.nn.saver.Saver" title="luchador.nn.saver.Saver"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.saver.Saver</span></code></a></p>
+</div></blockquote>
+<p><strong>summary_writer_config</strong> : dict</p>
+<blockquote>
+<div><p>Constructor arguments for <a class="reference internal" href="luchador.nn.summary.html#luchador.nn.summary.SummaryWriter" title="luchador.nn.summary.SummaryWriter"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.summary.SummaryWriter</span></code></a></p>
+</div></blockquote>
+<p><strong>action_config</strong> : dict</p>
+<blockquote>
+<div><p>Constructor arguments for <a class="reference internal" href="luchador.agent.misc.html#luchador.agent.misc.EGreedy" title="luchador.agent.misc.EGreedy"><code class="xref py py-class docutils literal"><span class="pre">luchador.agent.misc.EGreedy</span></code></a></p>
+</div></blockquote>
+<p><strong>training_config</strong> : dict</p>
+<blockquote class="last">
+<div><p>Configuration for training</p>
+<dl class="docutils">
+<dt>train_start <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">Training starts after this number of transitions are recorded
+Giving negative value effectively disable training and network sync</p>
+</dd>
+<dt>train_frequency <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">Train network every this number of observations are made</p>
+</dd>
+<dt>sync_frequency <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">Sync networks every this number of observations are made</p>
+</dd>
+<dt>n_samples <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">Batch size</p>
+</dd>
+</dl>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 <p class="rubric">References</p>
 <table class="docutils citation" frame="void" id="r2" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
@@ -221,7 +270,7 @@ Human-level control through deep reinforcement learning
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.5.0',
+            VERSION:'0.6.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

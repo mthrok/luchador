@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>luchador.agent.rl.q_learning module &mdash; Luchador 0.5.0 documentation</title>
+  <title>luchador.agent.rl.q_learning module &mdash; Luchador 0.6.0 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="Luchador 0.5.0 documentation" href="../index.html"/> 
+    <link rel="top" title="Luchador 0.6.0 documentation" href="../index.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.5.0
+                0.6.0
               </div>
             
           
@@ -134,7 +134,7 @@
 <p>Module for building neural Q learning network</p>
 <dl class="class">
 <dt id="luchador.agent.rl.q_learning.DeepQLearning">
-<em class="property">class </em><code class="descclassname">luchador.agent.rl.q_learning.</code><code class="descname">DeepQLearning</code><span class="sig-paren">(</span><em>model_config</em>, <em>q_learning_config</em>, <em>cost_config</em>, <em>optimizer_config</em>, <em>saver_config</em>, <em>summary_writer_config</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.rl.q_learning.DeepQLearning" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">luchador.agent.rl.q_learning.</code><code class="descname">DeepQLearning</code><span class="sig-paren">(</span><em>model_config</em>, <em>q_learning_config</em>, <em>cost_config</em>, <em>optimizer_config</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.rl.q_learning.DeepQLearning" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="luchador.util.mixin.html#luchador.util.mixin.StoreMixin" title="luchador.util.mixin.StoreMixin"><code class="xref py py-class docutils literal"><span class="pre">luchador.util.mixin.StoreMixin</span></code></a>, <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Build Q-learning network and optimization operations</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -190,7 +190,7 @@ for the list of available costs.</p>
 </dl>
 </div></blockquote>
 <p><strong>optimizer_config</strong> : dict</p>
-<blockquote>
+<blockquote class="last">
 <div><p>Configuration for optimizer</p>
 <dl class="docutils">
 <dt>name: str</dt>
@@ -201,14 +201,6 @@ for the list of available classes.</p>
 <dd><p class="first last">Configuration for the optimizer class</p>
 </dd>
 </dl>
-</div></blockquote>
-<p><strong>saver_config</strong> : dict</p>
-<blockquote>
-<div><p>Constructor arguments for <a class="reference internal" href="luchador.nn.saver.html#luchador.nn.saver.Saver" title="luchador.nn.saver.Saver"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.saver.Saver</span></code></a></p>
-</div></blockquote>
-<p><strong>summary_writer_config</strong> : dict</p>
-<blockquote class="last">
-<div><p>Constructor arguments for <a class="reference internal" href="luchador.nn.saver.html#luchador.nn.saver.Saver" title="luchador.nn.saver.Saver"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.saver.Saver</span></code></a></p>
 </div></blockquote>
 </td>
 </tr>
@@ -304,21 +296,21 @@ terminal states.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="luchador.agent.rl.q_learning.DeepQLearning.save">
-<code class="descname">save</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.rl.q_learning.DeepQLearning.save" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save network parameter to file</p>
+<dt id="luchador.agent.rl.q_learning.DeepQLearning.fetch_all_parameters">
+<code class="descname">fetch_all_parameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.rl.q_learning.DeepQLearning.fetch_all_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch network parameters and optimizer parameters for saving</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="luchador.agent.rl.q_learning.DeepQLearning.summarize_layer_params">
-<code class="descname">summarize_layer_params</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.rl.q_learning.DeepQLearning.summarize_layer_params" title="Permalink to this definition">¶</a></dt>
-<dd><p>Summarize paramters of each layer</p>
+<dt id="luchador.agent.rl.q_learning.DeepQLearning.fetch_layer_params">
+<code class="descname">fetch_layer_params</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.rl.q_learning.DeepQLearning.fetch_layer_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch paramters of each layer</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="luchador.agent.rl.q_learning.DeepQLearning.summarize_layer_outputs">
-<code class="descname">summarize_layer_outputs</code><span class="sig-paren">(</span><em>state</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.rl.q_learning.DeepQLearning.summarize_layer_outputs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Summarize outputs from each layer</p>
+<dt id="luchador.agent.rl.q_learning.DeepQLearning.fetch_layer_outputs">
+<code class="descname">fetch_layer_outputs</code><span class="sig-paren">(</span><em>state</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.rl.q_learning.DeepQLearning.fetch_layer_outputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch outputs from each layer</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -331,12 +323,6 @@ terminal states.</p>
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
-<dl class="method">
-<dt id="luchador.agent.rl.q_learning.DeepQLearning.summarize_stats">
-<code class="descname">summarize_stats</code><span class="sig-paren">(</span><em>episode</em>, <em>errors</em>, <em>rewards</em>, <em>steps</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.rl.q_learning.DeepQLearning.summarize_stats" title="Permalink to this definition">¶</a></dt>
-<dd><p>Summarize training history</p>
 </dd></dl>
 
 </dd></dl>
@@ -375,7 +361,7 @@ terminal states.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.5.0',
+            VERSION:'0.6.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
