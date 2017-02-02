@@ -11,7 +11,6 @@ Submodules
    luchador.nn.tensorflow.layer
    luchador.nn.tensorflow.misc
    luchador.nn.tensorflow.optimizer
-   luchador.nn.tensorflow.q_learning
    luchador.nn.tensorflow.scope
    luchador.nn.tensorflow.session
    luchador.nn.tensorflow.wrapper

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>luchador.nn.tensorflow.q_learning module &mdash; Luchador 0.5.0 documentation</title>
+  <title>luchador.agent.rl package &mdash; Luchador 0.5.0 documentation</title>
   
 
   
@@ -84,7 +84,11 @@
             
                 <!-- Local TOC -->
                 <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">luchador.nn.tensorflow.q_learning module</a></li>
+<li><a class="reference internal" href="#">luchador.agent.rl package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-luchador.agent.rl">Module contents</a></li>
+</ul>
+</li>
 </ul>
 </div>
             
@@ -115,11 +119,11 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../index.html">Docs</a> &raquo;</li>
       
-    <li>luchador.nn.tensorflow.q_learning module</li>
+    <li>luchador.agent.rl package</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../_sources/API/luchador.nn.tensorflow.q_learning.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/API/luchador.agent.rl.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -129,31 +133,20 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-luchador.nn.tensorflow.q_learning">
-<span id="luchador-nn-tensorflow-q-learning-module"></span><h1>luchador.nn.tensorflow.q_learning module<a class="headerlink" href="#module-luchador.nn.tensorflow.q_learning" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="luchador.nn.tensorflow.q_learning.DeepQLearning">
-<em class="property">class </em><code class="descclassname">luchador.nn.tensorflow.q_learning.</code><code class="descname">DeepQLearning</code><span class="sig-paren">(</span><em>discount_rate</em>, <em>scale_reward=None</em>, <em>min_reward=None</em>, <em>max_reward=None</em>, <em>min_delta=None</em>, <em>max_delta=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.q_learning.DeepQLearning" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="luchador.nn.base.q_learning.html#luchador.nn.base.q_learning.BaseDeepQLearning" title="luchador.nn.base.q_learning.BaseDeepQLearning"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.base.q_learning.BaseDeepQLearning</span></code></a></p>
-<p>Implement DeepQLearning in Tensorflow.</p>
-<p>See <a class="reference internal" href="luchador.nn.base.q_learning.html#luchador.nn.base.q_learning.BaseDeepQLearning" title="luchador.nn.base.q_learning.BaseDeepQLearning"><code class="xref any py py-class docutils literal"><span class="pre">BaseDeepQLearning</span></code></a> for detail.</p>
-<dl class="method">
-<dt id="luchador.nn.tensorflow.q_learning.DeepQLearning.build">
-<code class="descname">build</code><span class="sig-paren">(</span><em>model_maker</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.q_learning.DeepQLearning.build" title="Permalink to this definition">¶</a></dt>
-<dd><p>Build computation graph (error and sync ops) for Q learning</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd><dl class="first last docutils">
-<dt>q_network(TFModel): TFModel which represetns Q network.</dt>
-<dd>Model must be pre-built since this function needs shape
-information.</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+  <div class="section" id="luchador-agent-rl-package">
+<h1>luchador.agent.rl package<a class="headerlink" href="#luchador-agent-rl-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="luchador.agent.rl.q_learning.html">luchador.agent.rl.q_learning module</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="module-luchador.agent.rl">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-luchador.agent.rl" title="Permalink to this headline">¶</a></h2>
+<p>Import Q Learning algorithms</p>
+</div>
 </div>
 
 

@@ -1,6 +1,13 @@
 luchador.agent package
 ======================
 
+Subpackages
+-----------
+
+.. toctree::
+
+    luchador.agent.rl
+
 Submodules
 ----------
 

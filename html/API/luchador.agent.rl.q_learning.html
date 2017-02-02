@@ -1,0 +1,406 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>luchador.agent.rl.q_learning module &mdash; Luchador 0.5.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Luchador 0.5.0 documentation" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Luchador
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.5.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <!-- Local TOC -->
+                <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">luchador.agent.rl.q_learning module</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">Luchador</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>luchador.agent.rl.q_learning module</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/API/luchador.agent.rl.q_learning.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-luchador.agent.rl.q_learning">
+<span id="luchador-agent-rl-q-learning-module"></span><h1>luchador.agent.rl.q_learning module<a class="headerlink" href="#module-luchador.agent.rl.q_learning" title="Permalink to this headline">¶</a></h1>
+<p>Module for building neural Q learning network</p>
+<dl class="class">
+<dt id="luchador.agent.rl.q_learning.DeepQLearning">
+<em class="property">class </em><code class="descclassname">luchador.agent.rl.q_learning.</code><code class="descname">DeepQLearning</code><span class="sig-paren">(</span><em>model_config</em>, <em>q_learning_config</em>, <em>cost_config</em>, <em>optimizer_config</em>, <em>saver_config</em>, <em>summary_writer_config</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.rl.q_learning.DeepQLearning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="luchador.util.mixin.html#luchador.util.mixin.StoreMixin" title="luchador.util.mixin.StoreMixin"><code class="xref py py-class docutils literal"><span class="pre">luchador.util.mixin.StoreMixin</span></code></a>, <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Build Q-learning network and optimization operations</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>model_config</strong> : dict</p>
+<blockquote>
+<div><p>Configuration for model definition.</p>
+<dl class="docutils">
+<dt>name <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">The name of network model or path to model definition file.</p>
+</dd>
+<dt>initial_parameter <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">Path to HDF5 file which contain the initial parameter values.</p>
+</dd>
+<dt>input_channel, input_height, input_width <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">The shape of input to the network</p>
+</dd>
+</dl>
+</div></blockquote>
+<p><strong>q_learning_config</strong> : dict</p>
+<blockquote>
+<div><p>Configuration for building target Q value.</p>
+<dl class="docutils">
+<dt>discout_rate <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd><p class="first last">Discount rate for computing future reward. Valid value range is
+(0.0, 1.0)</p>
+</dd>
+<dt>scale_reward <span class="classifier-delimiter">:</span> <span class="classifier">number or None</span></dt>
+<dd><p class="first last">When given, reward is divided by this number before applying
+min/max threashold</p>
+</dd>
+<dt>min_reward <span class="classifier-delimiter">:</span> <span class="classifier">number or None</span></dt>
+<dd><p class="first last">When given, clip reward after scaling.</p>
+</dd>
+<dt>max_reward <span class="classifier-delimiter">:</span> <span class="classifier">number or None</span></dt>
+<dd><p class="first last">See <cite>min_reward</cite>.</p>
+</dd>
+</dl>
+</div></blockquote>
+<p><strong>cost_config</strong> : dict</p>
+<blockquote>
+<div><p>Configuration for defining error between predicted Q and target Q</p>
+<dl class="docutils">
+<dt>name: str</dt>
+<dd><p class="first last">The name of cost class. See <a class="reference internal" href="luchador.nn.base.cost.html#module-luchador.nn.base.cost" title="luchador.nn.base.cost"><code class="xref py py-mod docutils literal"><span class="pre">luchador.nn.base.cost</span></code></a>
+for the list of available costs.</p>
+</dd>
+<dt>args <span class="classifier-delimiter">:</span> <span class="classifier">dict</span></dt>
+<dd><p class="first last">Configuration for the cost class</p>
+</dd>
+</dl>
+</div></blockquote>
+<p><strong>optimizer_config</strong> : dict</p>
+<blockquote>
+<div><p>Configuration for optimizer</p>
+<dl class="docutils">
+<dt>name: str</dt>
+<dd><p class="first last">The name of cost class. See <a class="reference internal" href="luchador.nn.base.optimizer.html#module-luchador.nn.base.optimizer" title="luchador.nn.base.optimizer"><code class="xref py py-mod docutils literal"><span class="pre">luchador.nn.base.optimizer</span></code></a>
+for the list of available classes.</p>
+</dd>
+<dt>args <span class="classifier-delimiter">:</span> <span class="classifier">dict</span></dt>
+<dd><p class="first last">Configuration for the optimizer class</p>
+</dd>
+</dl>
+</div></blockquote>
+<p><strong>saver_config</strong> : dict</p>
+<blockquote>
+<div><p>Constructor arguments for <a class="reference internal" href="luchador.nn.saver.html#luchador.nn.saver.Saver" title="luchador.nn.saver.Saver"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.saver.Saver</span></code></a></p>
+</div></blockquote>
+<p><strong>summary_writer_config</strong> : dict</p>
+<blockquote class="last">
+<div><p>Constructor arguments for <a class="reference internal" href="luchador.nn.saver.html#luchador.nn.saver.Saver" title="luchador.nn.saver.Saver"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.saver.Saver</span></code></a></p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="luchador.agent.rl.q_learning.DeepQLearning.build">
+<code class="descname">build</code><span class="sig-paren">(</span><em>n_actions</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.rl.q_learning.DeepQLearning.build" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build computation graph (error and sync ops) for Q learning</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>n_actions: int</strong></p>
+<blockquote class="last">
+<div><p>The number of available actions in the environment.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.agent.rl.q_learning.DeepQLearning.predict_action_value">
+<code class="descname">predict_action_value</code><span class="sig-paren">(</span><em>state</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.rl.q_learning.DeepQLearning.predict_action_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict action values</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>state</strong> : NumPy ND Array</p>
+<blockquote>
+<div><p>Environment state</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">NumPy ND Array</p>
+<blockquote class="last">
+<div><p>Action values</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.agent.rl.q_learning.DeepQLearning.sync_network">
+<code class="descname">sync_network</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.rl.q_learning.DeepQLearning.sync_network" title="Permalink to this definition">¶</a></dt>
+<dd><p>Synchronize parameters of model_1 with those of model_0</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.agent.rl.q_learning.DeepQLearning.train">
+<code class="descname">train</code><span class="sig-paren">(</span><em>state_0</em>, <em>action_0</em>, <em>reward</em>, <em>state_1</em>, <em>terminal</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.rl.q_learning.DeepQLearning.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train model network</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>state_0</strong> : NumPy ND Array</p>
+<blockquote>
+<div><p>Environment states before taking actions</p>
+</div></blockquote>
+<p><strong>action_0</strong> : NumPy ND Array</p>
+<blockquote>
+<div><p>Actions taken in state_0</p>
+</div></blockquote>
+<p><strong>reward</strong> : NumPy ND Array</p>
+<blockquote>
+<div><p>Rewards obtained by taking the action_0.</p>
+</div></blockquote>
+<p><strong>state_1</strong> : NumPy ND Array</p>
+<blockquote>
+<div><p>Environment states after action_0 are taken</p>
+</div></blockquote>
+<p><strong>terminal</strong> : NumPy ND Array</p>
+<blockquote>
+<div><p>Flags for marking corresponding states in state_1 are
+terminal states.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">NumPy ND Array</p>
+<blockquote class="last">
+<div><p>Mean error between Q prediction and target Q</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.agent.rl.q_learning.DeepQLearning.save">
+<code class="descname">save</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.rl.q_learning.DeepQLearning.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save network parameter to file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.agent.rl.q_learning.DeepQLearning.summarize_layer_params">
+<code class="descname">summarize_layer_params</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.rl.q_learning.DeepQLearning.summarize_layer_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Summarize paramters of each layer</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.agent.rl.q_learning.DeepQLearning.summarize_layer_outputs">
+<code class="descname">summarize_layer_outputs</code><span class="sig-paren">(</span><em>state</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.rl.q_learning.DeepQLearning.summarize_layer_outputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Summarize outputs from each layer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>state</strong> : NumPy ND Array</p>
+<blockquote class="last">
+<div><p>Input to model_0 (pre-transition model)</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="luchador.agent.rl.q_learning.DeepQLearning.summarize_stats">
+<code class="descname">summarize_stats</code><span class="sig-paren">(</span><em>episode</em>, <em>errors</em>, <em>rewards</em>, <em>steps</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.rl.q_learning.DeepQLearning.summarize_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Summarize training history</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, moto.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0.5.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

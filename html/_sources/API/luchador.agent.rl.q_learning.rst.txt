@@ -1,0 +1,7 @@
+luchador.agent.rl.q_learning module
+===================================
+
+.. automodule:: luchador.agent.rl.q_learning
+    :members:
+    :undoc-members:
+    :show-inheritance:
