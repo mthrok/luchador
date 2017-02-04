@@ -133,35 +133,67 @@
 <span id="luchador-nn-base-wrapper-module"></span><h1>luchador.nn.base.wrapper module<a class="headerlink" href="#module-luchador.nn.base.wrapper" title="Permalink to this headline">¶</a></h1>
 <p>Module to define common interface for Tensor/Operation wrapping</p>
 <dl class="class">
-<dt id="luchador.nn.base.wrapper.BaseTensor">
-<em class="property">class </em><code class="descclassname">luchador.nn.base.wrapper.</code><code class="descname">BaseTensor</code><span class="sig-paren">(</span><em>tensor</em>, <em>shape</em>, <em>name</em>, <em>dtype</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.base.wrapper.BaseTensor" title="Permalink to this definition">¶</a></dt>
+<dt id="luchador.nn.base.wrapper.BaseWrapper">
+<em class="property">class </em><code class="descclassname">luchador.nn.base.wrapper.</code><code class="descname">BaseWrapper</code><span class="sig-paren">(</span><em>tensor</em>, <em>shape</em>, <em>name</em>, <em>dtype</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.base.wrapper.BaseWrapper" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Wraps Tensor or Variable object in Theano/Tensorflow</p>
 <p>This class was introduced to provide easy shape inference to Theano Tensors
 while having the common interface for both Theano and Tensorflow.
 <cite>unwrap</cite> method provides access to the underlying object.</p>
 <dl class="method">
-<dt id="luchador.nn.base.wrapper.BaseTensor.unwrap">
-<code class="descname">unwrap</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.base.wrapper.BaseTensor.unwrap" title="Permalink to this definition">¶</a></dt>
+<dt id="luchador.nn.base.wrapper.BaseWrapper.unwrap">
+<code class="descname">unwrap</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.base.wrapper.BaseWrapper.unwrap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the underlying tensor object</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="luchador.nn.base.wrapper.BaseTensor.set">
-<code class="descname">set</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.base.wrapper.BaseTensor.set" title="Permalink to this definition">¶</a></dt>
+<dt id="luchador.nn.base.wrapper.BaseWrapper.set">
+<code class="descname">set</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.base.wrapper.BaseWrapper.set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the underlying tensor object</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="luchador.nn.base.wrapper.BaseTensor.size">
-<code class="descname">size</code><a class="headerlink" href="#luchador.nn.base.wrapper.BaseTensor.size" title="Permalink to this definition">¶</a></dt>
+<dt id="luchador.nn.base.wrapper.BaseWrapper.size">
+<code class="descname">size</code><a class="headerlink" href="#luchador.nn.base.wrapper.BaseWrapper.size" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of elements in tensor</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="luchador.nn.base.wrapper.BaseTensor.n_dim">
-<code class="descname">n_dim</code><a class="headerlink" href="#luchador.nn.base.wrapper.BaseTensor.n_dim" title="Permalink to this definition">¶</a></dt>
+<dt id="luchador.nn.base.wrapper.BaseWrapper.n_dim">
+<code class="descname">n_dim</code><a class="headerlink" href="#luchador.nn.base.wrapper.BaseWrapper.n_dim" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of array dimension in tensor</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.nn.base.wrapper.BaseVariable">
+<em class="property">class </em><code class="descclassname">luchador.nn.base.wrapper.</code><code class="descname">BaseVariable</code><span class="sig-paren">(</span><em>tensor</em>, <em>shape</em>, <em>name</em>, <em>dtype</em>, <em>trainable</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.base.wrapper.BaseVariable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luchador.nn.base.wrapper.BaseWrapper" title="luchador.nn.base.wrapper.BaseWrapper"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.base.wrapper.BaseWrapper</span></code></a></p>
+<p>Base wrapper class for Variable</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.nn.base.wrapper.BaseTensor">
+<em class="property">class </em><code class="descclassname">luchador.nn.base.wrapper.</code><code class="descname">BaseTensor</code><span class="sig-paren">(</span><em>tensor</em>, <em>shape</em>, <em>name</em>, <em>dtype</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.base.wrapper.BaseTensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luchador.nn.base.wrapper.BaseWrapper" title="luchador.nn.base.wrapper.BaseWrapper"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.base.wrapper.BaseWrapper</span></code></a></p>
+<p>Base wrapper class for Tensor</p>
+<dl class="method">
+<dt id="luchador.nn.base.wrapper.BaseTensor.register">
+<code class="descname">register</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.base.wrapper.BaseTensor.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register this Tensor to global list of Tensors for later re-use</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>name</strong> : str</p>
+<blockquote class="last">
+<div><p>Name to store this Tensor object.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
