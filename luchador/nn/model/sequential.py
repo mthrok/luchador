@@ -36,6 +36,11 @@ class LayerConfig(object):  # pylint: disable=too-few-public-methods
             'output': self.output,
         })
 
+    def serialize(self):
+        ret = self.layer.serialize()
+        ret['scope'] = self.scope
+        return ret
+
 
 class Sequential(BaseModel):
     """Network architecture which produces single output from single input
@@ -243,10 +248,7 @@ class Sequential(BaseModel):
         """
         return {
             'model_type': self.__class__.__name__,
-            'layer_configs': [{
-                'scope': cfg.scope,
-                'layer': cfg.layer.serialize(),
-            } for cfg in self.layer_configs]
+            'layer_configs': [cfg.serialize() for cfg in self.layer_configs]
         }
 
     ###########################################################################
@@ -271,12 +273,12 @@ def make_sequential_model(layer_configs):
         Resulting model
     """
     model = Sequential()
-    for layer_config in layer_configs:
-        layer_cfg = layer_config['layer']
-        if 'name' not in layer_cfg:
+    for config in layer_configs:
+        if 'typename' not in config:
             raise RuntimeError('Layer name is not given')
-        args = layer_cfg.get('args', {})
-        _LG.debug('    Constructing: %s: %s', layer_cfg['name'], args)
-        layer = get_layer(layer_cfg['name'])(**args)
-        model.add_layer(layer=layer, scope=layer_config.get('scope', ''))
+        args = config.get('args', {})
+
+        _LG.debug('    Constructing: %s: %s', config['typename'], args)
+        layer = get_layer(config['typename'])(**args)
+        model.add_layer(layer=layer, scope=config.get('scope', ''))
     return model
