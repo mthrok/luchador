@@ -134,29 +134,14 @@
 <p>Module for building neural Q learning network</p>
 <dl class="class">
 <dt id="luchador.agent.rl.q_learning.DeepQLearning">
-<em class="property">class </em><code class="descclassname">luchador.agent.rl.q_learning.</code><code class="descname">DeepQLearning</code><span class="sig-paren">(</span><em>model_config</em>, <em>q_learning_config</em>, <em>cost_config</em>, <em>optimizer_config</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.rl.q_learning.DeepQLearning" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">luchador.agent.rl.q_learning.</code><code class="descname">DeepQLearning</code><span class="sig-paren">(</span><em>q_learning_config</em>, <em>cost_config</em>, <em>optimizer_config</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.rl.q_learning.DeepQLearning" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="luchador.util.mixin.html#luchador.util.mixin.StoreMixin" title="luchador.util.mixin.StoreMixin"><code class="xref py py-class docutils literal"><span class="pre">luchador.util.mixin.StoreMixin</span></code></a>, <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Build Q-learning network and optimization operations</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>model_config</strong> : dict</p>
-<blockquote>
-<div><p>Configuration for model definition.</p>
-<dl class="docutils">
-<dt>name <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd><p class="first last">The name of network model or path to model definition file.</p>
-</dd>
-<dt>initial_parameter <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
-<dd><p class="first last">Path to HDF5 file which contain the initial parameter values.</p>
-</dd>
-<dt>input_channel, input_height, input_width <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
-<dd><p class="first last">The shape of input to the network</p>
-</dd>
-</dl>
-</div></blockquote>
-<p><strong>q_learning_config</strong> : dict</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>q_learning_config</strong> : dict</p>
 <blockquote>
 <div><p>Configuration for building target Q value.</p>
 <dl class="docutils">
@@ -208,7 +193,7 @@ for the list of available classes.</p>
 </table>
 <dl class="method">
 <dt id="luchador.agent.rl.q_learning.DeepQLearning.build">
-<code class="descname">build</code><span class="sig-paren">(</span><em>n_actions</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.rl.q_learning.DeepQLearning.build" title="Permalink to this definition">¶</a></dt>
+<code class="descname">build</code><span class="sig-paren">(</span><em>model_def</em>, <em>initial_parameter</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.rl.q_learning.DeepQLearning.build" title="Permalink to this definition">¶</a></dt>
 <dd><p>Build computation graph (error and sync ops) for Q learning</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

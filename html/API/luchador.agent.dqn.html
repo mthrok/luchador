@@ -147,7 +147,7 @@ Human-level control through deep reinforcement learning
 </table>
 <dl class="class">
 <dt id="luchador.agent.dqn.DQNAgent">
-<em class="property">class </em><code class="descclassname">luchador.agent.dqn.</code><code class="descname">DQNAgent</code><span class="sig-paren">(</span><em>recorder_config</em>, <em>q_network_config</em>, <em>action_config</em>, <em>training_config</em>, <em>saver_config</em>, <em>save_config</em>, <em>summary_writer_config</em>, <em>summary_config</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.dqn.DQNAgent" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">luchador.agent.dqn.</code><code class="descname">DQNAgent</code><span class="sig-paren">(</span><em>recorder_config</em>, <em>model_config</em>, <em>q_network_config</em>, <em>action_config</em>, <em>training_config</em>, <em>saver_config</em>, <em>save_config</em>, <em>summary_writer_config</em>, <em>summary_config</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.dqn.DQNAgent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="luchador.util.mixin.html#luchador.util.mixin.StoreMixin" title="luchador.util.mixin.StoreMixin"><code class="xref py py-class docutils literal"><span class="pre">luchador.util.mixin.StoreMixin</span></code></a>, <a class="reference internal" href="luchador.agent.base.html#luchador.agent.base.BaseAgent" title="luchador.agent.base.BaseAgent"><code class="xref py py-class docutils literal"><span class="pre">luchador.agent.base.BaseAgent</span></code></a></p>
 <p>Implement Vanilla DQNAgent from <a class="reference internal" href="#r2" id="id2">[R2]</a>:</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -158,6 +158,21 @@ Human-level control through deep reinforcement learning
 <blockquote>
 <div><p>Constructor arguments for
 <a class="reference internal" href="luchador.agent.recorder.html#luchador.agent.recorder.TransitionRecorder" title="luchador.agent.recorder.TransitionRecorder"><code class="xref py py-class docutils literal"><span class="pre">luchador.agent.recorder.TransitionRecorder</span></code></a></p>
+</div></blockquote>
+<p><strong>model_config</strong> : dict</p>
+<blockquote>
+<div><p>Configuration for model definition.</p>
+<dl class="docutils">
+<dt>name <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">The name of network model or path to model definition file.</p>
+</dd>
+<dt>initial_parameter <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">Path to HDF5 file which contain the initial parameter values.</p>
+</dd>
+<dt>input_channel, input_height, input_width <span class="classifier-delimiter">:</span> <span class="classifier">int</span></dt>
+<dd><p class="first last">The shape of input to the network</p>
+</dd>
+</dl>
 </div></blockquote>
 <p><strong>q_network_config</strong> : dict</p>
 <blockquote>

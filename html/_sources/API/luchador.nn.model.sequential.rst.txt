@@ -1,0 +1,7 @@
+luchador.nn.model.sequential module
+===================================
+
+.. automodule:: luchador.nn.model.sequential
+    :members:
+    :undoc-members:
+    :show-inheritance:

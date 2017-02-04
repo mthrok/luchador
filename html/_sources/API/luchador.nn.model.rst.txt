@@ -6,7 +6,8 @@ Submodules
 
 .. toctree::
 
-   luchador.nn.model.model
+   luchador.nn.model.base_model
+   luchador.nn.model.sequential
    luchador.nn.model.util
 
 Module contents

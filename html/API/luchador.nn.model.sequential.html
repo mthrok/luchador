@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>luchador.nn.model.model module &mdash; Luchador 0.6.0 documentation</title>
+  <title>luchador.nn.model.sequential module &mdash; Luchador 0.6.0 documentation</title>
   
 
   
@@ -84,7 +84,7 @@
             
                 <!-- Local TOC -->
                 <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">luchador.nn.model.model module</a></li>
+<li><a class="reference internal" href="#">luchador.nn.model.sequential module</a></li>
 </ul>
 </div>
             
@@ -115,11 +115,11 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../index.html">Docs</a> &raquo;</li>
       
-    <li>luchador.nn.model.model module</li>
+    <li>luchador.nn.model.sequential module</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../_sources/API/luchador.nn.model.model.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/API/luchador.nn.model.sequential.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -129,50 +129,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-luchador.nn.model.model">
-<span id="luchador-nn-model-model-module"></span><h1>luchador.nn.model.model module<a class="headerlink" href="#module-luchador.nn.model.model" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-luchador.nn.model.sequential">
+<span id="luchador-nn-model-sequential-module"></span><h1>luchador.nn.model.sequential module<a class="headerlink" href="#module-luchador.nn.model.sequential" title="Permalink to this headline">¶</a></h1>
 <p>Define base network model structure and fetch method</p>
 <dl class="class">
-<dt id="luchador.nn.model.model.BaseModel">
-<em class="property">class </em><code class="descclassname">luchador.nn.model.model.</code><code class="descname">BaseModel</code><a class="headerlink" href="#luchador.nn.model.model.BaseModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Base Model class</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="luchador.nn.model.model.get_model">
-<code class="descclassname">luchador.nn.model.model.</code><code class="descname">get_model</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.model.model.get_model" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get Model class by name</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>name</strong> : str</p>
-<blockquote>
-<div><p>Name of Model to get</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">type</p>
-<blockquote>
-<div><p>Class found with the given name</p>
-</div></blockquote>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>ValueError</strong></p>
-<blockquote class="last">
-<div><p>When Model class with the given name is not found</p>
-</div></blockquote>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="class">
-<dt id="luchador.nn.model.model.Sequential">
-<em class="property">class </em><code class="descclassname">luchador.nn.model.model.</code><code class="descname">Sequential</code><a class="headerlink" href="#luchador.nn.model.model.Sequential" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#luchador.nn.model.model.BaseModel" title="luchador.nn.model.model.BaseModel"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.model.model.BaseModel</span></code></a></p>
+<dt id="luchador.nn.model.sequential.Sequential">
+<em class="property">class </em><code class="descclassname">luchador.nn.model.sequential.</code><code class="descname">Sequential</code><a class="headerlink" href="#luchador.nn.model.sequential.Sequential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="luchador.nn.model.base_model.html#luchador.nn.model.base_model.BaseModel" title="luchador.nn.model.base_model.BaseModel"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.model.base_model.BaseModel</span></code></a></p>
 <p>Network architecture which produces single output from single input</p>
 <p class="rubric">Examples</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">luchador</span> <span class="k">import</span> <span class="n">nn</span>
@@ -226,8 +189,8 @@ parameters and return output from the model.</p>
 </pre></div>
 </div>
 <dl class="method">
-<dt id="luchador.nn.model.model.Sequential.add_layer">
-<code class="descname">add_layer</code><span class="sig-paren">(</span><em>layer</em>, <em>scope=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.model.model.Sequential.add_layer" title="Permalink to this definition">¶</a></dt>
+<dt id="luchador.nn.model.sequential.Sequential.add_layer">
+<code class="descname">add_layer</code><span class="sig-paren">(</span><em>layer</em>, <em>scope=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.model.sequential.Sequential.add_layer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add layer to model</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -249,8 +212,8 @@ instantiated under this scope.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="luchador.nn.model.model.Sequential.build">
-<code class="descname">build</code><span class="sig-paren">(</span><em>input_tensor</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.model.model.Sequential.build" title="Permalink to this definition">¶</a></dt>
+<dt id="luchador.nn.model.sequential.Sequential.build">
+<code class="descname">build</code><span class="sig-paren">(</span><em>input_tensor</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.model.sequential.Sequential.build" title="Permalink to this definition">¶</a></dt>
 <dd><p>Build the model on top of input tensor.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -273,8 +236,8 @@ instantiated under this scope.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="luchador.nn.model.model.Sequential.get_parameter_variables">
-<code class="descname">get_parameter_variables</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.model.model.Sequential.get_parameter_variables" title="Permalink to this definition">¶</a></dt>
+<dt id="luchador.nn.model.sequential.Sequential.get_parameter_variables">
+<code class="descname">get_parameter_variables</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.model.sequential.Sequential.get_parameter_variables" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get Variable objects consisting the parameters of this model</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -291,8 +254,8 @@ instantiated under this scope.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="luchador.nn.model.model.Sequential.get_output_tensors">
-<code class="descname">get_output_tensors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.model.model.Sequential.get_output_tensors" title="Permalink to this definition">¶</a></dt>
+<dt id="luchador.nn.model.sequential.Sequential.get_output_tensors">
+<code class="descname">get_output_tensors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.model.sequential.Sequential.get_output_tensors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get Tensor objects which represent the output of each layer</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -309,8 +272,8 @@ instantiated under this scope.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="luchador.nn.model.model.Sequential.get_update_operations">
-<code class="descname">get_update_operations</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.model.model.Sequential.get_update_operations" title="Permalink to this definition">¶</a></dt>
+<dt id="luchador.nn.model.sequential.Sequential.get_update_operations">
+<code class="descname">get_update_operations</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.model.sequential.Sequential.get_update_operations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get update opretaions from each layer</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -327,8 +290,8 @@ instantiated under this scope.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="luchador.nn.model.model.Sequential.serialize">
-<code class="descname">serialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.model.model.Sequential.serialize" title="Permalink to this definition">¶</a></dt>
+<dt id="luchador.nn.model.sequential.Sequential.serialize">
+<code class="descname">serialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.model.sequential.Sequential.serialize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Serialize model configuration</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

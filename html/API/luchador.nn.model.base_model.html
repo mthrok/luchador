@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>luchador.nn.model package &mdash; Luchador 0.6.0 documentation</title>
+  <title>luchador.nn.model.base_model module &mdash; Luchador 0.6.0 documentation</title>
   
 
   
@@ -84,11 +84,7 @@
             
                 <!-- Local TOC -->
                 <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">luchador.nn.model package</a><ul>
-<li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-luchador.nn.model">Module contents</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#">luchador.nn.model.base_model module</a></li>
 </ul>
 </div>
             
@@ -119,11 +115,11 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../index.html">Docs</a> &raquo;</li>
       
-    <li>luchador.nn.model package</li>
+    <li>luchador.nn.model.base_model module</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../_sources/API/luchador.nn.model.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/API/luchador.nn.model.base_model.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -133,22 +129,46 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="luchador-nn-model-package">
-<h1>luchador.nn.model package<a class="headerlink" href="#luchador-nn-model-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="luchador.nn.model.base_model.html">luchador.nn.model.base_model module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="luchador.nn.model.sequential.html">luchador.nn.model.sequential module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="luchador.nn.model.util.html">luchador.nn.model.util module</a></li>
-</ul>
-</div>
-</div>
-<div class="section" id="module-luchador.nn.model">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-luchador.nn.model" title="Permalink to this headline">¶</a></h2>
-<p>Defined Network model architecture and utility tools for build</p>
-</div>
+  <div class="section" id="module-luchador.nn.model.base_model">
+<span id="luchador-nn-model-base-model-module"></span><h1>luchador.nn.model.base_model module<a class="headerlink" href="#module-luchador.nn.model.base_model" title="Permalink to this headline">¶</a></h1>
+<p>Define base network model structure and fetch method</p>
+<dl class="class">
+<dt id="luchador.nn.model.base_model.BaseModel">
+<em class="property">class </em><code class="descclassname">luchador.nn.model.base_model.</code><code class="descname">BaseModel</code><a class="headerlink" href="#luchador.nn.model.base_model.BaseModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Base Model class</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="luchador.nn.model.base_model.get_model">
+<code class="descclassname">luchador.nn.model.base_model.</code><code class="descname">get_model</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.model.base_model.get_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get Model class by name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>name</strong> : str</p>
+<blockquote>
+<div><p>Name of Model to get</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">type</p>
+<blockquote>
+<div><p>Class found with the given name</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first"><strong>ValueError</strong></p>
+<blockquote class="last">
+<div><p>When Model class with the given name is not found</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 
 
