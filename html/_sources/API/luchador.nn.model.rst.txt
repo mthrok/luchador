@@ -8,7 +8,6 @@ Submodules
 
    luchador.nn.model.base_model
    luchador.nn.model.sequential
-   luchador.nn.model.util
 
 Module contents
 ---------------

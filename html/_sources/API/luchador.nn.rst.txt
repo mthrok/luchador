@@ -18,6 +18,7 @@ Submodules
 
    luchador.nn.saver
    luchador.nn.summary
+   luchador.nn.util
 
 Module contents
 ---------------
