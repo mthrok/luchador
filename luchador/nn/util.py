@@ -9,7 +9,7 @@ import os
 import logging
 import StringIO
 
-import yaml
+import ruamel.yaml as yaml
 
 from luchador.util import get_subclasses
 import luchador.nn
@@ -107,4 +107,4 @@ def get_model_config(model_name, **parameters):
         model_text = model_text.format(**parameters)
 
     model_text = StringIO.StringIO(model_text)
-    return yaml.load(model_text)
+    return yaml.safe_load(model_text)
