@@ -145,7 +145,45 @@
 <dl class="method">
 <dt id="luchador.nn.theano.session.Session.run">
 <code class="descname">run</code><span class="sig-paren">(</span><em>outputs=None</em>, <em>inputs=None</em>, <em>updates=None</em>, <em>givens=None</em>, <em>name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.theano.session.Session.run" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Run computation and update values</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>outputs</strong> : list of Tensors</p>
+<blockquote>
+<div><p>Tensors of which values are fetched</p>
+</div></blockquote>
+<p><strong>inputs</strong> : dict</p>
+<blockquote>
+<div><p>Keys are the input Tensors required to compute values of output
+Tensors. Values are actual values to feed to Tensors.</p>
+</div></blockquote>
+<p><strong>updates</strong> : Operation or list of Operations</p>
+<blockquote>
+<div><p>Updates variables</p>
+</div></blockquote>
+<p><strong>givens</strong> : dict</p>
+<blockquote>
+<div><p>Same as inputs</p>
+</div></blockquote>
+<p><strong>name</strong> : str</p>
+<blockquote>
+<div><p>When given, the resulting Theano function is internally cached so
+that next time calling the same operation, only inputs and
+givens are required.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">[list of] NumPy ND Arrays</p>
+<blockquote class="last">
+<div><p>The resulting values corresponding the given <cite>outputs</cite> values</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="luchador.nn.theano.session.Session.initialize">

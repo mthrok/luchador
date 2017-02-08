@@ -144,19 +144,43 @@
 <dl class="method">
 <dt id="luchador.nn.tensorflow.session.Session.run">
 <code class="descname">run</code><span class="sig-paren">(</span><em>outputs=None</em>, <em>inputs=None</em>, <em>updates=None</em>, <em>givens=None</em>, <em>name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.session.Session.run" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="docutils">
-<dt>Args:</dt>
-<dd><p class="first">outputs (list of Tensors): Tensors of which values are fetched</p>
-<dl class="docutils">
-<dt>inputs (dict): Keys are the input Tensors required to compute values</dt>
-<dd>of output Tensors. Values are actual values to feed
-to Tensors.</dd>
-</dl>
-<p>updates (Operation or list of Operations):</p>
-<p>givens (dict):</p>
-<p class="last">name (str): Not used. Compatibility for theano backend</p>
-</dd>
-</dl>
+<dd><p>Run computation and update values</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>outputs</strong> : list of Tensors</p>
+<blockquote>
+<div><p>Tensors of which values are fetched</p>
+</div></blockquote>
+<p><strong>inputs</strong> : dict</p>
+<blockquote>
+<div><p>Keys are the input Tensors required to compute values of output
+Tensors. Values are actual values to feed to Tensors.</p>
+</div></blockquote>
+<p><strong>updates</strong> : Operation or list of Operations</p>
+<blockquote>
+<div><p>Updates variables</p>
+</div></blockquote>
+<p><strong>givens</strong> : dict</p>
+<blockquote>
+<div><p>Same as inputs</p>
+</div></blockquote>
+<p><strong>name</strong> : str</p>
+<blockquote>
+<div><p>When given, outputs and updates are cached so that the next time
+calling the same operation, only inputs and givens are required.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">[list of] NumPy ND Arrays</p>
+<blockquote class="last">
+<div><p>The resulting values corresponding the given <cite>outputs</cite> values</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
