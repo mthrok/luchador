@@ -260,6 +260,9 @@ class Adam(OptimizerMixin, base_optimizer.BaseAdam):
         ret = super(Adam, self)._apply_gradients(grads_and_vars, **kwargs)
         name1 = '{}/{}'.format(self.args['name'], 'beta1_power')
         name2 = '{}/{}'.format(self.args['name'], 'beta2_power')
+        scope_ = scope.get_variable_scope().name
+        name1 = '{}/{}'.format(scope_, name1) if scope_ else name1
+        name2 = '{}/{}'.format(scope_, name2) if scope_ else name2
         self.slot.extend([
             wrapper.Variable(self.optimizer._beta1_power, name=name1),
             wrapper.Variable(self.optimizer._beta2_power, name=name2),
