@@ -24,22 +24,65 @@ class OptimizerMixin(object):  # pylint: disable=too-few-public-methods
     def _run_backend_specific_init(self):
         pass
 
-    def _minimize(self, loss, wrt, **_):
-        grads_and_vars = self._compute_gradients(loss, wrt)
-        return self._apply_gradients(grads_and_vars)
+    def _minimize(self, loss, wrt, **kwargs):
+        grads_and_vars = self.compute_gradients(loss, wrt, **kwargs)
+        grads_and_vars_ = [g_v for g_v in grads_and_vars if g_v[0] is not None]
+        return self._apply_gradients(grads_and_vars_)
 
     @staticmethod
-    def _compute_gradients(loss, wrt, **_):
+    def _compute_gradients(loss, wrt, **kwargs):
+        """Compute gradient
+
+        Parameters
+        ----------
+        loss : Tensor
+            loss to be minimized
+
+        wrt : Variable or list of Variables
+            Term for which loss Tensor is differentiated
+
+        kwargs
+            Other arguments passed to ``theano.gradient.grad``
+
+        Returns
+        -------
+        list
+            List of (gradient, variable) pairs
+        """
         wrt = wrt if luchador.util.is_iteratable(wrt) else [wrt]
-        loss, wrt = loss.unwrap(), [v.unwrap() for v in wrt if v.trainable]
-        grads = theano.grad(loss, wrt)
-        return [(grad, var) for grad, var in zip(grads, wrt)]
+        wrt_ = [v.unwrap() for v in wrt if v.trainable]
+
+        if not wrt_:
+            raise ValueError('No variables to optimize.')
+
+        grads = theano.grad(loss.unwrap(), wrt_, **kwargs)
+        ret, i = [], 0
+        for var in wrt:
+            if var.trainable:
+                ret.append((grads[i], wrt_[i]))
+                i += 1
+            else:
+                ret.append((None, var.unwrap()))
+        return ret
 
     def _create_slot_var(self, var, slot_name):
         """Create slot variable for the given Variable
 
         Typical usage is to create variables to hold moving average
         of the given Variable
+
+        Parameters
+        ----------
+        var : theno.SharedVariable
+            Variable of which size and dtype are used to create slot.
+
+        slot_name : str
+            The name of slot.
+
+        Returns
+        -------
+        Variable
+            Wrapped Variable of the resulting slot variable.
         """
         value = var.get_value(borrow=True)
         name = '{}/{}/{}'.format(
@@ -56,6 +99,19 @@ class OptimizerMixin(object):  # pylint: disable=too-few-public-methods
 
         Example use is beta parameters in Adam and Adamax optimizer.
         Only scalar type is supported.
+
+        Parameters
+        ----------
+        initial_value : number
+            Initial value of the resulting slot
+
+        slot_name : str
+            The name of slot.
+
+        Returns
+        -------
+        Variable
+            Wrapped Variable of the resulting slot variable.
         """
         name = '{}/{}'.format(self.args['name'], slot_name)
         slot_var = scope.get_variable(
