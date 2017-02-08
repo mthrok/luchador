@@ -186,6 +186,49 @@ thus should not cause cyclic import.</p>
 </table>
 </dd></dl>
 
+<dl class="function">
+<dt id="luchador.nn.util.get_grad">
+<code class="descclassname">luchador.nn.util.</code><code class="descname">get_grad</code><span class="sig-paren">(</span><em>var</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.util.get_grad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch gradient tensor corresponding to the given Variable</p>
+<p>In optimizers, gradient tensors are registered in global list of tensors,
+following the naming pattern <cite>&lt;scope&gt;/&lt;variable_name&gt;_grad</cite>.</p>
+<p>This function automatically build such name from the given Variable and
+the current scope.</p>
+<p>To properly fetch the corresponding gradient Tensor, this function
+must be called in the scope where gradient Tensor was defined.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>var</strong> : Variable</p>
+<blockquote>
+<div><p>Variable object of which grad is retrieved.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Tensor</p>
+<blockquote class="last">
+<div><p>Tensor object which is a gradient of given Variable</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">luchador</span> <span class="k">import</span> <span class="n">nn</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Variable x is registered with name &#39;x&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sgd</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">nn</span><span class="o">.</span><span class="n">variable_scope</span><span class="p">(</span><span class="s1">&#39;optimization&#39;</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="n">sgd</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">wrt</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="c1"># dydx is registered with name &#39;/optimization/x_grad&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="n">dydx2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">get_grad_tensor</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="k">assert</span> <span class="n">dydx1</span> <span class="ow">is</span> <span class="n">dydx2</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </div>
 
 
