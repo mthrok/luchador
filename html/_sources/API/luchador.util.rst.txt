@@ -10,6 +10,8 @@ Submodules
    luchador.util.misc
    luchador.util.mixin
    luchador.util.render
+   luchador.util.serialize
+   luchador.util.server
    luchador.util.yaml_util
 
 Module contents

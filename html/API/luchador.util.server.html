@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>luchador.util package &mdash; Luchador 0.7.0 documentation</title>
+  <title>luchador.util.server module &mdash; Luchador 0.7.0 documentation</title>
   
 
   
@@ -84,11 +84,7 @@
             
                 <!-- Local TOC -->
                 <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">luchador.util package</a><ul>
-<li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-luchador.util">Module contents</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#">luchador.util.server module</a></li>
 </ul>
 </div>
             
@@ -119,11 +115,11 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../index.html">Docs</a> &raquo;</li>
       
-    <li>luchador.util package</li>
+    <li>luchador.util.server module</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../_sources/API/luchador.util.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/API/luchador.util.server.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -133,28 +129,31 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="luchador-util-package">
-<h1>luchador.util package<a class="headerlink" href="#luchador-util-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="luchador.util.logging.html">luchador.util.logging module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="luchador.util.misc.html">luchador.util.misc module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="luchador.util.mixin.html">luchador.util.mixin module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="luchador.util.render.html">luchador.util.render module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="luchador.util.serialize.html">luchador.util.serialize module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="luchador.util.server.html">luchador.util.server module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="luchador.util.yaml_util.html">luchador.util.yaml_util module</a></li>
-</ul>
-</div>
-</div>
-<div class="section" id="module-luchador.util">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-luchador.util" title="Permalink to this headline">¶</a></h2>
-<p>Module to define utility functions/classes used in luchador module</p>
-<p>This submodule is expected to be used by other submodule such as <cite>env</cite>,
-<cite>agent</cite> and <cite>nn</cite>, so must be importable independent of them.</p>
-</div>
+  <div class="section" id="module-luchador.util.server">
+<span id="luchador-util-server-module"></span><h1>luchador.util.server module<a class="headerlink" href="#module-luchador.util.server" title="Permalink to this headline">¶</a></h1>
+<p>WSGI compliant server module</p>
+<dl class="function">
+<dt id="luchador.util.server.create_server">
+<code class="descclassname">luchador.util.server.</code><code class="descname">create_server</code><span class="sig-paren">(</span><em>app</em>, <em>port=5000</em>, <em>host='0.0.0.0'</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.util.server.create_server" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mount application on cheroot WSGI server</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>app</strong></p>
+<blockquote>
+<div><p>WSGI compilant application object.
+See <code class="xref py py-func docutils literal"><span class="pre">create_env_app()</span></code> for example.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">WSGIServer object</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 
 

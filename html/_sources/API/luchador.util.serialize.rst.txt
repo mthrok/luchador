@@ -1,0 +1,7 @@
+luchador.util.serialize module
+==============================
+
+.. automodule:: luchador.util.serialize
+    :members:
+    :undoc-members:
+    :show-inheritance:

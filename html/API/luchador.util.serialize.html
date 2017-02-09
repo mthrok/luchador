@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>luchador.util package &mdash; Luchador 0.7.0 documentation</title>
+  <title>luchador.util.serialize module &mdash; Luchador 0.7.0 documentation</title>
   
 
   
@@ -84,11 +84,7 @@
             
                 <!-- Local TOC -->
                 <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">luchador.util package</a><ul>
-<li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-luchador.util">Module contents</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#">luchador.util.serialize module</a></li>
 </ul>
 </div>
             
@@ -119,11 +115,11 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../index.html">Docs</a> &raquo;</li>
       
-    <li>luchador.util package</li>
+    <li>luchador.util.serialize module</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../_sources/API/luchador.util.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/API/luchador.util.serialize.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -133,28 +129,75 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="luchador-util-package">
-<h1>luchador.util package<a class="headerlink" href="#luchador-util-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="luchador.util.logging.html">luchador.util.logging module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="luchador.util.misc.html">luchador.util.misc module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="luchador.util.mixin.html">luchador.util.mixin module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="luchador.util.render.html">luchador.util.render module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="luchador.util.serialize.html">luchador.util.serialize module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="luchador.util.server.html">luchador.util.server module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="luchador.util.yaml_util.html">luchador.util.yaml_util module</a></li>
-</ul>
-</div>
-</div>
-<div class="section" id="module-luchador.util">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-luchador.util" title="Permalink to this headline">¶</a></h2>
-<p>Module to define utility functions/classes used in luchador module</p>
-<p>This submodule is expected to be used by other submodule such as <cite>env</cite>,
-<cite>agent</cite> and <cite>nn</cite>, so must be importable independent of them.</p>
-</div>
+  <div class="section" id="module-luchador.util.serialize">
+<span id="luchador-util-serialize-module"></span><h1>luchador.util.serialize module<a class="headerlink" href="#module-luchador.util.serialize" title="Permalink to this headline">¶</a></h1>
+<p>Define common method for [de]serializing NumPyArray</p>
+<dl class="function">
+<dt id="luchador.util.serialize.serialize_numpy_array">
+<code class="descclassname">luchador.util.serialize.</code><code class="descname">serialize_numpy_array</code><span class="sig-paren">(</span><em>array</em>, <em>compress=True</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.util.serialize.serialize_numpy_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Serialize NumPy ND Array into JSON format</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>array</strong> : NumPy ND Array</p>
+<blockquote>
+<div><p>Array to serialize</p>
+</div></blockquote>
+<p><strong>compress</strong> : bool</p>
+<blockquote>
+<div><p>When True, array data are compressed. Default: True.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">dict</p>
+<blockquote class="last">
+<div><p>Serialized array</p>
+<dl class="docutils">
+<dt>shape <span class="classifier-delimiter">:</span> <span class="classifier">list</span></dt>
+<dd><p class="first last">array shape</p>
+</dd>
+<dt>dtype <span class="classifier-delimiter">:</span> <span class="classifier">str</span></dt>
+<dd><p class="first last">dtype</p>
+</dd>
+<dt>data <span class="classifier-delimiter">:</span> <span class="classifier">byte string</span></dt>
+<dd><p class="first last">actual data</p>
+</dd>
+<dt>compressed <span class="classifier-delimiter">:</span> <span class="classifier">bool</span></dt>
+<dd><p class="first last">Indicates if data is compressed</p>
+</dd>
+</dl>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="luchador.util.serialize.deserialize_numpy_array">
+<code class="descclassname">luchador.util.serialize.</code><code class="descname">deserialize_numpy_array</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.util.serialize.deserialize_numpy_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deserialize NumPy ND Array from JSON format</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>obj</strong> : dict</p>
+<blockquote>
+<div><p>See <cite>serialize_numpy_array</cite> for the detail.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">NumPy ND Array</p>
+<blockquote class="last">
+<div><p>Resulting array</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 
 
