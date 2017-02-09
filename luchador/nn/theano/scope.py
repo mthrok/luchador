@@ -19,36 +19,6 @@ __all__ = [
 
 _LG = logging.getLogger(__name__)
 
-_CURRENT_REUSE_FLAG = False
-_CURRENT_VARIABLE_SCOPE = ''
-
-
-def _set_flag(flag):
-    # pylint: disable=global-statement
-    global _CURRENT_REUSE_FLAG
-    _CURRENT_REUSE_FLAG = flag
-
-
-def _set_scope(scope):
-    # pylint: disable=global-statement
-    global _CURRENT_VARIABLE_SCOPE
-    _CURRENT_VARIABLE_SCOPE = scope
-
-
-def _get_flag():
-    return _CURRENT_REUSE_FLAG
-
-
-def _get_scope():
-    return _CURRENT_VARIABLE_SCOPE
-
-
-def _reset():
-    """Reset variable scope and remove cached variables. For Testing"""
-    # pylint: disable=protected-access
-    _set_flag(False)
-    _set_scope('')
-
 
 class _NameScope(object):  # pylint: disable=too-few-public-methods
     def __enter__(self):
@@ -76,26 +46,28 @@ class VariableScope(object):
     @staticmethod
     def reuse_variables():
         """Set reuse flag to True"""
-        _set_flag(True)
+        wrapper.set_flag_(True)
 
     def _open(self):
-        self.previous_scopes.append(_get_scope())
-        self.previous_reuse_flags.append(_get_flag())
-        _set_scope(self.name)
-        _set_flag(self.reuse)
+        self.previous_scopes.append(wrapper.get_scope_())
+        self.previous_reuse_flags.append(wrapper.get_flag_())
+        wrapper.set_scope_(self.name)
+        wrapper.set_flag_(self.reuse)
 
     def _close(self):
-        _set_scope(self.previous_scopes.pop())
-        _set_flag(self.previous_reuse_flags.pop())
+        wrapper.set_scope_(self.previous_scopes.pop())
+        wrapper.set_flag_(self.previous_reuse_flags.pop())
 
     def __enter__(self):
+        # pylint: disable=protected-access
         self._open()
-        _LG.debug('Current Scope: %s', _CURRENT_VARIABLE_SCOPE)
+        _LG.debug('Current Scope: %s', wrapper._CURRENT_VARIABLE_SCOPE)
         return self
 
     def __exit__(self, type_, value, traceback):
+        # pylint: disable=protected-access
         self._close()
-        _LG.debug('Current Scope: %s', _CURRENT_VARIABLE_SCOPE)
+        _LG.debug('Current Scope: %s', wrapper._CURRENT_VARIABLE_SCOPE)
 
 
 def variable_scope(name_or_scope, reuse=None):
@@ -106,15 +78,15 @@ def variable_scope(name_or_scope, reuse=None):
         return name_or_scope
 
     scope = (
-        '{}/{}'.format(_get_scope(), name_or_scope)
-        if _get_scope() else name_or_scope
+        '{}/{}'.format(wrapper.get_scope_(), name_or_scope)
+        if wrapper.get_scope_() else name_or_scope
     )
     return VariableScope(reuse, scope)
 
 
 def get_variable_scope():
     """Return the current variable scope"""
-    return VariableScope(_get_flag(), _get_scope())
+    return VariableScope(wrapper.get_flag_(), wrapper.get_scope_())
 
 
 def get_tensor(name):
@@ -129,7 +101,7 @@ def get_tensor(name):
     Tensor
     """
     try:
-        scope = _get_scope()
+        scope = wrapper.get_scope_()
         return base_wrapper.retrieve_tensor('{}/{}'.format(scope, name))
     except ValueError:
         pass
@@ -147,16 +119,16 @@ def get_variable(
         warnings.warn('`regularizer` is not implemented in Theano backend.')
 
     # 1. Check the current variable scope
-    scope = _get_scope()
-    name = '{}/{}'.format(scope, name) if scope else name
+    scope = wrapper.get_scope_()
+    name_ = '{}/{}'.format(scope, name) if scope else name
 
-    var = base_wrapper.retrieve_variable(name)
-    if _get_flag():  # Search for an existing variable
+    var = base_wrapper.retrieve_variable(name_)
+    if wrapper.get_flag_():  # Search for an existing variable
         if var is None:
             raise ValueError(
                 'Variable {} does not exist, disallowed. '
                 'Did you mean to set reuse=None in VarScope?'
-                .format(name)
+                .format(name_)
             )
         return var
     else:  # Create new variable
@@ -164,12 +136,12 @@ def get_variable(
             raise ValueError(
                 'Variable {} already exists, disallowed. '
                 'Did you mean to set reuse=True in VarScope?'
-                .format(name)
+                .format(name_)
             )
         if shape is None:
             raise ValueError(
                 'Shape of a new variable ({}) must be fully defined, '
-                'but instead was {}.'.format(name, shape))
+                'but instead was {}.'.format(name_, shape))
 
         if not initializer:
             initializer = Normal(dtype=dtype)
@@ -181,6 +153,6 @@ def get_variable(
         return wrapper.Variable(
             theano.shared(
                 value=np.array(initializer.sample(shape), dtype=dtype),
-                name=name, allow_downcast=True, **kwargs
-            ), trainable=trainable,
+                name=name_, allow_downcast=True, **kwargs
+            ), trainable=trainable, name=name,
         )

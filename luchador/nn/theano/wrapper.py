@@ -13,6 +13,42 @@ from luchador.nn.base.wrapper import Operation
 __all__ = ['Variable', 'Tensor', 'Input', 'Operation']
 
 
+###############################################################################
+_CURRENT_REUSE_FLAG = False
+_CURRENT_VARIABLE_SCOPE = ''
+
+
+def set_flag_(flag):
+    """Set reuse flag. Internal user only"""
+    # pylint: disable=global-statement
+    global _CURRENT_REUSE_FLAG
+    _CURRENT_REUSE_FLAG = flag
+
+
+def set_scope_(scope):
+    """Set scope value. Internal user only"""
+    # pylint: disable=global-statement
+    global _CURRENT_VARIABLE_SCOPE
+    _CURRENT_VARIABLE_SCOPE = scope
+
+
+def get_flag_():
+    """Get reuse flag. Internal user only"""
+    return _CURRENT_REUSE_FLAG
+
+
+def get_scope_():
+    """Get scope value. Internal user only"""
+    return _CURRENT_VARIABLE_SCOPE
+
+
+def _reset():
+    """Reset variable scope and remove cached variables. For Testing"""
+    set_flag_(False)
+    set_scope_('')
+
+
+###############################################################################
 def _is_same_shape(shape1, shape2):
     if not len(shape1) == len(shape2):
         return False
@@ -269,6 +305,11 @@ class TensorMixin(object):  # pylint: disable=too-few-public-methods
         return Tensor(tensor=_tensor, shape=_shape, name=name)
 
 
+def _prefix_with_scope(name):
+    scope_ = get_scope_()
+    return '{}/{}'.format(scope_, name) if scope_ else name
+
+
 class Variable(TensorMixin, base_wrapper.BaseVariable):
     """Wrap SharedVariable object for storing network parameters"""
     def __init__(self, variable, name=None, trainable=True):
@@ -280,7 +321,7 @@ class Variable(TensorMixin, base_wrapper.BaseVariable):
             overwritten with this name, otherwise, name is constructed in the
             manner as Tensorflow.
         """
-        name = name or variable.name
+        name = _prefix_with_scope(name or variable.name)
         val = variable.get_value()
         super(Variable, self).__init__(
             tensor=variable, shape=val.shape, name=name,
@@ -299,6 +340,7 @@ class Tensor(TensorMixin, base_wrapper.BaseTensor):
         """
         if -1 in shape:
             shape = [None if val < 0 else val for val in shape]
+        name = _prefix_with_scope(name) if name else None
         super(Tensor, self).__init__(
             tensor=tensor, shape=shape, name=name, dtype=tensor.dtype)
 
@@ -329,6 +371,7 @@ class Input(TensorMixin, base_wrapper.BaseWrapper):
           name (str): The name of the resulting object.
           dtype (NumPy dtype or None): If None, default dtype(floatX) is used
         """
+        name = _prefix_with_scope(name) if name else None
         tensor = _create_placeholder(dtype, len(shape), name)
         super(Input, self).__init__(
             tensor=tensor, shape=shape, name=name, dtype=tensor.dtype)
