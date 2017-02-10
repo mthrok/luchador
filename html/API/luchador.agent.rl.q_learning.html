@@ -136,7 +136,7 @@
 <dt id="luchador.agent.rl.q_learning.DeepQLearning">
 <em class="property">class </em><code class="descclassname">luchador.agent.rl.q_learning.</code><code class="descname">DeepQLearning</code><span class="sig-paren">(</span><em>q_learning_config</em>, <em>cost_config</em>, <em>optimizer_config</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.rl.q_learning.DeepQLearning" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="luchador.util.mixin.html#luchador.util.mixin.StoreMixin" title="luchador.util.mixin.StoreMixin"><code class="xref py py-class docutils literal"><span class="pre">luchador.util.mixin.StoreMixin</span></code></a>, <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Build Q-learning network and optimization operations</p>
+<p>Implement Neural Network part of DQN <a class="reference internal" href="#r2" id="id1">[R2]</a>:</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -189,6 +189,15 @@ for the list of available classes.</p>
 </div></blockquote>
 </td>
 </tr>
+</tbody>
+</table>
+<p class="rubric">References</p>
+<table class="docutils citation" frame="void" id="r2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[R2]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id2">2</a>)</em> Mnih, V et. al (2015)
+Human-level control through deep reinforcement learning
+<a class="reference external" href="https://storage.googleapis.com/deepmind-media/dqn/DQNNaturePaper.pdf">https://storage.googleapis.com/deepmind-media/dqn/DQNNaturePaper.pdf</a></td></tr>
 </tbody>
 </table>
 <dl class="method">
@@ -303,6 +312,63 @@ terminal states.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>state</strong> : NumPy ND Array</p>
 <blockquote class="last">
 <div><p>Input to model_0 (pre-transition model)</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="luchador.agent.rl.q_learning.DoubleDeepQLearning">
+<em class="property">class </em><code class="descclassname">luchador.agent.rl.q_learning.</code><code class="descname">DoubleDeepQLearning</code><span class="sig-paren">(</span><em>q_learning_config</em>, <em>cost_config</em>, <em>optimizer_config</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.rl.q_learning.DoubleDeepQLearning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#luchador.agent.rl.q_learning.DeepQLearning" title="luchador.agent.rl.q_learning.DeepQLearning"><code class="xref py py-class docutils literal"><span class="pre">luchador.agent.rl.q_learning.DeepQLearning</span></code></a></p>
+<p>Implement Neural Network part of Double DQN <a class="reference internal" href="#r3" id="id3">[R3]</a>:</p>
+<p class="rubric">References</p>
+<table class="docutils citation" frame="void" id="r3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[R3]</td><td><em>(<a class="fn-backref" href="#id3">1</a>, <a class="fn-backref" href="#id4">2</a>)</em> Hasselt, H et. al (2015)
+Deep Reinforcement Learning with Double Q-learning
+<a class="reference external" href="https://arxiv.org/abs/1509.06461">https://arxiv.org/abs/1509.06461</a></td></tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="luchador.agent.rl.q_learning.DoubleDeepQLearning.train">
+<code class="descname">train</code><span class="sig-paren">(</span><em>state_0</em>, <em>action_0</em>, <em>reward</em>, <em>state_1</em>, <em>terminal</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.agent.rl.q_learning.DoubleDeepQLearning.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train model network</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>state_0</strong> : NumPy ND Array</p>
+<blockquote>
+<div><p>Environment states before taking actions</p>
+</div></blockquote>
+<p><strong>action_0</strong> : NumPy ND Array</p>
+<blockquote>
+<div><p>Actions taken in state_0</p>
+</div></blockquote>
+<p><strong>reward</strong> : NumPy ND Array</p>
+<blockquote>
+<div><p>Rewards obtained by taking the action_0.</p>
+</div></blockquote>
+<p><strong>state_1</strong> : NumPy ND Array</p>
+<blockquote>
+<div><p>Environment states after action_0 are taken</p>
+</div></blockquote>
+<p><strong>terminal</strong> : NumPy ND Array</p>
+<blockquote>
+<div><p>Flags for marking corresponding states in state_1 are
+terminal states.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">NumPy ND Array</p>
+<blockquote class="last">
+<div><p>Mean error between Q prediction and target Q</p>
 </div></blockquote>
 </td>
 </tr>

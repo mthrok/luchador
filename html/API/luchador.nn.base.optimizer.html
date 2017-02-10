@@ -320,7 +320,7 @@ Virtually has no effect in SGD</p>
 <dd><p>Bases: <a class="reference internal" href="#luchador.nn.base.optimizer.BaseOptimizer" title="luchador.nn.base.optimizer.BaseOptimizer"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.base.optimizer.BaseOptimizer</span></code></a></p>
 <p>Tensorflow style RMSProp with momentum</p>
 <p>Scale learning rates by dividing with the moving average of the root mean
-squared (RMS) gradients. See <a class="reference internal" href="#r11" id="id1">[R11]</a> for further description.</p>
+squared (RMS) gradients. See <a class="reference internal" href="#r12" id="id1">[R12]</a> for further description.</p>
 <p>This implementation mimics TF native RMSProp, which updates parameters as</p>
 <div class="math">
 \[\begin{split}rms_t &amp;= \rho * rms_{t-1} + (1- \rho) * grad ^2 \\
@@ -362,10 +362,10 @@ coefficient.</p>
 </tbody>
 </table>
 <p class="rubric">References</p>
-<table class="docutils citation" frame="void" id="r11" rules="none">
+<table class="docutils citation" frame="void" id="r12" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label">[R11]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id2">2</a>)</em> Tieleman, T. and Hinton, G. (2012):
+<tr><td class="label">[R12]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id2">2</a>)</em> Tieleman, T. and Hinton, G. (2012):
 Neural Networks for Machine Learning, Lecture 6.5 - rmsprop.
 Coursera. <a class="reference external" href="http://www.youtube.com/watch?v=O3sxAc4hxZU">http://www.youtube.com/watch?v=O3sxAc4hxZU</a> (formula &#64;5:20)</td></tr>
 </tbody>
@@ -413,10 +413,10 @@ var_t &amp;= var_{t-1} - lr * grad  \\\end{split}\]</div>
 </tbody>
 </table>
 <p class="rubric">References</p>
-<table class="docutils citation" frame="void" id="r12" rules="none">
+<table class="docutils citation" frame="void" id="r13" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id3">[R12]</a></td><td>Tieleman, T. and Hinton, G. (2012):
+<tr><td class="label"><a class="fn-backref" href="#id3">[R13]</a></td><td>Tieleman, T. and Hinton, G. (2012):
 Neural Networks for Machine Learning, Lecture 6.5 - rmsprop.
 Coursera. <a class="reference external" href="http://www.youtube.com/watch?v=O3sxAc4hxZU">http://www.youtube.com/watch?v=O3sxAc4hxZU</a> (formula &#64;5:20)</td></tr>
 </tbody>
@@ -427,21 +427,21 @@ Coursera. <a class="reference external" href="http://www.youtube.com/watch?v=O3s
 <dt id="luchador.nn.base.optimizer.BaseGravesRMSProp">
 <em class="property">class </em><code class="descclassname">luchador.nn.base.optimizer.</code><code class="descname">BaseGravesRMSProp</code><span class="sig-paren">(</span><em>learning_rate</em>, <em>decay1=0.95</em>, <em>decay2=0.95</em>, <em>epsilon=0.01</em>, <em>name='GravesRMSProp'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.base.optimizer.BaseGravesRMSProp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#luchador.nn.base.optimizer.BaseOptimizer" title="luchador.nn.base.optimizer.BaseOptimizer"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.base.optimizer.BaseOptimizer</span></code></a></p>
-<p>RMSProp used in DQN paper <a class="reference internal" href="#r13" id="id4">[R13]</a> and described in A.Graves paper <a class="reference internal" href="#r14" id="id5">[R14]</a></p>
+<p>RMSProp used in DQN paper <a class="reference internal" href="#r14" id="id4">[R14]</a> and described in A.Graves paper <a class="reference internal" href="#r15" id="id5">[R15]</a></p>
 <p class="rubric">References</p>
-<table class="docutils citation" frame="void" id="r13" rules="none">
+<table class="docutils citation" frame="void" id="r14" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label">[R13]</td><td><em>(<a class="fn-backref" href="#id4">1</a>, <a class="fn-backref" href="#id6">2</a>)</em> Mnih, V et. al (2015)
+<tr><td class="label">[R14]</td><td><em>(<a class="fn-backref" href="#id4">1</a>, <a class="fn-backref" href="#id6">2</a>)</em> Mnih, V et. al (2015)
 Human-level control through deep reinforcement learning
 <a class="reference external" href="https://storage.googleapis.com/deepmind-media/dqn/DQNNaturePaper.pdf">https://storage.googleapis.com/deepmind-media/dqn/DQNNaturePaper.pdf</a>
 <a class="reference external" href="https://github.com/kuz/DeepMind-Atari-Deep-Q-Learner/blob/4b9f5a79b03ea0cfc512ed1c11f1b00bc875bc57/dqn/NeuralQLearner.lua#L265">https://github.com/kuz/DeepMind-Atari-Deep-Q-Learner/blob/4b9f5a79b03ea0cfc512ed1c11f1b00bc875bc57/dqn/NeuralQLearner.lua#L265</a></td></tr>
 </tbody>
 </table>
-<table class="docutils citation" frame="void" id="r14" rules="none">
+<table class="docutils citation" frame="void" id="r15" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label">[R14]</td><td><em>(<a class="fn-backref" href="#id5">1</a>, <a class="fn-backref" href="#id7">2</a>)</em> Graves, A. (2014):
+<tr><td class="label">[R15]</td><td><em>(<a class="fn-backref" href="#id5">1</a>, <a class="fn-backref" href="#id7">2</a>)</em> Graves, A. (2014):
 Generating Sequences With Recurrent Neural Networks
 <a class="reference external" href="http://arxiv.org/pdf/1308.0850v5.pdf">http://arxiv.org/pdf/1308.0850v5.pdf</a></td></tr>
 </tbody>
@@ -452,12 +452,12 @@ Generating Sequences With Recurrent Neural Networks
 <dt id="luchador.nn.base.optimizer.BaseAdam">
 <em class="property">class </em><code class="descclassname">luchador.nn.base.optimizer.</code><code class="descname">BaseAdam</code><span class="sig-paren">(</span><em>learning_rate</em>, <em>beta1=0.9</em>, <em>beta2=0.999</em>, <em>epsilon=1e-08</em>, <em>name='Adam'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.base.optimizer.BaseAdam" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#luchador.nn.base.optimizer.BaseOptimizer" title="luchador.nn.base.optimizer.BaseOptimizer"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.base.optimizer.BaseOptimizer</span></code></a></p>
-<p>Adam optimizer <a class="reference internal" href="#r15" id="id8">[R15]</a></p>
+<p>Adam optimizer <a class="reference internal" href="#r16" id="id8">[R16]</a></p>
 <p class="rubric">References</p>
-<table class="docutils citation" frame="void" id="r15" rules="none">
+<table class="docutils citation" frame="void" id="r16" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label">[R15]</td><td><em>(<a class="fn-backref" href="#id8">1</a>, <a class="fn-backref" href="#id9">2</a>)</em> Kingma, D. Ba, J 2014
+<tr><td class="label">[R16]</td><td><em>(<a class="fn-backref" href="#id8">1</a>, <a class="fn-backref" href="#id9">2</a>)</em> Kingma, D. Ba, J 2014
 Adam: A Method for Stochastic Optimization
 <a class="reference external" href="https://arxiv.org/abs/1412.6980">https://arxiv.org/abs/1412.6980</a></td></tr>
 </tbody>
@@ -468,12 +468,12 @@ Adam: A Method for Stochastic Optimization
 <dt id="luchador.nn.base.optimizer.BaseAdamax">
 <em class="property">class </em><code class="descclassname">luchador.nn.base.optimizer.</code><code class="descname">BaseAdamax</code><span class="sig-paren">(</span><em>learning_rate</em>, <em>beta1=0.9</em>, <em>beta2=0.999</em>, <em>epsilon=1e-08</em>, <em>name='Adamax'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.base.optimizer.BaseAdamax" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#luchador.nn.base.optimizer.BaseOptimizer" title="luchador.nn.base.optimizer.BaseOptimizer"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.base.optimizer.BaseOptimizer</span></code></a></p>
-<p>Adam optimizer <a class="reference internal" href="#r16" id="id10">[R16]</a></p>
+<p>Adam optimizer <a class="reference internal" href="#r17" id="id10">[R17]</a></p>
 <p class="rubric">References</p>
-<table class="docutils citation" frame="void" id="r16" rules="none">
+<table class="docutils citation" frame="void" id="r17" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label">[R16]</td><td><em>(<a class="fn-backref" href="#id10">1</a>, <a class="fn-backref" href="#id11">2</a>)</em> Kingma, D. Ba, J 2014
+<tr><td class="label">[R17]</td><td><em>(<a class="fn-backref" href="#id10">1</a>, <a class="fn-backref" href="#id11">2</a>)</em> Kingma, D. Ba, J 2014
 Adam: A Method for Stochastic Optimization
 <a class="reference external" href="https://arxiv.org/abs/1412.6980">https://arxiv.org/abs/1412.6980</a></td></tr>
 </tbody>

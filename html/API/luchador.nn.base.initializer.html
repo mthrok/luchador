@@ -279,7 +279,7 @@ Initializers and this method is not used.</p>
 <dt id="luchador.nn.base.initializer.BaseXavier">
 <em class="property">class </em><code class="descclassname">luchador.nn.base.initializer.</code><code class="descname">BaseXavier</code><span class="sig-paren">(</span><em>uniform=True</em>, <em>seed=None</em>, <em>dtype=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.base.initializer.BaseXavier" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#luchador.nn.base.initializer.BaseInitializer" title="luchador.nn.base.initializer.BaseInitializer"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.base.initializer.BaseInitializer</span></code></a></p>
-<p>Implement Xavier initialization <a class="reference internal" href="#r7" id="id1">[R7]</a> in Tensorflow manner <a class="reference internal" href="#r8" id="id2">[R8]</a></p>
+<p>Implement Xavier initialization <a class="reference internal" href="#r8" id="id1">[R8]</a> in Tensorflow manner <a class="reference internal" href="#r9" id="id2">[R9]</a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -302,7 +302,7 @@ is used. See Notes.</p>
 </tbody>
 </table>
 <p class="rubric">Notes</p>
-<p>The implementation of Xavier in Theano follows that of Tensorflow.[R8]_
+<p>The implementation of Xavier in Theano follows that of Tensorflow.[R9]_
 The underlying distribution is computed in the following way.</p>
 <p>when <code class="docutils literal"><span class="pre">uniform=True</span></code>,</p>
 <div class="math">
@@ -313,19 +313,19 @@ W &amp;\sim U[-a, a]\end{split}\]</div>
 \[\begin{split}\sigma &amp;= \sqrt{\frac{3}{fan_{in}+fan_{out}}}\\
 W &amp;\sim N(0, \sigma)\end{split}\]</div>
 <p class="rubric">References</p>
-<table class="docutils citation" frame="void" id="r7" rules="none">
+<table class="docutils citation" frame="void" id="r8" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label">[R7]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id3">2</a>)</em> Xavier Glorot and Yoshua Bengio (2010):
+<tr><td class="label">[R8]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id3">2</a>)</em> Xavier Glorot and Yoshua Bengio (2010):
 Understanding the difficulty of training deep feedforward neural
 networks. International conference on artificial intelligence and
 statistics.</td></tr>
 </tbody>
 </table>
-<table class="docutils citation" frame="void" id="r8" rules="none">
+<table class="docutils citation" frame="void" id="r9" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label">[R8]</td><td><em>(<a class="fn-backref" href="#id2">1</a>, <a class="fn-backref" href="#id4">2</a>)</em> <a class="reference external" href="https://www.tensorflow.org/versions/r0.11/api_docs/python/contrib.layers.html#xavier_initializer">https://www.tensorflow.org/versions/r0.11/api_docs/python/contrib.layers.html#xavier_initializer</a></td></tr>
+<tr><td class="label">[R9]</td><td><em>(<a class="fn-backref" href="#id2">1</a>, <a class="fn-backref" href="#id4">2</a>)</em> <a class="reference external" href="https://www.tensorflow.org/versions/r0.11/api_docs/python/contrib.layers.html#xavier_initializer">https://www.tensorflow.org/versions/r0.11/api_docs/python/contrib.layers.html#xavier_initializer</a></td></tr>
 </tbody>
 </table>
 </dd></dl>
@@ -336,10 +336,10 @@ statistics.</td></tr>
 <dd><p>Bases: <a class="reference internal" href="#luchador.nn.base.initializer.BaseInitializer" title="luchador.nn.base.initializer.BaseInitializer"><code class="xref py py-class docutils literal"><span class="pre">luchador.nn.base.initializer.BaseInitializer</span></code></a></p>
 <p>Implement Kaiming initialization</p>
 <p class="rubric">References</p>
-<table class="docutils citation" frame="void" id="r9" rules="none">
+<table class="docutils citation" frame="void" id="r10" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id5">[R9]</a></td><td>Kaiming He et al. (2015):
+<tr><td class="label"><a class="fn-backref" href="#id5">[R10]</a></td><td>Kaiming He et al. (2015):
 Delving deep into rectifiers: Surpassing human-level performance on
 imagenet classification. arXiv preprint arXiv:1502.01852.</td></tr>
 </tbody>
