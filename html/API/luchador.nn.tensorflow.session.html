@@ -131,6 +131,7 @@
             
   <div class="section" id="module-luchador.nn.tensorflow.session">
 <span id="luchador-nn-tensorflow-session-module"></span><h1>luchador.nn.tensorflow.session module<a class="headerlink" href="#module-luchador.nn.tensorflow.session" title="Permalink to this headline">¶</a></h1>
+<p>Define tf.Session wrapper class</p>
 <dl class="class">
 <dt id="luchador.nn.tensorflow.session.Session">
 <em class="property">class </em><code class="descclassname">luchador.nn.tensorflow.session.</code><code class="descname">Session</code><span class="sig-paren">(</span><em>graph=None</em>, <em>config=None</em><span class="sig-paren">)</span><a class="headerlink" href="#luchador.nn.tensorflow.session.Session" title="Permalink to this definition">¶</a></dt>
@@ -168,8 +169,7 @@ Tensors. Values are actual values to feed to Tensors.</p>
 </div></blockquote>
 <p><strong>name</strong> : str</p>
 <blockquote>
-<div><p>When given, outputs and updates are cached so that the next time
-calling the same operation, only inputs and givens are required.</p>
+<div><p>Not used. Compatibility for theano backend</p>
 </div></blockquote>
 </td>
 </tr>
