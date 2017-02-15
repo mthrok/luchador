@@ -1,13 +1,17 @@
 """Test wapper module"""
 from __future__ import absolute_import
 
+import unittest
 import numpy as np
 
+import luchador
 from luchador import nn
 
 from tests.unit import fixture
 
 # pylint: disable=invalid-name
+
+_BACKEND = luchador.get_nn_backend()
 
 
 class TestTensorOpsMult(fixture.TestCase):
@@ -426,6 +430,40 @@ class TestTensorOpsMax(fixture.TestCase):
     def test_max_multi_keep_dim(self):
         """Test max with multiple axes, dropping axis"""
         self._test_max((1, 2), (3, 4, 5, 6), True)
+
+
+class TestTensorOpsMaximum(fixture.TestCase):
+    """Test wrapper maximum method"""
+    def _test_maximum(self, value0, value1):
+        with nn.variable_scope(self.get_scope()):
+            input0 = nn.Input(
+                shape=value0.shape, dtype=value0.dtype, name='0')
+            input1 = nn.Input(
+                shape=value1.shape, dtype=value1.dtype, name='1')
+            output0 = input0.maximum(input1)
+            output1 = input1.maximum(input0)
+        session = nn.Session()
+
+        val0, val1 = session.run(
+            outputs=[output0, output1],
+            inputs={input0: value0, input1: value1},
+        )
+
+        np.testing.assert_almost_equal(val0, np.maximum(value0, value1))
+        np.testing.assert_almost_equal(val1, np.maximum(value1, value0))
+
+    def test_max_same_shape_same_dtype(self):
+        """Test maximum with same shape and dtype"""
+        shape = (3, 4)
+        value0, value1 = np.random.randn(*shape), np.random.randn(*shape)
+        self._test_maximum(value0, value1)
+
+    @unittest.skipUnless(
+        _BACKEND == 'tensorflow', 'Only supported in Tensorflow')
+    def test_max_different_shape(self):
+        """Test maximum with same dtype"""
+        value0, value1 = np.random.randn(3, 4), np.random.randn(1, 4)
+        self._test_maximum(value0, value1)
 
 
 class TestTensorOpsClip(fixture.TestCase):
