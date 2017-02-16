@@ -3,9 +3,11 @@ from __future__ import absolute_import
 
 from collections import OrderedDict
 
-from .wrapper import Operation
+import theano.tensor as T
 
-__all__ = ['build_sync_op']
+from .wrapper import Operation, Tensor
+
+__all__ = ['build_sync_op', 'one_hot', 'maximum', 'minimum']
 
 
 def build_sync_op(source_vars, target_vars, tau=None, name='sync'):
@@ -41,3 +43,78 @@ def build_sync_op(source_vars, target_vars, tau=None, name='sync'):
             src = (1 - tau) * tgt + tau * src
         _operations[tgt] = src
     return Operation(op=_operations, name=name)
+
+
+###############################################################################
+def one_hot(var, n_classes, dtype=None, name=None):
+    """Convert to one-hot encoding.
+
+    Parameters
+    ----------
+    n_classes : int
+        Number of label to encode
+
+    dtype : str
+        The dtype of the resulting Tensor. Default to floatX
+
+    name : str
+        Name of operation
+
+    Returns
+    -------
+    Tensor
+        Tensor with shape ``(var.shape[0], n_classes)``
+
+    Notes
+    -----
+    The Tensor must be either vector or 2D matrix
+    """
+    if not var.n_dim == 1:
+        raise ValueError('Tensor must be 1D.')
+
+    _tensor = T.extra_ops.to_one_hot(var.unwrap(), n_classes, dtype=dtype)
+    shape = [var.shape[0], n_classes]
+    return Tensor(tensor=_tensor, shape=shape, name=name)
+
+
+###############################################################################
+def maximum(var1, var2, name=None):
+    """Compute elementwise max among tensors
+
+    Parameters
+    ----------
+    other : Tensor
+        Tensor to compare
+
+    name : str
+        Name of new Tensor
+
+    Returns
+    -------
+    Tensor
+        The resulting Tensor
+    """
+    # TODO: Add Broadcasting
+    _tensor = T.maximum(var1.unwrap(), var2.unwrap())
+    return Tensor(tensor=_tensor, shape=var1.shape, name=name)
+
+
+def minimum(var1, var2, name=None):
+    """Compute elementwise min among tensors
+
+    Parameters
+    ----------
+    other : Tensor
+        Tensor to compare
+
+    name : str
+        Name of new Tensor
+
+    Returns
+    -------
+    Tensor
+        The resulting Tensor
+    """
+    # TODO: Add Broadcasting
+    _tensor = T.minimum(var1.unwrap(), var2.unwrap())
+    return Tensor(tensor=_tensor, shape=var1.shape, name=name)

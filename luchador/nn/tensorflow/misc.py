@@ -1,9 +1,12 @@
 """Module for providing backend-common interface for misc task"""
 from __future__ import absolute_import
 
-from .wrapper import Operation
+import tensorflow as tf
 
-__all__ = ['build_sync_op']
+import luchador
+from .wrapper import Operation, Tensor
+
+__all__ = ['build_sync_op', 'one_hot', 'maximum', 'minimum']
 
 
 def build_sync_op(source_vars, target_vars, tau=None, name='sync'):
@@ -39,3 +42,79 @@ def build_sync_op(source_vars, target_vars, tau=None, name='sync'):
             src = (1 - tau) * tgt + tau * src
         _operations.append(tgt.assign(src))
     return Operation(op=_operations, name=name)
+
+
+###############################################################################
+def one_hot(var, n_classes, dtype=None, name=None):
+    """Convert to one-hot encoding.
+
+    Parameters
+    ----------
+    n_classes : int
+        Number of label to encode
+
+    dtype : str
+        The dtype of the resulting Tensor. Default to floatX
+
+    name : str
+        Name of operation
+
+    Returns
+    -------
+    Tensor
+        Tensor with shape ``(var.shape[0], n_classes)``
+
+    Notes
+    -----
+    The Tensor must be either vector or 2D matrix
+    """
+    if not var.n_dim == 1:
+        raise ValueError('Tensor must be 1D.')
+
+    _dtype = dtype or luchador.get_nn_dtype()
+    _tensor = tf.one_hot(
+        var.unwrap(), depth=n_classes, dtype=_dtype, name=name)
+    return Tensor(tensor=_tensor, name=name)
+
+
+###############################################################################
+def maximum(var1, var2, name=None):
+    """Compute elementwise max against other tensor
+
+    Parameters
+    ----------
+    other : Tensor
+        Tensor to compare. In Tensorflow backend, the shape of other
+        Tensor can be different as long as it is broadcastable.
+
+    name : str
+        Name of new Tensor
+
+    Returns
+    -------
+    Tensor
+        The resulting Tensor
+    """
+    _tensor = tf.maximum(var1.unwrap(), var2.unwrap(), name=name)
+    return Tensor(tensor=_tensor, name=name)
+
+
+def minimum(var1, var2, name=None):
+    """Compute elementwise min against other tensor
+
+    Parameters
+    ----------
+    other : Tensor
+        Tensor to compare. In Tensorflow backend, the shape of other
+        Tensor can be different as long as it is broadcastable.
+
+    name : str
+        Name of new Tensor
+
+    Returns
+    -------
+    Tensor
+        The resulting Tensor
+    """
+    _tensor = tf.minimum(var1.unwrap(), var2.unwrap(), name=name)
+    return Tensor(tensor=_tensor, name=name)

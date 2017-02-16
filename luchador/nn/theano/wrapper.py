@@ -154,7 +154,8 @@ class TensorMixin(object):  # pylint: disable=too-few-public-methods
         Tensor
             The resulting Tensor
         """
-        _tensor = self._tensor.mean(axis=axis, keepdims=keep_dims, dtype=dtype)
+        _tensor = self.unwrap().mean(
+            axis=axis, keepdims=keep_dims, dtype=dtype)
         _shape = _compute_reduced_shape(axis, self.shape, keep_dims)
         return Tensor(tensor=_tensor, shape=_shape, name=name)
 
@@ -176,7 +177,7 @@ class TensorMixin(object):  # pylint: disable=too-few-public-methods
         Tensor
             The resulting Tensor
         """
-        _tensor = self._tensor.sum(axis=axis, keepdims=keep_dims, dtype=dtype)
+        _tensor = self.unwrap().sum(axis=axis, keepdims=keep_dims, dtype=dtype)
         _shape = _compute_reduced_shape(axis, self.shape, keep_dims)
         return Tensor(tensor=_tensor, shape=_shape, name=name)
 
@@ -198,49 +199,9 @@ class TensorMixin(object):  # pylint: disable=too-few-public-methods
         Tensor
             The resulting Tensor
         """
-        _tensor = self._tensor.max(axis=axis, keepdims=keep_dims)
+        _tensor = self.unwrap().max(axis=axis, keepdims=keep_dims)
         _shape = _compute_reduced_shape(axis, self.shape, keep_dims)
         return Tensor(tensor=_tensor, shape=_shape, name=name)
-
-    def maximum(self, other, name=None):
-        """Compute elementwise max against other tensor
-
-        Parameters
-        ----------
-        other : Tensor
-            Tensor to compare
-
-        name : str
-            Name of new Tensor
-
-        Returns
-        -------
-        Tensor
-            The resulting Tensor
-        """
-        # TODO: Add Broadcasting
-        _tensor = T.maximum(self._tensor, other.unwrap())
-        return Tensor(tensor=_tensor, shape=self.shape, name=name)
-
-    def minimum(self, other, name=None):
-        """Compute elementwise min against other tensor
-
-        Parameters
-        ----------
-        other : Tensor
-            Tensor to compare
-
-        name : str
-            Name of new Tensor
-
-        Returns
-        -------
-        Tensor
-            The resulting Tensor
-        """
-        # TODO: Add Broadcasting
-        _tensor = T.minimum(self._tensor, other.unwrap())
-        return Tensor(tensor=_tensor, shape=self.shape, name=name)
 
     def clip(self, max_value, min_value, name=None):
         """Clip value elementwise
@@ -259,38 +220,8 @@ class TensorMixin(object):  # pylint: disable=too-few-public-methods
             max_value = max_value.unwrap()
         if isinstance(min_value, base_wrapper.BaseWrapper):
             min_value = min_value.unwrap()
-        _tensor = self._tensor.clip(a_max=max_value, a_min=min_value)
+        _tensor = self.unwrap().clip(a_max=max_value, a_min=min_value)
         return Tensor(tensor=_tensor, shape=self.shape, name=name)
-
-    def one_hot(self, n_classes, dtype=None, name=None):
-        """Convert to one-hot encoding.
-
-        Parameters
-        ----------
-        n_classes : int
-            Number of label to encode
-
-        dtype : str
-             The dtype of the resulting Tensor. Default to floatX
-
-        name : str
-             Name of operation
-
-        Returns
-        -------
-        Tensor
-            Tensor with shape ``(self.shape[0], n_classes)``
-
-        Note
-        ----
-        The Tensor must be either vector or 2D matrix
-        """
-        if not self.n_dim == 1:
-            raise ValueError('Tensor must be 1D.')
-
-        _tensor = T.extra_ops.to_one_hot(self._tensor, n_classes, dtype=dtype)
-        shape = [self.shape[0], n_classes]
-        return Tensor(tensor=_tensor, shape=shape, name=name)
 
     def reshape(self, new_shape, name=None):
         """Reshape tensor.
@@ -301,19 +232,19 @@ class TensorMixin(object):  # pylint: disable=too-few-public-methods
             new shape
 
         name : str
-             Name of operation
+            Name of operation
 
         Returns
         -------
         Tensor
             Tensor with new shape
 
-        Note
-        ----
+        Notes
+        -----
         This function is for conveniently invoke underlying reshap function.
         Shape-checking and inference is not carried out.
         """
-        _tensor = T.reshape(self._tensor, newshape=new_shape)
+        _tensor = T.reshape(self.unwrap(), newshape=new_shape)
         return Tensor(tensor=_tensor, shape=new_shape, name=name)
 
     def tile(self, pattern, name=None):
@@ -325,22 +256,22 @@ class TensorMixin(object):  # pylint: disable=too-few-public-methods
             tile pattern
 
         name : str
-             Name of operation
+            Name of operation
 
         Returns
         -------
         Tensor
             Resulting tensor.
 
-        Note
-        ----
+        Notes
+        -----
         Currently only constant pattern is allowed.
         """
         if not luchador.util.is_iteratable(pattern):
             raise ValueError('`pattern` must be iteratable')
 
         _shape = _compute_tile_shape(pattern, self.shape)
-        _tensor = T.tile(self._tensor, pattern)
+        _tensor = T.tile(self.unwrap(), pattern)
         return Tensor(tensor=_tensor, shape=_shape, name=name)
 
 
