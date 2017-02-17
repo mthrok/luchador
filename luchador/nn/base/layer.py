@@ -11,7 +11,7 @@ import luchador.util
 _LG = logging.getLogger(__name__)
 
 
-class BaseLayer(luchador.util.SerializeMixin, object):
+class BaseLayer(luchador.util.StoreMixin, object):
     """Define common interface (``build``, ``parameters`` ...) of Layer"""
     __metaclass__ = abc.ABCMeta
 
@@ -19,39 +19,55 @@ class BaseLayer(luchador.util.SerializeMixin, object):
         super(BaseLayer, self).__init__()
         self._store_args(**kwargs)
 
-        self.update_operations = OrderedDict()
-        self.parameter_variables = OrderedDict()
+        self._update_operation = None
+        self._parameter_variables = OrderedDict()
 
     ###########################################################################
-    # Setter for learnable parameters
-    def _add_update(self, name, operation):
-        self.update_operations[name] = operation
+    # Getter for learnable parameters
+    def get_parameter_variables(self, name=None):
+        """Get parameter variables
+
+        Parameters
+        ----------
+        name : str or None
+            The name of the parameter (such as ``weight``) to retrieve.
+            If not given, all parameter Variables consisting this layer are
+            returned.
+
+        Returns
+        -------
+        [list of] Variable
+            When name is given, a single Variable is returned, otherwise
+            list of Variables are returned.
+        """
+        if name:
+            return self._parameter_variables[name]
+        return self._parameter_variables.values()
 
     def get_update_operation(self):
-        """Get operation which updates Layer parameter
+        """Get Operation which updates Layer parameter
 
         For layers which require updates other than back propagate
         optimization, Operation returned by this function must be
         fed to Session.run function.
 
         Currently only BatchNormalization requires such operation.
-        """
-        return self._get_update_operation()
 
-    @abc.abstractmethod
-    def _get_update_operation(self):
-        raise NotImplementedError(
-            '`get_update_operation` method is not implemented for {}'
-            .format(self.__class__)
-        )
+        Returns
+        -------
+        Operation or None
+            If update Operation is defined (BatchNormalization), Operation is
+            returned, else None
+        """
+        return self._update_operation
 
     ###########################################################################
-    # Setter/Getter for learnable parameters
+    # Setter for learnable parameters
     def _add_parameter(self, name, variable):
-        self.parameter_variables[name] = variable
+        self._parameter_variables[name] = variable
 
     def _get_parameter(self, name):
-        return self.parameter_variables[name]
+        return self._parameter_variables[name]
 
     ###########################################################################
     # Functions for building computation graph
@@ -105,6 +121,11 @@ class BaseDense(BaseLayer):
 
     with_bias : bool
         When True, bias term is added after multiplication.
+
+    Notes
+    -----
+    To fetch paramter variables with :any:`get_variable`, use keys
+    ``weight`` and ``bias`` in the same scope as layer build.
     """
     def __init__(self, n_nodes, initializers=None, with_bias=True):
         super(BaseDense, self).__init__(
@@ -128,7 +149,6 @@ class BaseConv2D(BaseLayer):
         NHWC format : (Tensorflow backend only)
             (batch size, output height, output width, **#output channels**)
 
-
     Parameters
     ----------
     filter_height : int
@@ -149,7 +169,7 @@ class BaseConv2D(BaseLayer):
             The output is subsapmled by ``strides[0]`` in height and
             ``striders[1]`` in width.
 
-        Note
+        Notes
             [Tensorflow only]
 
             When given type is tuple of four int, their order must be
@@ -169,6 +189,11 @@ class BaseConv2D(BaseLayer):
     kwargs
         use_cudnn_on_gpu
             [Tensorflow only] : Arguments passed to ``tf.nn.conv2d``
+
+    Notes
+    -----
+    To fetch paramter variables with :any:`get_variable`, use keys
+    ``weight`` and ``bias`` in the same scope as layer build.
     """
     def __init__(self, filter_height, filter_width, n_filters, strides,
                  padding='VALID', initializers=None, with_bias=True, **kwargs):
@@ -289,6 +314,14 @@ class BaseBatchNormalization(BaseLayer):
 
     .. math::
         y = \\frac{x - \\mu}{\\sqrt{\\sigma^2 + \\epsilon}} \\gamma + \\beta
+
+    Notes
+    -----
+    To fetch paramter variables with :any:`get_variable`, use keys ``mean``,
+    ``var``, ``scale`` and ``offset`` in the same scope as layer build.
+
+    To fetch update operation with :any:`get_operation` use key ``bn_update``
+    in the same scope as layer build.
 
     References
     ----------
