@@ -6,8 +6,6 @@ import logging
 import luchador.nn
 from .base_model import BaseModel
 
-__all__ = ['Sequential']
-
 _LG = logging.getLogger(__name__)
 
 
@@ -87,9 +85,6 @@ class Sequential(BaseModel):
         super(Sequential, self).__init__()
         # Layer configurations
         self.layer_configs = []
-        # I/O tensors of the model
-        self.input = None
-        self.output = None
 
     ###########################################################################
     def add_layer(self, layer, scope=None):
