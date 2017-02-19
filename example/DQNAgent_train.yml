@@ -1,4 +1,5 @@
 alias:
+  memory_size: &memory_size 25000
   width: &width 84
   height: &height 84
   stack: &stack 4
@@ -9,23 +10,15 @@ alias:
 
 typename: DQNAgent
 args:
+  record_config:
+    sort_frequency: *memory_size
+    stack: *stack
+
   recorder_config:
-    memory_size: 1000000
-    batch_size: *batch
-    buffer_config:
-      state:
-        shape:
-          - *height
-          - *width
-        dtype: uint8
-        stack: *stack
-        transition: 2
-      action:
-        dtype: uint8
-      reward:
-        dtype: float32
-      terminal:
-        dtype: bool
+    buffer_size: *memory_size
+    sample_size: *batch
+    priority: 0.7
+    importance: 0.5
 
   model_config:
     model_file: vanilla_dqn
@@ -77,9 +70,8 @@ args:
   training_config:
     # Training starts after this number of transitions are recorded
     # Giving negative value effectively disable training and network sync
-    train_start: 50000
+    train_start: *memory_size
     # Train network every this number of observations are made
     train_frequency: 4
     # Sync networks every this number of observations are made
     sync_frequency: 10000
-    n_samples: *batch
