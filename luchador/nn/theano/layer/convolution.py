@@ -3,6 +3,7 @@ from __future__ import division
 from __future__ import absolute_import
 
 import logging
+import warnings
 
 import theano.tensor as T
 
@@ -59,6 +60,71 @@ def _validate_strides(strides):
     raise ValueError('`strides` must be either int or tuple of two int')
 
 
+def _get_output_shape(input_shape, filter_shape, subsample, border_mode):
+    """Compute output shape
+
+    Parameters
+    ----------
+    input_shape : tuple
+        Input shape in order of (batch, n_input_channels, row, col)
+
+    filter_shape : tuple
+        Filter shape in order of (n_filters, n_input_channels, rows, cols)
+
+    subsample : tuple
+        Subsampling (stride) in (row, column) direction
+
+    border_mdoe : str
+        Either 'full', 'half', 'same' or 'valid'
+    """
+    f_row, f_col = filter_shape[2:4]
+    in_row, in_col = input_shape[2:4]
+    sub_row, sub_col = subsample
+    # Process padding
+    if border_mode in ['full', 'valid']:
+        pass
+    elif border_mode == 'half':
+        in_row += 2 * (f_row // 2)
+        in_col += 2 * (f_col // 2)
+    elif isinstance(border_mode, int):
+        in_row += 2 * border_mode
+        in_col += 2 * border_mode
+    else:
+        in_row += 2 * border_mode[0]
+        in_col += 2 * border_mode[1]
+    # Process convolution
+    if border_mode == 'full':
+        out_row = (in_row + f_row - 2) // sub_row + 1
+        out_col = (in_col + f_col - 2) // sub_col + 1
+        warn_row = in_row < sub_row
+        warn_col = in_col < sub_col
+    else:
+        out_row = (in_row - f_row) // sub_row + 1
+        out_col = (in_col - f_col) // sub_col + 1
+        warn_row = bool((in_row - f_row) % sub_row)
+        warn_col = bool((in_col - f_col) % sub_col)
+    if warn_col:
+        warnings.warn(
+            'Convolution op will not cover the right side of the input.'
+            'Check the width configuration of filter and stride.',
+            RuntimeWarning
+        )
+    if warn_row:
+        warnings.warn(
+            'Convolution op will not cover the bottom part of the input.'
+            'Check the height configuration of filter and stride.',
+            RuntimeWarning
+        )
+    # Reconstruct in NCHW format
+    return (input_shape[0], filter_shape[0], out_row, out_col)
+
+
+def _get_subsample(strides):
+    if isinstance(strides, int):
+        return (strides, strides)
+    return strides
+
+
 class Conv2D(base_layer.BaseConv2D):
     """Implement Conv2D layer in Theano.
 
@@ -69,70 +135,19 @@ class Conv2D(base_layer.BaseConv2D):
         _validate_strides(strides)
 
     ###########################################################################
-    def _instantiate_parameters(self, n_inputs, dtype):
+    def _instantiate_parameters(self, filter_shape, dtype):
         initializers = get_initializers(
             self.args.get('initializers') or {}, self.args['with_bias'])
 
-        w_shape = (self.args['n_filters'], n_inputs,
-                   self.args['filter_height'], self.args['filter_width'])
         w_init = initializers['weight']
-        self._add_parameter('weight', scope.get_variable(
-            name='weight', shape=w_shape, initializer=w_init, dtype=dtype))
-
+        w_var = scope.get_variable(
+            name='weight', shape=filter_shape, initializer=w_init, dtype=dtype)
+        self._add_parameter('weight', w_var)
         if self.args['with_bias']:
             b_shape = (self.args['n_filters'],)
             b_init = initializers['bias']
             self._add_parameter('bias', scope.get_variable(
                 name='bias', shape=b_shape, initializer=b_init, dtype=dtype))
-
-    def _get_subsample(self):
-        if isinstance(self.args['strides'], int):
-            return (self.args['strides'], self.args['strides'])
-        return self.args['strides']
-
-    def _get_border_mode(self):
-        return _map_border_mode(self.args['padding'])
-
-    def _get_output_shape(self, input_shape, filter_shape):
-        """Compute output shape
-
-        Parameters
-        ----------
-        input_shape : tuple
-            Input shape in order of (batch, n_input_channels, row, col)
-
-        filter_shape : tuple
-            Filter shape in order of (n_filters, n_input_channels, rows, cols)
-        """
-        # TODO: Add warning if
-        # parts of image are not covered because of subsampling
-        f_row, f_col = filter_shape[2:4]
-        in_row, in_col = input_shape[2:4]
-        sub_row, sub_col = self._get_subsample()
-        border_mode = self._get_border_mode()
-        # Process padding
-        if border_mode in ['full', 'valid']:
-            pass
-        elif border_mode == 'half':
-            in_row += 2 * (f_row // 2)
-            in_col += 2 * (f_col // 2)
-        elif isinstance(border_mode, int):
-            in_row += 2 * border_mode
-            in_col += 2 * border_mode
-        else:
-            in_row += 2 * border_mode[0]
-            in_col += 2 * border_mode[1]
-        # Process convolution
-        if border_mode == 'full':
-            out_row = (in_row + f_row - 2) // sub_row + 1
-            out_col = (in_col + f_col - 2) // sub_col + 1
-        else:
-            out_row = (in_row - f_row) // sub_row + 1
-            out_col = (in_col - f_col) // sub_col + 1
-        # Reconstruct
-        n_batches, n_filters = input_shape[0], filter_shape[0]
-        output_shape = (n_batches, n_filters, out_row, out_col)
-        return output_shape
 
     def _build(self, input_tensor):
         """Build 2D conolution operation of the input tensor
@@ -149,22 +164,31 @@ class Conv2D(base_layer.BaseConv2D):
         """
         input_shape = input_tensor.shape
         _LG.debug('    input_shape: %s', input_shape)
-        _LG.debug('    border_mode: %s', self._get_border_mode())
 
         if not len(input_shape) == 4:
-            raise ValueError('Input tensor must be 4D. '
-                             'Insted of {}'.format(len(input_shape)))
+            raise ValueError(
+                'Input tensor must be 4D. ({})'.format(input_tensor))
+
+        border_mode = _map_border_mode(self.args['padding'])
+        subsample = _get_subsample(self.args['strides'])
+        filter_shape = (
+            self.args['n_filters'], input_shape[1],
+            self.args['filter_height'], self.args['filter_width']
+        )
+        output_shape = _get_output_shape(
+            input_shape, filter_shape, subsample, border_mode)
+
+        _LG.debug('    border_mode: %s', border_mode)
+        _LG.debug('    subsample: %s', subsample)
+        _LG.debug('    filter_shape: %s', filter_shape)
+        _LG.debug('    output_shape: %s', output_shape)
 
         if not self._parameter_variables:
-            self._instantiate_parameters(input_shape[1], input_tensor.dtype)
+            self._instantiate_parameters(filter_shape, input_tensor.dtype)
 
-        filters = self._get_parameter('weight').unwrap()
-        filter_shape = filters.get_value().shape
-        subsample = self._get_subsample()
-        border_mode = self._get_border_mode()
-
+        filters = self._get_parameter('weight')
         output_tensor = T.nnet.conv2d(
-            input_tensor.unwrap(), filters=filters,
+            input_tensor.unwrap(), filters=filters.unwrap(),
             input_shape=input_shape, filter_shape=filter_shape,
             border_mode=border_mode, subsample=subsample)
 
@@ -173,6 +197,4 @@ class Conv2D(base_layer.BaseConv2D):
             bias = bias.dimshuffle(('x', 0, 'x', 'x'))
             output_tensor = bias + output_tensor
 
-        output_shape = self._get_output_shape(input_shape, filter_shape)
-        _LG.debug('    output_shape: %s', output_shape)
         return wrapper.Tensor(output_tensor, shape=output_shape, name='output')
