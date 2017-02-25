@@ -1,8 +1,16 @@
-layer:
-  typename: Dense
+model:
+  typename: Sequential
   args:
-    n_nodes: 7
-    with_bias: False
+    input_config:
+      typename: Input
+      args:
+        shape: {input_shape}
+        name: input
+    layer_configs:
+      - typename: Dense
+        args:
+          n_nodes: 7
+          with_bias: False
 
 input: input_randn_5x3.h5
 
