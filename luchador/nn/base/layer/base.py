@@ -25,7 +25,11 @@ class BaseLayer(luchador.util.StoreMixin, object):
         self._parameter_variables = OrderedDict()
 
     ###########################################################################
-    # Getter for learnable parameters
+    # Getter/Setter for learnable parameters
+    def _create_parameter_slots(self, *names):
+        for name in names:
+            self._parameter_variables[name] = None
+
     def get_parameter_variables(self, name=None):
         """Get parameter variables
 
@@ -55,8 +59,16 @@ class BaseLayer(luchador.util.StoreMixin, object):
             Name and Variable pair. See each Layer's documentation to find the
             of correct name to give.
         """
+        keys = self._parameter_variables.keys()
+        for key in variables.keys():
+            if key not in keys:
+                raise ValueError(
+                    'Unexpected parameter name: `{}`. '
+                    'Accepted names are {}'.format(key, keys))
         self._parameter_variables.update(variables)
 
+    ###########################################################################
+    # Getter for update operation
     def get_update_operation(self):
         """Get Operation which updates Layer parameter
 
@@ -73,14 +85,6 @@ class BaseLayer(luchador.util.StoreMixin, object):
             returned, else None
         """
         return self._update_operation
-
-    ###########################################################################
-    # Setter for learnable parameters
-    def _add_parameter(self, name, variable):
-        self._parameter_variables[name] = variable
-
-    def _get_parameter(self, name):
-        return self._parameter_variables[name]
 
     ###########################################################################
     # Functions for building computation graph

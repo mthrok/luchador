@@ -30,36 +30,42 @@ class BatchNormalization(base_layer.BaseBatchNormalization):
         _LG.debug('     Axes: %s', self._axes)
         _LG.debug('  Pattern: %s', self._pattern)
 
-        mean = scope.get_variable(
-            name='mean', shape=shape, trainable=False,
-            initializer=initializer.Constant(0), dtype=dtype)
-        var = scope.get_variable(
-            name='var', shape=shape, trainable=False,
-            initializer=initializer.Constant(1), dtype=dtype)
+        if self._parameter_variables['mean'] is None:
+            mean = scope.get_variable(
+                name='mean', shape=shape, trainable=False,
+                initializer=initializer.Constant(0), dtype=dtype)
+            self.set_parameter_variables({'mean': mean})
 
-        scale = scope.get_variable(
-            name='scale', shape=shape, trainable=True,
-            initializer=initializer.Constant(self.args['scale']), dtype=dtype)
-        offset = scope.get_variable(
-            name='offset', shape=shape, trainable=True,
-            initializer=initializer.Constant(self.args['offset']), dtype=dtype)
+        if self._parameter_variables['var'] is None:
+            var = scope.get_variable(
+                name='var', shape=shape, trainable=False,
+                initializer=initializer.Constant(1), dtype=dtype)
+            self.set_parameter_variables({'var': var})
 
-        self._add_parameter('mean', mean)
-        self._add_parameter('var', var)
-        self._add_parameter('scale', scale)
-        self._add_parameter('offset', offset)
+        if self._parameter_variables['scale'] is None:
+            scale_val = self.args['scale']
+            scale = scope.get_variable(
+                name='scale', shape=shape, trainable=True,
+                initializer=initializer.Constant(scale_val), dtype=dtype)
+            self.set_parameter_variables({'scale': scale})
+
+        if self._parameter_variables['offset'] is None:
+            offset_val = self.args['offset']
+            offset = scope.get_variable(
+                name='offset', shape=shape, trainable=True,
+                initializer=initializer.Constant(offset_val), dtype=dtype)
+            self.set_parameter_variables({'offset': offset})
 
     def _build(self, input_tensor):
-        if not self._parameter_variables:
-            self._instantiate_parameters(
-                input_tensor.shape, input_tensor.dtype)
+        self._instantiate_parameters(
+            input_tensor.shape, input_tensor.dtype)
 
         input_tensor_ = input_tensor.unwrap()
 
-        mean_acc = self._get_parameter('mean').unwrap()
-        var_acc = self._get_parameter('var').unwrap()
-        scale = self._get_parameter('scale').unwrap()
-        offset = self._get_parameter('offset').unwrap()
+        mean_acc = self.get_parameter_variables('mean').unwrap()
+        var_acc = self.get_parameter_variables('var').unwrap()
+        scale = self.get_parameter_variables('scale').unwrap()
+        offset = self.get_parameter_variables('offset').unwrap()
 
         if self.args['learn']:
             decay = self.args['decay']

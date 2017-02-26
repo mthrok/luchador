@@ -36,23 +36,23 @@ class Dense(base_layer.BaseDense):
         init = _get_weight_init(self.args['initializers'].get('weight'))
         weight = scope.get_variable(
             name='weight', shape=shape, initializer=init, dtype=dtype)
-        self._add_parameter('weight', weight)
+        self.set_parameter_variables({'weight': weight})
 
     def _build_bias(self, shape, dtype):
         init = _get_bias_init(self.args['initializers'].get('bias'))
         bias = scope.get_variable(
             name='bias', shape=shape, initializer=init, dtype=dtype)
-        self._add_parameter('bias', bias)
+        self.set_parameter_variables({'bias': bias})
 
     def _instantiate_parameters(self, n_inputs, dtype):
-        if 'weight' not in self._parameter_variables:
+        if self._parameter_variables['weight'] is None:
             shape = (n_inputs, self.args['n_nodes'])
             self._build_weight(shape=shape, dtype=dtype)
 
         if not self.args['with_bias']:
             return
 
-        if 'bias' not in self._parameter_variables:
+        if self._parameter_variables['bias'] is None:
             shape = (self.args['n_nodes'],)
             self._build_bias(shape=shape, dtype=dtype)
 
@@ -63,14 +63,13 @@ class Dense(base_layer.BaseDense):
             raise ValueError('Input tensor must be 2D. '
                              'Insted of {}'.format(len(input_shape)))
 
-        if not self._parameter_variables:
-            self._instantiate_parameters(input_shape[1], input_tensor.dtype)
+        self._instantiate_parameters(input_shape[1], input_tensor.dtype)
 
-        weight = self._get_parameter('weight').unwrap()
+        weight = self.get_parameter_variables('weight').unwrap()
         output = T.dot(input_tensor.unwrap(), weight)
 
         if self.args['with_bias']:
-            bias = self._get_parameter('bias').unwrap()
+            bias = self.get_parameter_variables('bias').unwrap()
             output = output + bias
         output_shape = (input_shape[0], self.args['n_nodes'])
         return wrapper.Tensor(output, shape=output_shape, name='output')
