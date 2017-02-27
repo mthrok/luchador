@@ -40,5 +40,8 @@ class BaseBatchNormalization(BaseLayer):
             decay=decay, epsilon=epsilon,
             scale=scale, offset=offset, learn=learn)
 
-        self._create_parameter_slots('mean', 'var', 'scale', 'offset')
         self._axes = self._pattern = None
+        for key in ['mean', 'var']:
+            self._create_parameter_slot(key, train=False, serialize=True)
+        for key in ['scale', 'offset']:
+            self._create_parameter_slot(key, train=True, serialize=True)

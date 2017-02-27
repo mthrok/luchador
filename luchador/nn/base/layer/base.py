@@ -24,11 +24,17 @@ class BaseLayer(luchador.util.StoreMixin, object):
         self._update_operation = None
         self._parameter_variables = OrderedDict()
 
+        self._parameters_to_train = []
+        self._parameters_to_serialize = []
+
     ###########################################################################
     # Getter/Setter for learnable parameters
-    def _create_parameter_slots(self, *names):
-        for name in names:
-            self._parameter_variables[name] = None
+    def _create_parameter_slot(self, name, train=True, serialize=True):
+        self._parameter_variables[name] = None
+        if train:
+            self._parameters_to_train.append(name)
+        if serialize:
+            self._parameters_to_serialize.append(name)
 
     def get_parameter_variables(self, name=None):
         """Get parameter variables
@@ -50,6 +56,49 @@ class BaseLayer(luchador.util.StoreMixin, object):
             return self._parameter_variables[name]
         return self._parameter_variables.values()
 
+    def get_parameters_to_train(self, name=None):
+        """Get parameter variables for training.
+
+        This function is mainly for retrieving variables which are fed to
+        gradient computation as `wrt`.
+
+        Parameters
+        ----------
+        name : str or None
+            The name of the parameter (such as ``weight``) to retrieve.
+            If not given, all parameter Variables consisting this layer are
+            returned.
+
+        Returns
+        -------
+        [list of] Variable
+            When name is given, a single Variable is returned, otherwise
+            list of Variables are returned.
+        """
+        if name and name not in self._parameters_to_train:
+            raise ValueError(
+                'Unexpected training parameter name ({}) was given. '
+                'Must be one of {}'.format(name, self._parameters_to_train)
+            )
+        if name:
+            return self._parameter_variables[name]
+        return [
+            self._parameter_variables[key]
+            for key in self._parameters_to_train]
+
+    def get_parameters_to_serialize(self):
+        """Get parameter variables for serialization.
+
+        This function returns parameter variables need to be serialized.
+
+        Returns
+        -------
+        list of Variables
+        """
+        return [
+            self._parameter_variables[key]
+            for key in self._parameters_to_serialize]
+
     def set_parameter_variables(self, **variables):
         """Set parameter variables
 
@@ -59,12 +108,11 @@ class BaseLayer(luchador.util.StoreMixin, object):
             Name and Variable pair. See each Layer's documentation to find the
             of correct name to give.
         """
-        keys = self._parameter_variables.keys()
-        for key in variables.keys():
-            if key not in keys:
+        for key in variables:
+            if key not in self._parameter_variables:
                 raise ValueError(
-                    'Unexpected parameter name: `{}`. '
-                    'Accepted names are {}'.format(key, keys))
+                    'Unexpected parameter name: `{}`. Accepted names are {}'
+                    .format(key, self._parameter_variables.keys()))
         self._parameter_variables.update(variables)
 
     ###########################################################################

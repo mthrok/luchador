@@ -31,16 +31,42 @@ class Container(BaseModel):
         return self
 
     def get_parameter_variables(self):
-        """Get Variable objects consisting the parameters of this model
+        """Get parameter Variables
 
         Returns
         -------
         list
-            List of Variables from layer parameters
+            List of Variables from interanal models.
         """
         ret = []
         for name_ in self.models.keys():
             ret.extend(self.models[name_].get_parameter_variables())
+        return ret
+
+    def get_parameters_to_train(self):
+        """Get parameter Variables to be fet to gradient computation.
+
+        Returns
+        -------
+        list
+            List of Variables from interanal models.
+        """
+        ret = []
+        for name_ in self.models.keys():
+            ret.extend(self.models[name_].get_parameters_to_train())
+        return ret
+
+    def get_parameters_to_serialize(self):
+        """Get parameter Variables to be serialized.
+
+        Returns
+        -------
+        list
+            List of Variables from internal models.
+        """
+        ret = []
+        for name_ in self.models.keys():
+            ret.extend(self.models[name_].get_parameters_to_serialize())
         return ret
 
     def get_output_tensors(self):
