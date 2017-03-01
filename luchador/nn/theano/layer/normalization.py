@@ -3,7 +3,6 @@ from __future__ import division
 from __future__ import absolute_import
 
 import logging
-from collections import OrderedDict
 
 import theano.tensor as T
 
@@ -62,10 +61,10 @@ class BatchNormalization(base_layer.BaseBatchNormalization):
 
         input_tensor_ = input_tensor.unwrap()
 
-        mean_acc = self.get_parameter_variables('mean').unwrap()
-        var_acc = self.get_parameter_variables('var').unwrap()
-        scale = self.get_parameter_variables('scale').unwrap()
-        offset = self.get_parameter_variables('offset').unwrap()
+        mean_acc = self.get_parameter_variable('mean').unwrap()
+        var_acc = self.get_parameter_variable('var').unwrap()
+        scale = self.get_parameter_variable('scale').unwrap()
+        offset = self.get_parameter_variable('offset').unwrap()
 
         if self.args['learn']:
             decay = self.args['decay']
@@ -75,10 +74,17 @@ class BatchNormalization(base_layer.BaseBatchNormalization):
             new_mean_acc = decay * mean_acc + (1 - decay) * mean_in
             new_var_acc = decay * var_acc + (1 - decay) * var_in
 
-            self._update_operation = wrapper.Operation(
-                op=OrderedDict(
-                    [(mean_acc, new_mean_acc), (var_acc, new_var_acc)]),
-                name='bn_update',
+            self._update_operations.append(
+                wrapper.Operation(
+                    op={mean_acc: new_mean_acc},
+                    name='update_mean',
+                )
+            )
+            self._update_operations.append(
+                wrapper.Operation(
+                    op={var_acc: new_var_acc},
+                    name='update_var',
+                )
             )
 
             mean_acc = new_mean_acc

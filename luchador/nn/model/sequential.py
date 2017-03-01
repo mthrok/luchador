@@ -125,19 +125,6 @@ class Sequential(BaseModel):
 
     ###########################################################################
     # Functions for retrieving variables, tensors and operations
-    def get_parameter_variables(self):
-        """Get parameter Variables
-
-        Returns
-        -------
-        list
-            List of Variables from layer parameters
-        """
-        ret = []
-        for layer in self.layers:
-            ret.extend(layer.get_parameter_variables())
-        return ret
-
     def get_parameters_to_train(self):
         """Get parameter Variables to be fet to gradient computation.
 
@@ -184,14 +171,9 @@ class Sequential(BaseModel):
         """
         ret = []
         for layer in self.layers:
-            update = layer.get_update_operation()
-            if update:
-                ret.append(update)
+            ret.extend(layer.get_update_operations())
         return ret
 
     ###########################################################################
     def __repr__(self):
-        return repr({
-            'typename': self.__class__.__name__,
-            'layers': self.layers,
-        })
+        return repr({self.__class__.__name__: self.layers})

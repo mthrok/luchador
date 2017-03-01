@@ -32,19 +32,6 @@ class Container(BaseModel):
         self.models[name] = model
         return self
 
-    def get_parameter_variables(self):
-        """Get parameter Variables
-
-        Returns
-        -------
-        list
-            List of Variables from interanal models.
-        """
-        ret = []
-        for name_ in self.models.keys():
-            ret.extend(self.models[name_].get_parameter_variables())
-        return ret
-
     def get_parameters_to_train(self):
         """Get parameter Variables to be fet to gradient computation.
 
@@ -99,7 +86,4 @@ class Container(BaseModel):
 
     ###########################################################################
     def __repr__(self):
-        return repr({
-            'model_type': self.__class__.__name__,
-            'models': self.models,
-        })
+        return repr({self.__class__.__name__: self.models})
