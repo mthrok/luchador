@@ -5,7 +5,7 @@ import unittest
 
 import luchador
 from luchador import nn
-import luchador.nn.base.scope.theano as be
+import luchador.nn.core.base.scope.theano as be
 
 from tests.unit.fixture import TestCase
 
