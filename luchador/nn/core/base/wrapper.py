@@ -8,6 +8,7 @@ import numpy as np
 
 __all__ = [
     'BaseWrapper', 'BaseTensor', 'BaseVariable', 'BaseInput', 'BaseOperation',
+    'as_unwrapped'
 ]
 
 _LG = logging.getLogger(__name__)
@@ -152,6 +153,13 @@ class BaseWrapper(object):
 
     def __rtruediv__(self, other):
         return NotImplemented
+
+
+def as_unwrapped(value):
+    """Unwrap if the given is wrapper type."""
+    if isinstance(value, BaseWrapper):
+        return value.unwrap()
+    return value
 
 
 class BaseVariable(BaseWrapper):
