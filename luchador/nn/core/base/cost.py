@@ -5,6 +5,7 @@ import abc
 import logging
 
 import luchador.util
+from . import scope as scope_module
 
 _LG = logging.getLogger(__name__)
 
@@ -23,6 +24,9 @@ class BaseCost(luchador.util.StoreMixin, object):
         """
         super(BaseCost, self).__init__()
         self._store_args(**args)
+
+        self.input = None
+        self.output = None
 
     def __call__(self, target, prediction):
         """Convenience method to call `build`"""
@@ -44,47 +48,13 @@ class BaseCost(luchador.util.StoreMixin, object):
         Tensor
             Tensor holding the cost between the given input tensors.
         """
-        return self._build(target, prediction)
+        _LG.info(
+            '  Building cost %s between target: %s and prediction: %s',
+            type(self).__name__, target, prediction
+        )
+        with scope_module.variable_scope(self.args['name']):
+            return self._build(target, prediction)
 
     @abc.abstractmethod
     def _build(self, target, prediction):
         pass
-
-
-###############################################################################
-# pylint: disable=abstract-method
-class BaseSSE(BaseCost):
-    """Compute Sum-Squared-Error for the given target and prediction
-
-    .. math::
-        loss = (target - prediction) ^ {2}
-
-    Parameters
-    ----------
-    elementwise : Bool
-        When True, the cost tesnor returned by `build` method has the same
-        shape as its input Tensors. When False, the cost tensor is reduced to
-        scalar shape by taking average over batch and sum over feature.
-        Defalut: False.
-    """
-    def __init__(self, elementwise=False):
-        super(BaseSSE, self).__init__(elementwise=elementwise)
-
-
-class BaseSigmoidCrossEntropy(BaseCost):
-    """Directory computes classification entropy from logit
-
-    .. math::
-        loss = \\frac{-1}{n} \\sum\\limits_{n=1}^N \\left[ p_n \\log
-                \\hat{p}_n + (1 - p_n) \\log(1 - \\hat{p}_n) \\right]
-
-    Parameters
-    ----------
-    elementwise : Bool
-        When True, the cost tesnor returned by `build` method has the same
-        shape as its input Tensors. When False, the cost tensor is reduced to
-        scalar shape by taking average over batch and sum over feature.
-        Defalut: False.
-    """
-    def __init__(self, elementwise=False):
-        super(BaseSigmoidCrossEntropy, self).__init__(elementwise=elementwise)
