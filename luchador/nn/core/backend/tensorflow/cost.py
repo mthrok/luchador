@@ -5,7 +5,7 @@ import tensorflow as tf
 
 from . import wrapper
 
-__all__ = ['SSE', 'SigmoidCrossEntropy']
+__all__ = ['SSE', 'SigmoidCrossEntropy', 'SoftmaxCrossEntropy']
 # pylint: disable=too-few-public-methods, no-member
 
 
@@ -38,4 +38,19 @@ class SigmoidCrossEntropy(object):
             labels=labels, logits=logits)
 
         output = sce if self.args['elementwise'] else _mean_sum(sce)
+        return wrapper.Tensor(output)
+
+
+class SoftmaxCrossEntropy(object):
+    """Implement SoftmaxCrossEntropy in Tensorflow.
+
+    See :any:`BaseSoftmaxCrossEntropy` for detail.
+    """
+    def _build(self, target, logit):
+        x = logit.unwrap()
+        z = tf.stop_gradient(target.unwrap())
+
+        ce = tf.nn.softmax_cross_entropy_with_logits(labels=z, logits=x)
+
+        output = ce if self.args['elementwise'] else _mean_sum(ce)
         return wrapper.Tensor(output, name='output')
