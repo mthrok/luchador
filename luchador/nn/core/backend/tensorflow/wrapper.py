@@ -8,12 +8,14 @@ import tensorflow as tf
 
 import luchador
 import luchador.util
-from luchador.nn.core.base import (
-    wrapper as base_wrapper,
-    initializer as base_initializer,
-)
+from ...base import wrapper as base_wrapper
+from ...base import scope as scope_module
+from ...base import initializer as base_initializer
 
-__all__ = ['Variable', 'Tensor', 'Input', 'Operation']
+__all__ = [
+    'Variable', 'Tensor', 'Input', 'Operation',
+    'get_variable', 'make_variable',
+]
 
 
 class TensorMixin(object):  # pylint: disable=too-few-public-methods
@@ -69,8 +71,16 @@ def _get_dtype_str(tensor):
     return tensor.dtype.as_numpy_dtype().dtype.name
 
 
+def _get_scope():
+    return scope_module.get_variable_scope()
+
+
+def _is_reuse():
+    return _get_scope().reuse
+
+
 def _prefix_with_scope(name):
-    scope = tf.get_variable_scope().name
+    scope = _get_scope().name
     return '{}/{}'.format(scope, name) if scope else name
 
 
@@ -165,29 +175,23 @@ class Operation(base_wrapper.BaseOperation):
         super(Operation, self).__init__(op=op, name=name)
 
 
-def get_variable(
-        name, shape=None, dtype=None,
+def make_variable(
+        name, shape, dtype=None,
         initializer=None, regularizer=None, trainable=True, **kwargs):
-    """Create Variable with the given configuration or retrieve existing one
-
-    This function works mostly same as tf.get_variable, except when retrieving
-    existing Variable, you only need name and need not to give shape and dtype.
-
-    Mapping from name to VariableWrapper is internally cached so that you can
-    retrieve variable with only name.
+    """Create Variable with the given configuration
 
     Parameters
     ----------
     name : str
-        Name of Variable to create or retrieve
+        Name of Variable to create.
 
     shape : list
-        Used to create new Variable. Ignored when retrieving one
+        Used to create new Variable.
 
     dtype : str
-        Used to create new Variable. Ignored when retrieving one
+        Used to create new Variable.
 
-    initializer : luchador.nn.Initializer or tf.Initializer
+    initializer : luchador.nn.Initializer
         Initializer object
 
     kwargs
@@ -195,25 +199,25 @@ def get_variable(
         See
         https://www.tensorflow.org/versions/master/api_docs/python/state_ops.html#get_variable
     """
+    dtype = dtype or luchador.get_nn_dtype()
+
     if isinstance(initializer, base_initializer.BaseInitializer):
         initializer = initializer.unwrap()
 
-    scope = tf.get_variable_scope()
-    if scope.reuse:
-        name = '{}/{}'.format(scope.name, name) if scope.name else name
-        var = base_wrapper.retrieve_variable(name)
-        if var is None:
-            raise ValueError(
-                'Variable {} does not exist, disallowed. '
-                'Did you mean to set reuse=None in VarScope?'
-                .format(name)
-            )
-        return var
-    else:
-        dtype = dtype or luchador.get_nn_dtype()
-
-        variable = tf.get_variable(
+    return Variable(
+        tf.get_variable(
             name, shape=shape, dtype=dtype, initializer=initializer,
-            regularizer=regularizer, trainable=trainable, **kwargs)
+            regularizer=regularizer, trainable=trainable, **kwargs
+        ), name=name, trainable=trainable
+    )
 
-        return Variable(variable, trainable=trainable)
+
+def get_variable(name):
+    """Fetch variable by name, from the current scope or global scope"""
+    try:
+        scope = scope_module.get_variable_scope()
+        name_ = '{}/{}'.format(scope.name, name) if scope.name else name
+        return base_wrapper.retrieve_variable(name_)
+    except ValueError:
+        pass
+    return base_wrapper.retrieve_variable(name)

@@ -13,7 +13,10 @@ from ...base import wrapper as base_wrapper
 from ...base import scope as scope_module
 from ...base.getter import get_initializer
 
-__all__ = ['Variable', 'Tensor', 'Input', 'Operation', 'get_variable']
+__all__ = [
+    'Variable', 'Tensor', 'Input', 'Operation',
+    'get_variable', 'make_variable',
+]
 
 
 ###############################################################################
@@ -170,51 +173,55 @@ class Operation(base_wrapper.BaseOperation):
         super(Operation, self).__init__(op=op, name=name)
 
 
-def get_variable(
-        name, shape=None, dtype=None, initializer=None,
-        regularizer=None, trainable=True, **kwargs):
-    """Create/Fetch variable in the current scope
+def make_variable(
+        name, shape, dtype=None,
+        initializer=None, regularizer=None, trainable=True, **kwargs):
+    """Create Variable with the given configuration
 
-    regularizer is not supported and has no effect.
+    Parameters
+    ----------
+    name : str
+        Name of Variable to create or retrieve
+
+    shape : list
+        Used to create new Variable. Ignored when retrieving one
+
+    dtype : str
+        Used to create new Variable. Ignored when retrieving one
+
+    initializer : luchador.nn.Initializer or tf.Initializer
+        Initializer object
+
+    kwargs
+        Other arguments passed to ``theano.shared`` function.
     """
-    if regularizer:
-        warnings.warn('`regularizer` is not implemented in Theano backend.')
-
-    # 1. Check the current variable scope
     scope = _get_scope().name
     name_ = '{}/{}'.format(scope, name) if scope else name
 
-    var = base_wrapper.retrieve_variable(name_)
-    if _is_reuse():  # Search for an existing variable
-        if var is None:
-            raise ValueError(
-                'Variable {} does not exist, disallowed. '
-                'Did you mean to set reuse=None in VarScope?'
-                .format(name_)
-            )
-        return var
-    else:  # Create new variable
-        if var is not None:
-            raise ValueError(
-                'Variable {} already exists, disallowed. '
-                'Did you mean to set reuse=True in VarScope?'
-                .format(name_)
-            )
-        if shape is None:
-            raise ValueError(
-                'Shape of a new variable ({}) must be fully defined, '
-                'but instead was {}.'.format(name_, shape))
+    if not initializer:
+        initializer = get_initializer('NormalInitializer')(dtype=dtype)
 
-        if not initializer:
-            initializer = get_initializer('NormalInitializer')(dtype=dtype)
+    if regularizer:
+        warnings.warn('`regularizer` is not implemented in Theano backend.')
 
-        # Scalar variable should not have `broadcastable`
-        if not shape and 'broadcastable' in kwargs:
-            del kwargs['broadcastable']
+    # Scalar variable should not have `broadcastable`
+    if not shape and 'broadcastable' in kwargs:
+        del kwargs['broadcastable']
 
-        return Variable(
-            theano.shared(
-                value=np.array(initializer.sample(shape), dtype=dtype),
-                name=name_, allow_downcast=True, **kwargs
-            ), trainable=trainable, name=name,
-        )
+    return Variable(
+        theano.shared(
+            value=np.array(initializer.sample(shape), dtype=dtype),
+            name=name_, allow_downcast=True, **kwargs
+        ), name=name, trainable=trainable,
+    )
+
+
+def get_variable(name):
+    """Fetch variable by name, from the current scope or global scope"""
+    try:
+        scope = _get_scope().name
+        name_ = '{}/{}'.format(scope, name) if scope else name
+        return base_wrapper.retrieve_variable(name_)
+    except ValueError:
+        pass
+    return base_wrapper.retrieve_variable(name)
