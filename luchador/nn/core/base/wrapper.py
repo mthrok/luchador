@@ -10,7 +10,8 @@ from . import scope as scope_module
 
 __all__ = [
     'BaseWrapper', 'BaseTensor', 'BaseVariable', 'BaseInput', 'BaseOperation',
-    'as_unwrapped'
+    'as_unwrapped',
+    'get_input', 'get_variable', 'get_tensor', 'get_operation', 'get_grad',
 ]
 
 _LG = logging.getLogger(__name__)
@@ -28,75 +29,49 @@ _INPUTS = OrderedDict()
 _OPERATIONS = OrderedDict()
 
 
-def register_variable(name, var):
-    """Register variable to global list of variables for later resuse"""
+def _register_variable(name, var):
     if name in _VARIABLES:
         raise ValueError('Variable `{}` already exists.'.format(name))
     _VARIABLES[name] = var
 
 
-def register_tensor(name, tensor):
-    """Register tensor to global list of tensors for later resuse"""
+def _register_tensor(name, tensor):
     if name in _TENSORS:
         _LG.warning('Tensor `%s` already exists.', name)
     _TENSORS[name] = tensor
 
 
-def register_input(name, input_):
-    """Register Input to global list of inputs for later resuse"""
+def _register_input(name, input_):
     if name in _INPUTS:
         _LG.warning('Input `%s` already exists.', name)
     _INPUTS[name] = input_
 
 
-def register_operation(name, operation):
-    """Register Operation to global list of operations for later resuse"""
+def _register_operation(name, operation):
     if name in _OPERATIONS:
         _LG.warning('Operation `%s` already exists.', name)
     _OPERATIONS[name] = operation
 
 
-def retrieve_variable(name):
-    """Get variable from global list of variables"""
+def _retrieve_variable(name):
     if name not in _VARIABLES:
         raise ValueError('Variable `{}` does not exist.'.format(name))
     return _VARIABLES.get(name)
 
 
-def retrieve_tensor(name):
-    """Get tensor from global list of tensors
-
-    Parameters
-    ----------
-    name : str
-        Name of Tensor to fetch
-    """
+def _retrieve_tensor(name):
     if name not in _TENSORS:
         raise ValueError('Tensor `{}` does not exist.'.format(name))
     return _TENSORS.get(name)
 
 
-def retrieve_input(name):
-    """Get Input from global list of tensors
-
-    Parameters
-    ----------
-    name : str
-        Name of Input to fetch
-    """
+def _retrieve_input(name):
     if name not in _INPUTS:
         raise ValueError('Input `{}` does not exist.'.format(name))
     return _INPUTS[name]
 
 
-def retrieve_operation(name):
-    """Get Operation from global list of tensors
-
-    Parameters
-    ----------
-    name : str
-        Name of Operation to fetch
-    """
+def _retrieve_operation(name):
     if name not in _OPERATIONS:
         raise ValueError('Operation `{}` does not exist.'.format(name))
     return _OPERATIONS[name]
@@ -172,7 +147,7 @@ class BaseVariable(BaseWrapper):
         super(BaseVariable, self).__init__(
             tensor=tensor, shape=shape, name=name,
             dtype=dtype, trainable=trainable)
-        register_variable(name, self)
+        _register_variable(name, self)
 
 
 class BaseTensor(BaseWrapper):
@@ -205,7 +180,7 @@ class BaseTensor(BaseWrapper):
         To retrieve `tensor2` with `get_tensor` method, you need to call
         tensor2.register().
         """
-        register_tensor(name, self)
+        _register_tensor(name, self)
 
 
 class BaseInput(BaseWrapper):
@@ -213,7 +188,7 @@ class BaseInput(BaseWrapper):
     def __init__(self, tensor, shape, name, dtype):
         super(BaseInput, self).__init__(
             tensor=tensor, shape=shape, name=name, dtype=dtype)
-        register_input(name, self)
+        _register_input(name, self)
 
 
 class BaseOperation(object):
@@ -223,19 +198,131 @@ class BaseOperation(object):
         self.name = name
 
         if name:
-            register_operation(name, self)
+            _register_operation(name, self)
 
     def unwrap(self):
         """Returns the underlying backend-specific operation object"""
         return self.op
 
 
+###############################################################################
 def get_variable(name):
-    """Fetch variable by name, from the current scope or global scope"""
+    """Get an instance of ``Variable`` from the current or the global scope
+
+    Parameters
+    ----------
+    name : str
+        name of ``Variable`` instance to get
+
+    Returns
+    -------
+    Variable
+    """
     scope = scope_module.get_variable_scope().name
     try:
         name_ = '{}/{}'.format(scope, name) if scope else name
-        return retrieve_variable(name_)
+        return _retrieve_variable(name_)
     except ValueError:
         pass
-    return retrieve_variable(name)
+    return _retrieve_variable(name)
+
+
+def get_input(name):
+    """Get an instance of ``Input`` from the current or the global scope
+
+    Parameters
+    ----------
+    name : str
+        name of ``Input`` instance to get
+
+    Returns
+    -------
+    Input
+    """
+    try:
+        scope = scope_module.get_variable_scope().name
+        name_ = '{}/{}'.format(scope, name) if scope else name
+        return _retrieve_input(name_)
+    except ValueError:
+        pass
+    return _retrieve_input(name)
+
+
+def get_tensor(name):
+    """Get an instance of ``Tensor`` from the current or the global scope
+
+    Parameters
+    ----------
+    name : str
+        name of ``Tensor`` instance to get
+
+    Returns
+    -------
+    Tensor
+    """
+    try:
+        scope = scope_module.get_variable_scope().name
+        name_ = '{}/{}'.format(scope, name) if scope else name
+        return _retrieve_tensor(name_)
+    except ValueError:
+        pass
+    return _retrieve_tensor(name)
+
+
+def get_grad(var):
+    """Get gradient ``Tensor`` corresponding to the given ``Variable``
+
+    In optimizers, gradient tensors are registered in global scope,
+    following the naming pattern ``<scope>/<variable_name>_grad``.
+
+    This function automatically build such name from the given ``Variable``
+    and the current scope name.
+
+    To properly fetch the corresponding gradient ``Tensor``, this function
+    must be called in the scope where gradient ``Tensor`` was defined.
+
+    Examples
+    --------
+    >>> from luchador import nn
+    >>> x = nn.get_variable(shape=(), name='x')
+    >>> # Variable x is registered with name 'x'
+    >>> y = x * x
+    >>> sgd = nn.optimizer.SGD(learning_rate=0.1)
+    >>> with nn.variable_scope('optimization'):
+    >>>    sgd.minimize(loss=y, wrt=x)
+    >>>    # dydx is registered with name '/optimization/x_grad'
+    >>>    dydx2 = nn.get_grad_tensor(x)
+    >>>    assert dydx1 is dydx2
+
+    Parameters
+    ----------
+    var : Variable
+        ``Variable`` object of which grad is retrieved.
+
+    Returns
+    -------
+    Tensor
+        ``Tensor`` object which is a gradient of given ``Variable``
+    """
+    return get_tensor('{}_grad'.format(var.name))
+
+
+def get_operation(name):
+    """Get ``Operation`` instance from the current scope or the global scope
+
+    Parameters
+    ----------
+    name : str
+        name of ``Operation`` instance to get
+
+    Returns
+    -------
+    Operation
+    """
+    try:
+        scope = scope_module.get_variable_scope().name
+        name_ = '{}/{}'.format(scope, name) if scope else name
+        return _retrieve_operation(name_)
+    except ValueError:
+        pass
+    return _retrieve_operation(name)
