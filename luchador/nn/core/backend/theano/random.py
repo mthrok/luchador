@@ -1,15 +1,27 @@
+"""Module foe implementing random source"""
 from __future__ import absolute_import
 
-from numpy.random import RandomState
+from theano.sandbox.rng_mrg import MRG_RandomStreams as RandomStreams
+
+__all__ = ['NormalRandom', 'UniformRandom']
+# pylint: disable=no-member
 
 
-_RANDOM_STATE = RandomState(seed=None)
+class NormalRandom(object):
+    """Implements normal random sampling in Tensorflow"""
+    def __init__(self):
+        self._rng = RandomStreams(seed=self.seed or 123456)
+
+    def _sample(self, shape, dtype):
+        return self._rng.normal(
+            size=shape, avg=self.mean, std=self.std, dtype=dtype)
 
 
-def set_random_seed(seed):
-    global _RANDOM_STATE
-    _RANDOM_STATE = RandomState(seed=seed)
+class UniformRandom(object):
+    """Implements uniform random sampling in Tensorflow"""
+    def __init__(self):
+        self._rng = RandomStreams(seed=self.seed or 123456)
 
-
-def get_rng():
-    return _RANDOM_STATE
+    def _sample(self, shape, dtype):
+        return self._rng.uniform(
+            size=shape, low=self.low, high=self.high, dtype=dtype)
