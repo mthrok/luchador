@@ -1,6 +1,7 @@
 """Implement Agent part of Deep Q Learning"""
 from __future__ import division
 
+import os.path
 import logging
 
 import numpy as np
@@ -32,10 +33,18 @@ class DQNAgent(luchador.util.StoreMixin, BaseAgent):  # pylint: disable=R0902
     record_config : dict
         Configuration for recording
 
-        sort_frequency : int
-            Sort heap buffer every this number of records are put
         stack : int
-            Stack state
+            #states to stack
+        sort_frequency : int
+            Sort heap buffer every this number of records are put.
+            Giving non-positive value will disable this.
+        save_frequency : int
+            Save heap buffer every this number of records are put.
+            This functionality is for inspecting the replay memory, and not
+            meant for deserializing replay memory.
+            Giving non-positive value will disable this.
+        save_dir : str
+            Save directory name.
 
     recorder_config : dict
         Constructor arguments for
@@ -241,6 +250,17 @@ class DQNAgent(luchador.util.StoreMixin, BaseAgent):  # pylint: disable=R0902
             _LG.info('Sorting Memory')
             self._recorder.sort()
             _LG.debug('Sorting Complete')
+
+        save_freq = cfg.get('save_frequency', 0)
+        if save_freq > 0 and self._n_obs % save_freq == 0:
+            _LG.info('Saiving Replay Memory')
+            self._save_record()
+
+    def _save_record(self):
+        save_dir = self.args['record_config']['save_dir']
+        for id_, record in self._recorder.id2record.items():
+            path = os.path.join(save_dir, str(id_))
+            np.savez_compressed(path, **record)
 
     # -------------------------------------------------------------------------
     # Training
