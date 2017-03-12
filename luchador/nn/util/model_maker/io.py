@@ -5,6 +5,7 @@ import logging
 from collections import OrderedDict
 
 from ... import core
+from ...model import get_model
 from .common import ConfigDict, parse_config
 
 _LG = logging.getLogger(__name__)
@@ -21,6 +22,15 @@ def _make_io_node(config):
             ret = core.get_input(config['name'])
         else:
             ret = core.Input(**config['args'])
+    elif type_ == 'Model':
+        model = get_model(config['name'])
+        fetch = config['fetch']
+        if fetch == 'output':
+            ret = model.output
+        elif fetch == 'input':
+            ret = model.input
+        elif fetch == 'parameter':
+            ret = model.get_parameters_to_train()
     else:
         raise ValueError('Unexpected IO type: {}'.format(type_))
     return ret
