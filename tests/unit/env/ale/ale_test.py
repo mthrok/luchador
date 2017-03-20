@@ -22,8 +22,6 @@ class ALEEnvironmentTest(unittest.TestCase):
         ale = ALE(
             rom='breakout',
             mode='test',
-            width=None,
-            height=None,
             grayscale=True,
             repeat_action=1,
             random_start=None,
@@ -50,8 +48,6 @@ class ALEEnvironmentTest(unittest.TestCase):
         ale = ALE(
             rom='breakout',
             mode='train',
-            width=None,
-            height=None,
             grayscale=True,
             repeat_action=1,
             random_start=None,
@@ -78,8 +74,6 @@ class ALEEnvironmentTest(unittest.TestCase):
         """Observation width and height equal to the original screen size"""
         ale = ALE(
             rom='breakout',
-            width=None,
-            height=None,
             grayscale=True,
         )
 
@@ -97,8 +91,6 @@ class ALEEnvironmentTest(unittest.TestCase):
         """Observation width and height equal to the original screen size"""
         ale = ALE(
             rom='breakout',
-            width=None,
-            height=None,
             grayscale=False,
         )
 
@@ -119,7 +111,6 @@ class ALEEnvironmentTest(unittest.TestCase):
         ale = ALE(
             rom='breakout',
             width=width,
-            height=None,
             grayscale=True,
         )
 
@@ -138,7 +129,6 @@ class ALEEnvironmentTest(unittest.TestCase):
 
         ale = ALE(
             rom='breakout',
-            width=None,
             height=height,
             grayscale=True,
         )
@@ -179,7 +169,6 @@ class ALEEnvironmentTest(unittest.TestCase):
         ale = ALE(
             rom='breakout',
             width=width,
-            height=None,
             grayscale=False,
         )
 
@@ -198,7 +187,6 @@ class ALEEnvironmentTest(unittest.TestCase):
 
         ale = ALE(
             rom='breakout',
-            width=None,
             height=height,
             grayscale=False,
         )
@@ -309,58 +297,6 @@ class ALEEnvironmentTest(unittest.TestCase):
                 frame = outcome.info['episode_frame_number']
                 self.assertEqual(frame - last_frame, repeat_action)
                 last_frame = frame
-
-    def test_buffer_frame_rgb(self):
-        """_frame_buffer contains the last raw frames given as buffer_frames"""
-        buffer_frames = 4
-        ale = ALE(
-            rom='breakout',
-            mode='train',
-            repeat_action=1,
-            buffer_frames=buffer_frames,
-            grayscale=False,
-        )
-
-        ale.reset()
-        frame = ale._get_raw_screen()
-        self.assertTrue((frame == ale._frame_buffer[0]).all())
-
-        for i in range(1, buffer_frames):
-            ale.step(1)
-            frame = ale._get_raw_screen()
-            self.assertTrue((frame == ale._frame_buffer[i]).all())
-
-        for _ in range(10):
-            for i in range(buffer_frames):
-                ale.step(1)
-                frame = ale._get_raw_screen()
-                self.assertTrue((frame == ale._frame_buffer[i]).all())
-
-    def test_buffer_frame_grayscale(self):
-        """_frame_buffer contains the last raw frames given as buffer_frames"""
-        buffer_frames = 4
-        ale = ALE(
-            rom='breakout',
-            mode='train',
-            repeat_action=1,
-            buffer_frames=buffer_frames,
-            grayscale=True,
-        )
-
-        ale.reset()
-        frame = ale._get_raw_screen()
-        for i in range(1, buffer_frames):
-            ale.step(1)
-            frame = ale._get_raw_screen()
-            frame = frame[:, :, 0]
-            self.assertTrue((frame == ale._frame_buffer[i]).all())
-
-        for _ in range(10):
-            for i in range(buffer_frames):
-                ale.step(1)
-                frame = ale._get_raw_screen()
-                frame = frame[:, :, 0]
-                self.assertTrue((frame == ale._frame_buffer[i]).all())
 
     def test_random_start(self):
         """Episode starts from frame number in range of [1, `random_start`]"""
