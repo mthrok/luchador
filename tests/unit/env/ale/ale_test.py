@@ -10,54 +10,47 @@ from luchador.env.ale import ALEEnvironment as ALE
 class ALEEnvShapeTest(unittest.TestCase):
     longMessage = True
 
-    def _test(self, width=160, height=210, grayscale=True):
+    def _test(self, width=160, height=210, stack=4, grayscale=True):
         ale = ALE(
             rom='breakout',
-            width=width, height=height,
+            stack=stack, width=width, height=height,
             grayscale=grayscale,
         )
 
         ale.reset()
         outcome = ale.step(1)
-        channel = 1 if grayscale else 3
-        self.assertEqual(outcome.state.shape, (channel, height, width))
+        expected = (
+            (stack, height, width) if grayscale else (stack, height, width, 3))
+        self.assertEqual(outcome.state.shape, expected)
 
     def test_no_resize(self):
         """State shape equals to the original screen size"""
-        self._test(grayscale=True)
+        for gs in [True, False]:
+            self._test(grayscale=gs)
+            self._test(grayscale=gs, stack=1)
 
     def test_resize_width(self):
         """State shape equals to the given size"""
-        self._test(width=84, grayscale=True)
+        for gs in [True, False]:
+            self._test(width=84, grayscale=gs)
+            self._test(width=84, grayscale=gs, stack=1)
 
     def test_resize_height(self):
         """State shape equals to the given size"""
-        self._test(height=84, grayscale=True)
+        for gs in [True, False]:
+            self._test(height=84, grayscale=gs)
+            self._test(height=84, grayscale=gs, stack=1)
 
     def test_resize_width_height(self):
         """State shape equals to the given size"""
-        self._test(height=84, width=84, grayscale=True)
-
-    def test_no_resize_color(self):
-        """State shape equals to the original screen size"""
-        self._test(grayscale=False)
-
-    def test_resize_width_color(self):
-        """State shape equals to the given size"""
-        self._test(width=84, grayscale=False)
-
-    def test_resize_height_color(self):
-        """State shape equals to the given size"""
-        self._test(height=84, grayscale=False)
-
-    def test_resize_width_height_color(self):
-        """State shape equals to the given size"""
-        self._test(height=84, width=84, grayscale=False)
+        for gs in [True, False]:
+            self._test(height=84, width=84, grayscale=gs)
+            self._test(height=84, width=84, grayscale=gs, stack=1)
 
 
-def _test_buffer(grayscale):
+def _test_processor_buffer(grayscale):
     # pylint: disable=protected-access
-    buffer_frames = 4
+    buffer_frames = 2
     ale = ALE(
         rom='breakout',
         mode='train',
@@ -65,33 +58,52 @@ def _test_buffer(grayscale):
         buffer_frames=buffer_frames,
         grayscale=grayscale,
     )
-    buffer_ = ale._preprocessor._buffer
-
     ale.reset()
-    frame = ale._get_raw_screen().transpose((2, 0, 1))
-    np.testing.assert_equal(frame, buffer_[0])
+    frame = ale._get_raw_screen().squeeze()
+    for i in range(buffer_frames):
+        np.testing.assert_equal(frame, ale._processor._buffer[i])
 
-    for i in range(1, buffer_frames):
+    previous_frame = frame
+    for _ in range(buffer_frames):
         ale.step(1)
-        frame = ale._get_raw_screen().transpose((2, 0, 1))
-        np.testing.assert_equal(frame, buffer_[i])
-
-    for _ in range(10):
-        for i in range(buffer_frames):
-            ale.step(1)
-            frame = ale._get_raw_screen().transpose((2, 0, 1))
-            np.testing.assert_equal(frame, buffer_[i])
+        frame = ale._get_raw_screen().squeeze()
+        np.testing.assert_equal(ale._processor._buffer[-1], frame)
+        np.testing.assert_equal(ale._processor._buffer[-2], previous_frame)
+        previous_frame = frame
 
 
 class PreprocessorTest(unittest.TestCase):
     # pylint: disable=no-self-use
     def test_buffer_frame(self):
         """The latest frame is correctly passed to preprocessor buffer"""
-        _test_buffer(grayscale=True)
+        _test_processor_buffer(grayscale=True)
 
     def test_buffer_frame_color(self):
         """The latest frame is correctly passed to preprocessor buffer"""
-        _test_buffer(grayscale=False)
+        _test_processor_buffer(grayscale=False)
+
+
+class StackTest(unittest.TestCase):
+    # pylint: disable=no-self-use
+    def _test_stack_buffer(self, grayscale):
+        stack = 4
+        ale = ALE(rom='breakout', stack=stack, grayscale=grayscale)
+        previous_stack = ale.reset().state
+
+        for _ in range(stack):
+            stack = ale.step(1).state
+            np.testing.assert_equal(previous_stack[1:], stack[:-1])
+            self.assertEqual(previous_stack.shape, stack.shape)
+            self.assertFalse((previous_stack == stack).all())
+            previous_stack = stack
+
+    def test_buffer_frame(self):
+        """The latest frame is correctly passed to preprocessor buffer"""
+        self._test_stack_buffer(grayscale=True)
+
+    def test_buffer_frame_color(self):
+        """The latest frame is correctly passed to preprocessor buffer"""
+        self._test_stack_buffer(grayscale=False)
 
 
 class ALEEnvironmentTest(unittest.TestCase):

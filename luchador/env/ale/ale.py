@@ -18,55 +18,61 @@ _DIR = os.path.dirname(os.path.abspath(__file__))
 _ROM_DIR = os.path.join(_DIR, 'rom')
 
 
-class Preprocessor(object):
+class StateStack(object):
+    """Stack multiple states
+
+    Parameters
+    ----------
+    stack_size : int
+        The number of states to stack. Default: 4.
+    """
+    def __init__(self, stack_size=4):
+        self.stack_size = stack_size
+        self._buffer = None
+
+    def reset(self, initial_state):
+        """Reset stack buffer by filling it with initial state
+
+        Parameters
+        ----------
+        initial_state : state object
+        """
+        self._buffer = [initial_state] * self.stack_size
+
+    def append(self, state):
+        """Append new state and discard old state
+
+        Parameters
+        ----------
+        initial_state : state object
+        """
+        self._buffer.append(state)
+        self._buffer = self._buffer[-self.stack_size:]
+
+    def get(self):
+        """Get the current stack
+
+        Returns
+        -------
+        list of states
+        """
+        return self._buffer
+
+
+class Preprocessor(StateStack):
     """Store the latest frames and take max/mean over them
 
     Parameters
     ----------
-    frame_shape : list of two int
-        Order is (height, width)
-
-    channel : int
-        1 or 3
-
     buffer_size : int
         The number of frames to process. Default: 2.
 
     mode : int
         `max` or `mean`
     """
-    def __init__(self, frame_shape, channel, buffer_size=2, mode='max'):
-        self.frame_shape = list(frame_shape)
-        self.buffer_size = buffer_size
-        self.channel = channel
-        self.mode = mode
-
-        buffer_shape = [buffer_size, channel] + self.frame_shape
-        self._buffer = np.zeros(buffer_shape, dtype=np.uint8)
+    def __init__(self, buffer_size=2, mode='max'):
+        super(Preprocessor, self).__init__(stack_size=buffer_size)
         self._func = np.max if mode == 'max' else np.mean
-        self._index = 0
-
-    def reset(self, initial_frame):
-        """Reset buffer with new frame
-
-        Parameters
-        ----------
-        initial_frame : NumPy Array
-            The initial observation obtained from resetting env
-        """
-        for _ in range(self.buffer_size):
-            self.append(initial_frame)
-
-    def append(self, frame):
-        """Update buffer with new frame
-
-        Parameters
-        ----------
-        frame : NumPy Array
-            The observation obtained by taking a step in env
-        """
-        self._buffer[self._index] = frame
-        self._index = (self._index + 1) % self.buffer_size
 
     def get(self):
         """Return preprocessed frame
@@ -120,16 +126,119 @@ def _make_ale(
 
 
 class ALEEnvironment(StoreMixin, BaseEnvironment):
-    """Atari Environment"""
-    @staticmethod
-    def get_roms():
-        """Get the list of ROMs available
+    """Atari Environment
 
-        Returns:
-          list of srting: Names of available ROMs
-        """
-        return [rom for rom in os.listdir(_ROM_DIR)
-                if rom.endswith('.bin')]
+    Parameters
+    ----------
+    rom : str
+        ROM name. Use `get_roms` for the list of available ROMs.
+
+    mode : str
+        When `train`, a loss of life is considered as terminal condition.
+        When `test`, a loss of life is not considered as terminal condition.
+
+    width, height : int
+        Output screen size.
+
+    stack : int
+        Stack the environment state. The output shape of ``step`` is 4D, where
+        the first dimension is the stack.
+
+    grayscale : bool
+        If True, output screen is gray scale and has no color channel. i.e.
+        output shape == (h, w). Otherwise output screen has color channel with
+        shape (h, w, 3)
+
+    repeat_action : int
+        When calling `step` method, action is repeated for this numebr of times
+        internally, unless a terminal condition is met.
+
+    minimal_action_set : bool
+        When True, `n_actions` property reports actions only meaningfull to the
+        loaded ROM. Otherwise all the 18 actions are dounted.
+
+    random_seed : int
+        ALE's random seed
+
+    random_start : int or None
+        When given,  at the beginning of each episode at most this number of
+        frames are played with action == 0. This technique is used to acquire
+        more diverse states of environment.
+
+    buffer_frames : int
+        The number of latest frame to preprocess.
+
+    preprocess_mode : str
+        Either `max` or `average`. When obtaining observation, pixel-wise
+        maximum or average over buffered frames are taken before resizing
+
+    display_screen : bool
+        Display sceen when True.
+
+    play_sound : bool
+        Play sound
+
+    record_screen_path : str
+        Passed to ALE. Save the raw screens into the path.
+
+    record_screen_filename : str
+        Passed to ALE. Save sound to a file.
+    """
+    def __init__(
+            self, rom,
+            mode='train',
+            width=160,
+            height=210,
+            stack=4,
+            grayscale=True,
+            repeat_action=4,
+            buffer_frames=2,
+            preprocess_mode='max',
+            minimal_action_set=True,
+            random_seed=0,
+            random_start=None,
+            display_screen=False,
+            play_sound=False,
+            record_screen_path=None,
+            record_sound_filename=None,
+    ):
+        if not rom.endswith('.bin'):
+            rom += '.bin'
+
+        self._store_args(
+            rom=rom, mode=mode, width=width, height=height, stack=stack,
+            grayscale=grayscale, repeat_action=repeat_action,
+            buffer_frames=buffer_frames, preprocess_mode=preprocess_mode,
+            minimal_action_set=minimal_action_set, random_seed=random_seed,
+            random_start=random_start, display_screen=display_screen,
+            play_sound=play_sound, record_screen_path=record_screen_path,
+            record_sound_filename=record_sound_filename)
+
+        if display_screen and sys.platform == 'darwin':
+            import pygame
+            pygame.init()
+
+        self.resize = None
+        self.life_lost = False
+
+        self._ale = _make_ale(**self.args)
+        self._actions = (
+            self._ale.getMinimalActionSet()
+            if minimal_action_set else
+            self._ale.getLegalActionSet()
+        )
+        self._get_raw_screen = (
+            self._ale.getScreenGrayscale
+            if grayscale else
+            self._ale.getScreenRGB
+        )
+
+        self._raw_buffer_shape = (
+            (210, 160) if self.args['grayscale'] else (210, 160, 3))
+        self._init_resize()
+        self._processor = Preprocessor(
+            buffer_size=buffer_frames, mode=preprocess_mode)
+        self._stack = StateStack(stack_size=stack)
 
     def _validate_args(
             self, mode, preprocess_mode,
@@ -154,132 +263,23 @@ class ALEEnvironment(StoreMixin, BaseEnvironment):
         if not os.path.isfile(rom_path):
             raise ValueError('ROM ({}) not found.'.format(rom))
 
-    def __init__(
-            self, rom,
-            mode='train',
-            width=160,
-            height=210,
-            grayscale=True,
-            repeat_action=4,
-            buffer_frames=2,
-            preprocess_mode='max',
-            minimal_action_set=True,
-            random_seed=0,
-            random_start=None,
-            display_screen=False,
-            play_sound=False,
-            record_screen_path=None,
-            record_sound_filename=None,
-    ):
-        """Initialize ALE Environment with the given parmeters
-
-        Parameters
-        ----------
-        rom : str
-            ROM name. Use `get_roms` for the list of available ROMs.
-
-        mode : str
-            When `train`, a loss of life is considered as terminal condition.
-            When `test`, a loss of life is not considered as terminal
-            condition.
-
-        width, height : int
-            Output screen size.
-
-        grayscale : bool
-            If True, output screen is gray scale and has no color channel.
-            i.e. output shape == (h, w). Otherwise output screen has color
-            channel with shape (h, w, 3)
-
-        repeat_action : int
-            When calling `step` method, action is repeated for this numebr of
-            times internally, unless a terminal condition is met.
-
-        minimal_action_set : bool
-            When True, `n_actions` property reports actions only meaningfull to
-            the loaded ROM. Otherwise all the 18 actions are dounted.
-
-        random_seed : int
-            ALE's random seed
-
-        random_start : int or None
-            When given,  at the beginning of each episode at most this number
-            of frames are played with action == 0. This technique is used to
-            acquire more diverse states of environment.
-
-        buffer_frames : int
-            The number of latest frame to preprocess.
-
-        preprocess_mode : str
-            Either `max` or `average`. When obtaining observation, pixel-wise
-            maximum or average over buffered frames are taken before resizing
-
-        display_screen : bool
-            Display sceen when True.
-
-        play_sound : bool
-            Play sound
-
-        record_screen_path : str
-            Passed to ALE. Save the original screens into the path.
-
-            Note
-                that this is different from the observation returned by
-                `step` method.
-
-        record_screen_filename : str
-            Passed to ALE. Save sound to a file.
-        """
-        if not rom.endswith('.bin'):
-            rom += '.bin'
-
-        self._store_args(
-            rom=rom, mode=mode, width=width, height=height,
-            grayscale=grayscale, repeat_action=repeat_action,
-            buffer_frames=buffer_frames, preprocess_mode=preprocess_mode,
-            minimal_action_set=minimal_action_set, random_seed=random_seed,
-            random_start=random_start, display_screen=display_screen,
-            play_sound=play_sound, record_screen_path=record_screen_path,
-            record_sound_filename=record_sound_filename)
-
-        if display_screen and sys.platform == 'darwin':
-            import pygame
-            pygame.init()
-
-        self.resize = None
-        self.life_lost = False
-
-        self._ale = _make_ale(**self.args)
-        self._actions = (
-            self._ale.getMinimalActionSet()
-            if self.args['minimal_action_set'] else
-            self._ale.getLegalActionSet()
-        )
-
-        self._get_raw_screen = (
-            self._ale.getScreenGrayscale
-            if self.args['grayscale'] else
-            self._ale.getScreenRGB
-        )
-
-        self._init_raw_buffer()
-        self._preprocessor = Preprocessor(
-            frame_shape=(self.args['height'], self.args['width']),
-            channel=1 if self.args['grayscale'] else 3,
-            buffer_size=self.args['buffer_frames'],
-            mode=self.args['preprocess_mode'])
-        self._init_resize()
-
-    def _init_raw_buffer(self):
-        w, h = self._ale.getScreenDims()
-        shape = (h, w) if self.args['grayscale'] else (h, w, 3)
-        self._raw_buffer = np.zeros(shape, dtype=np.uint8)
-
     def _init_resize(self):
+        """Initialize resize method"""
         orig_width, orig_height = self._ale.getScreenDims()
         h, w = self.args['height'], self.args['width']
         if not (h == orig_height and w == orig_width):
             self.resize = (h, w) if self.args['grayscale'] else (h, w, 3)
+
+    ###########################################################################
+    @staticmethod
+    def get_roms():
+        """Get the list of ROMs available
+
+        Returns:
+          list of srting: Names of available ROMs
+        """
+        return [rom for rom in os.listdir(_ROM_DIR)
+                if rom.endswith('.bin')]
 
     ###########################################################################
     @property
@@ -287,21 +287,17 @@ class ALEEnvironment(StoreMixin, BaseEnvironment):
         return len(self._actions)
 
     ###########################################################################
+    # Helper methods common to `reset` and `step`
     def _get_resized_frame(self):
-        """Fetch the current frame and resize then convert to CHW format"""
-        self._get_raw_screen(screen_data=self._raw_buffer)
+        """Fetch the current frame and resize"""
+        buffer_ = np.zeros(shape=self._raw_buffer_shape, dtype=np.uint8)
+        self._get_raw_screen(screen_data=buffer_)
         if self.resize:
-            screen = imresize(self._raw_buffer, self.resize)
-        else:
-            screen = self._raw_buffer
-        if self.args['grayscale']:
-            return screen[None, ...]
-        return screen.transpose((2, 0, 1))
+            return imresize(buffer_, self.resize)
+        return buffer_
 
-    def _random_play(self):
-        rand = self.args['random_start']
-        repeat = 1 + (np.random.randint(rand) if rand else 0)
-        return sum(self._step(0) for _ in range(repeat))
+    def _get_state(self):
+        return np.array(self._stack.get())
 
     def _get_info(self):
         return {
@@ -310,23 +306,38 @@ class ALEEnvironment(StoreMixin, BaseEnvironment):
             'episode_frame_number': self._ale.getEpisodeFrameNumber(),
         }
 
+    def _is_terminal(self):
+        if self.args['mode'] == 'train':
+            return self._ale.game_over() or self.life_lost
+        return self._ale.game_over()
+
+    ###########################################################################
+    def _random_play(self):
+        rand = self.args['random_start']
+        repeat = 1 + (np.random.randint(rand) if rand else 0)
+        return sum(self._step(0) for _ in range(repeat))
+
+    def _reset(self):
+        """Actually reset game"""
+        self._ale.reset_game()
+        self._processor.reset(self._get_resized_frame())
+        self._stack.reset(self._processor.get())
+        rewards = self._random_play()
+        self._stack.append(self._processor.get())
+        return rewards
+
     def reset(self):
         """Reset game
 
-        In test mode, the game is simply initialized. In train mode, if the
-        game is in terminal state due to a life loss but not yet game over,
-        then only life loss flag is reset so that the next game starts from
-        the current state. Otherwise, the game is simply initialized.
+        In ``train`` mode, a loss of life is considered to be terminal state.
+        If this method is called at such state, then only life_lost flag is
+        reset so that the next episode can start from the next frame.
         """
-        reward = 0
-        if (
-                self.args['mode'] == 'test' or
-                not self.life_lost or  # `reset` called in a middle of episode
-                self._ale.game_over()  # all lives are lost
-        ):
-            self._ale.reset_game()
-            self._preprocessor.reset(self._get_resized_frame())
-            reward += self._random_play()
+        mode = self.args['mode']
+        if mode == 'train' and self.life_lost and not self._ale.game_over():
+            reward = 0
+        else:
+            reward = self._reset()
 
         self.life_lost = False
         return Outcome(
@@ -354,6 +365,7 @@ class ALEEnvironment(StoreMixin, BaseEnvironment):
             if terminal:
                 break
 
+        self._stack.append(self._processor.get())
         return Outcome(
             reward=reward,
             state=self._get_state(),
@@ -363,13 +375,5 @@ class ALEEnvironment(StoreMixin, BaseEnvironment):
 
     def _step(self, action):
         reward = self._ale.act(action)
-        self._preprocessor.append(self._get_resized_frame())
+        self._processor.append(self._get_resized_frame())
         return reward
-
-    def _get_state(self):
-        return self._preprocessor.get()
-
-    def _is_terminal(self):
-        if self.args['mode'] == 'train':
-            return self._ale.game_over() or self.life_lost
-        return self._ale.game_over()
