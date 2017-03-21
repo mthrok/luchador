@@ -41,9 +41,7 @@ class Preprocessor(object):
         self.channel = channel
         self.mode = mode
 
-        buffer_shape = [buffer_size] + self.frame_shape
-        if channel:
-            buffer_shape += [channel]
+        buffer_shape = [buffer_size, channel] + self.frame_shape
         self._buffer = np.zeros(buffer_shape, dtype=np.uint8)
         self._func = np.max if mode == 'max' else np.mean
         self._index = 0
@@ -267,7 +265,7 @@ class ALEEnvironment(StoreMixin, BaseEnvironment):
         self._init_raw_buffer()
         self._preprocessor = Preprocessor(
             frame_shape=(self.args['height'], self.args['width']),
-            channel=None if self.args['grayscale'] else 3,
+            channel=1 if self.args['grayscale'] else 3,
             buffer_size=self.args['buffer_frames'],
             mode=self.args['preprocess_mode'])
         self._init_resize()
@@ -289,17 +287,28 @@ class ALEEnvironment(StoreMixin, BaseEnvironment):
         return len(self._actions)
 
     ###########################################################################
+    def _get_resized_frame(self):
+        """Fetch the current frame and resize then convert to CHW format"""
+        self._get_raw_screen(screen_data=self._raw_buffer)
+        if self.resize:
+            screen = imresize(self._raw_buffer, self.resize)
+        else:
+            screen = self._raw_buffer
+        if self.args['grayscale']:
+            return screen[None, ...]
+        return screen.transpose((2, 0, 1))
+
+    def _random_play(self):
+        rand = self.args['random_start']
+        repeat = 1 + (np.random.randint(rand) if rand else 0)
+        return sum(self._step(0) for _ in range(repeat))
+
     def _get_info(self):
         return {
             'lives': self._ale.lives(),
             'total_frame_number': self._ale.getFrameNumber(),
             'episode_frame_number': self._ale.getEpisodeFrameNumber(),
         }
-
-    def _random_play(self):
-        rand = self.args['random_start']
-        repeat = 1 + (np.random.randint(rand) if rand else 0)
-        return sum(self._step(0) for _ in range(repeat))
 
     def reset(self):
         """Reset game
@@ -316,6 +325,7 @@ class ALEEnvironment(StoreMixin, BaseEnvironment):
                 self._ale.game_over()  # all lives are lost
         ):
             self._ale.reset_game()
+            self._preprocessor.reset(self._get_resized_frame())
             reward += self._random_play()
 
         self.life_lost = False
@@ -353,11 +363,7 @@ class ALEEnvironment(StoreMixin, BaseEnvironment):
 
     def _step(self, action):
         reward = self._ale.act(action)
-        self._get_raw_screen(screen_data=self._raw_buffer)
-        if self.resize:
-            self._preprocessor.append(imresize(self._raw_buffer, self.resize))
-        else:
-            self._preprocessor.append(self._raw_buffer)
+        self._preprocessor.append(self._get_resized_frame())
         return reward
 
     def _get_state(self):
