@@ -132,7 +132,7 @@ class DeepQLearning(luchador.util.StoreMixin, object):
             if 'clip_norm' not in clip_grads:
                 raise ValueError('`clip_norm` must be given in `clip_grads`')
 
-    def build(self, model_def, initial_parameter):
+    def build(self, model_def):
         """Build computation graph (error and sync ops) for Q learning
 
         Parameters
@@ -143,7 +143,7 @@ class DeepQLearning(luchador.util.StoreMixin, object):
         # pylint: disable=too-many-locals
         model_0, state_0, action_value_0 = _make_model(model_def, 'pre_trans')
         model_1, state_1, action_value_1 = _make_model(model_def, 'post_trans')
-        sync_op = _build_sync_op(model_0, model_1, 'sync')
+        sync_op = _build_sync_op(model_0, model_1, 'sync_q_network')
 
         with nn.variable_scope('target_q_value'):
             reward = nn.Input(shape=(None,), name='rewards')
@@ -151,22 +151,21 @@ class DeepQLearning(luchador.util.StoreMixin, object):
             target_q, post_q = self._build_target_q_value(
                 action_value_1, reward, terminal)
 
-        with nn.variable_scope('error'):
+        with nn.variable_scope('q_error'):
             action_0 = nn.Input(
                 shape=(None,), dtype='int32', name='action_0')
             error = _build_error(target_q, action_value_0, action_0)
+            weight = nn.Input(
+                shape=(None,), name='sample_weight')
+            loss = nn.ops.reduce_mean(error * weight)
 
-        weight = nn.Input(
-            shape=(None,), name='sample_weight')
         self._init_optimizer()
         optimize_op = _build_optimize_op(
-            optimizer=self.optimizer,
-            loss=nn.ops.reduce_mean(error * weight),
+            optimizer=self.optimizer, loss=loss,
             params=model_0.get_parameters_to_train(),
             clip_grads=self.args.get('clip_grads'))
 
-        self._init_session(initial_parameter)
-
+        self.session = nn.get_session()
         self.models = {
             'model_0': model_0,
             'model_1': model_1,
@@ -214,11 +213,19 @@ class DeepQLearning(luchador.util.StoreMixin, object):
         cfg = self.args['optimizer_config']
         self.optimizer = nn.fetch_optimizer(cfg['typename'])(**cfg['args'])
 
-    def _init_session(self, initial_parameter=None):
-        self.session = nn.get_session()
-        if initial_parameter:
-            _LG.info('Loading parameters from %s', initial_parameter)
-            self.session.load_from_file(initial_parameter)
+    def initialize(self, initial_parameter_file=None):
+        """Initialize network parameters
+
+        Parameters
+        ----------
+        initial_parameter : str or None
+            If given, network parameters are loaded from the given file path.
+            Otherwise, parameters are initialized following their initializer
+            configuration.
+        """
+        if initial_parameter_file:
+            _LG.info('Loading parameters from %s', initial_parameter_file)
+            self.session.load_from_file(initial_parameter_file)
         else:
             self.session.initialize()
 
