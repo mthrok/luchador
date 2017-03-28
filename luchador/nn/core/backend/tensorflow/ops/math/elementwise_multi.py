@@ -1,8 +1,8 @@
-"""Define elementwise ops with broadcast support"""
+"""Define elementwise ops work on multiple tensors"""
 from __future__ import absolute_import
 
 import tensorflow as tf
-from ..wrapper import Tensor
+from ...wrapper import Tensor
 
 __all__ = ['add', 'multiply', 'maximum', 'minimum']
 
