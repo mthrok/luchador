@@ -13,23 +13,9 @@ _LG = logging.getLogger(__name__)
 
 
 def compute_gradient(loss, wrt, **kwargs):
-    """Compute gradient
+    """Implement ``compute_gradient`` in Tensorflow backend.
 
-    Parameters
-    ----------
-    loss : Tensor
-        loss to be minimized
-
-    wrt : Variable or list of Variables
-        Term for which loss Tensor is differentiated.
-
-    kwargs
-        Other arguments passed to ``tf.gradients``
-
-    Returns
-    -------
-    list
-        List of (gradient, variable) pairs
+    See :func:`luchador.nn.ops.compute_gradient` for detail
     """
     _LG.info('Computing gradient for %s', loss)
     wrt = wrt if is_iteratable(wrt) else [wrt]
