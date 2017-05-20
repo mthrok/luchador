@@ -5,15 +5,13 @@ import os
 import logging
 
 from luchador.util import load_config
-__all__ = ['get_model_config']
 
-_DATA_DIR = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), 'data')
+__all__ = ['get_model_config']
 _LG = logging.getLogger(__name__)
 
 
-def get_model_config(model_name, **parameters):
-    """Load model configurations from library or file
+def get_model_config(filepath, **parameters):
+    """Load model configurations from file
 
     Parameters
     ----------
@@ -28,16 +26,7 @@ def get_model_config(model_name, **parameters):
     JSON-compatible object
         Model configuration.
     """
-    file_name = model_name
-    if not file_name.endswith('.yml'):
-        file_name = '{}.yml'.format(file_name)
-
-    if os.path.isfile(file_name):
-        file_path = file_name
-    elif os.path.isfile(os.path.join(_DATA_DIR, file_name)):
-        file_path = os.path.join(_DATA_DIR, file_name)
-    else:
+    if not os.path.isfile(filepath):
         raise ValueError(
-            'Model definition file ({}) was not found.'.format(file_name))
-
-    return load_config(file_path, **parameters)
+            'Model definition file ({}) was not found.'.format(filepath))
+    return load_config(filepath, **parameters)
