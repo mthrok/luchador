@@ -46,7 +46,7 @@ class OptimizerMixin(object):
         So for convenience, this mixin initialize underlying optimizer with SGD
         """
         self.optimizer = tf.train.GradientDescentOptimizer(
-            self.args['learning_rate'], name=self.args['name'])
+            self.args['learning_rate'], name=self.args['scope'])
 
     def _minimize(self, loss, wrt=None, **kwargs):
         kws1, kws2 = _parse_kwargs(kwargs)
@@ -123,7 +123,7 @@ class SGD(OptimizerMixin):
     def _run_backend_specific_init(self):
         """Initialize underlying optimizer with TF native SGD Optimizer"""
         self.optimizer = tf.train.GradientDescentOptimizer(
-            learning_rate=self.args['learning_rate'], name=self.args['name'],
+            learning_rate=self.args['learning_rate'], name=self.args['scope'],
             use_locking=self.args.get('use_locking', False))
 
 
@@ -137,7 +137,7 @@ class RMSProp(OptimizerMixin):
         self.optimizer = tf.train.RMSPropOptimizer(
             learning_rate=self.args['learning_rate'],
             decay=self.args['decay'], momentum=self.args['momentum'],
-            epsilon=self.args['epsilon'], name=self.args['name'],
+            epsilon=self.args['epsilon'], name=self.args['scope'],
             use_locking=self.args.get('use_locking', False))
 
 
@@ -203,7 +203,7 @@ class Adam(OptimizerMixin):
             beta1=self.args['beta1'], beta2=self.args['beta2'],
             epsilon=self.args['epsilon'],
             use_locking=self.args.get('use_locking', False),
-            name=self.args['name'])
+            name=self.args['scope'])
 
     def _apply_gradients(self, grads_and_vars, **kwargs):
         # pylint: disable=protected-access
