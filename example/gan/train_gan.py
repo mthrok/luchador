@@ -1,11 +1,11 @@
 """Train vanilla GAN on MNIST"""
+from __future__ import division
 from __future__ import absolute_import
 
 import os
 import logging
 
 import numpy as np
-import luchador
 from luchador import nn
 
 from example.utils import (
@@ -18,12 +18,15 @@ _LG = logging.getLogger(__name__)
 def _parse_command_line_args():
     import argparse
     default_mnist_path = os.path.join(
-        os.path.expanduser('~'), '.mnist', 'mnist.pkl.gz')
+        os.path.expanduser('~'), '.dataset', 'mnist.pkl.gz')
     default_model_file = os.path.join(
         os.path.dirname(os.path.abspath(__file__)), 'gan.yml'
     )
     parser = argparse.ArgumentParser(
-        description='Test Generative Adversarial Network'
+        description=(
+            'Train simple Generative Adversarial Network '
+            'on MNIST dataset.'
+        )
     )
     parser.add_argument(
         '--model', default=default_model_file,
@@ -45,20 +48,24 @@ def _parse_command_line_args():
         help='#Generator input dimensions.'
     )
     parser.add_argument(
-        '--mnist', default=default_mnist_path,
+        '--dataset', default=default_mnist_path,
         help=(
             'Path to MNIST dataset, downloaded from '
             'http://www.iro.umontreal.ca/~lisa/deep/data/mnist/mnist.pkl.gz '
             'Default: {}'.format(default_mnist_path)
         ),
     )
-    parser.add_argument('--debug', action='store_true')
     parser.add_argument(
         '--output',
         help=(
             'When provided, plot generated data to this directory.'
         )
     )
+    parser.add_argument(
+        '--mock', action='store_true',
+        help='Mock test data to run the script without data for testing.'
+    )
+    parser.add_argument('--debug', action='store_true')
     return parser.parse_args()
 
 
@@ -99,9 +106,10 @@ def _train(
     plot_samples(0)
     _LG.info('%5s: %10s, %10s', 'EPOCH', 'DISC_LOSS', 'GEN_LOSS')
     for epoch in range(1, n_epochs+1):
+        disc_loss, gen_loss = 0.0, 0.0
         for _ in range(n_iterations):
-            disc_loss = train_disc()
-            gen_loss = train_gen()
+            disc_loss += train_disc() / n_iterations
+            gen_loss += train_gen() / n_iterations
         _LG.info('%5s: %10.3e, %10.3e', epoch, disc_loss, gen_loss)
         plot_samples(epoch)
 
@@ -115,8 +123,7 @@ def _main():
     initialize_logger(args.debug)
 
     batch_size = 32
-    data_format = luchador.get_nn_conv_format()
-    dataset = load_mnist(args.mnist, flatten=True)
+    dataset = load_mnist(args.dataset, flatten=True, mock=args.mock)
 
     model = _build_models(args.model)
     discriminator, generator = model['discriminator'], model['generator']

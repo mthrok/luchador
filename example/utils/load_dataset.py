@@ -1,4 +1,7 @@
 """Dataset loading utilities"""
+from __future__ import division
+from __future__ import absolute_import
+
 import gzip
 import pickle
 import logging
@@ -11,7 +14,7 @@ _LG = logging.getLogger(__name__)
 
 
 Datasets = namedtuple(
-    'Datasets', field_names=('train', 'test', 'validation')
+    'Datasets', field_names=('train', 'valid', 'test')
 )
 
 Batch = namedtuple(
@@ -36,7 +39,8 @@ class Dataset(object):
         perm = np.arange(self.n_data)
         np.random.shuffle(perm)
         self.data = self.data[perm]
-        self.label = self.label[perm]
+        if self.label is not None:
+            self.label = self.label[perm]
 
     def next_batch(self, batch_size):
         """Get mini batch.
@@ -56,10 +60,53 @@ class Dataset(object):
             self.index = 0
         start, end = self.index, self.index + batch_size
         self.index += batch_size
-        return Batch(self.data[start:end, ...], self.label[start:end, ...])
+        label = None if self.label is None else self.label[start:end, ...]
+        return Batch(self.data[start:end, ...], label)
 
 
-def load_mnist(filepath, flatten=None, data_format=None):
+def _format_dataset(datasets, flatten, data_format):
+    if flatten:
+        datasets = [
+            (data.reshape(data.shape[0], -1), label)
+            for data, label in datasets
+        ]
+    elif data_format == 'NHWC':
+        datasets = [
+            (data.transpose(0, 2, 3, 1), label)
+            for data, label in datasets
+        ]
+    for key, (data, _) in zip(['Train', 'Valid', 'Test'], datasets):
+        _LG.info('  %s Data Statistics', key)
+        _LG.info('    Shape: %s', data.shape)
+        _LG.info('    DType: %s', data.dtype)
+        _LG.info('    Mean: %s', data.mean())
+        _LG.info('    Max:  %s', data.max())
+        _LG.info('    Min:  %s', data.min())
+    return Datasets(
+        Dataset(*datasets[0]), Dataset(*datasets[1]), Dataset(*datasets[2])
+    )
+
+
+def _load_mnist(filepath, mock):
+    if mock:
+        _LG.info('Creating mock data')
+        return [
+            (
+                np.random.uniform(size=[n, 1, 28, 28]).astype(np.float32),
+                np.random.randint(10, size=[n]),
+            )
+            for n in [1000, 100, 100]
+        ]
+
+    _LG.info('Loading %s', filepath)
+    with gzip.open(filepath, 'rb') as file_:
+        return [
+            (data.reshape(-1, 1, 28, 28), label)
+            for data, label in pickle.load(file_)
+        ]
+
+
+def load_mnist(filepath, flatten=None, data_format=None, mock=False):
     """Load U of Montreal MNIST data
     http://www.iro.umontreal.ca/~lisa/deep/data/mnist/mnist.pkl.gz
 
@@ -70,27 +117,57 @@ def load_mnist(filepath, flatten=None, data_format=None):
 
     flatten : Boolean
         If True each image is flattened to 1D vector.
+
+    Returns
+    -------
+    Datasets
     """
+    datasets = _load_mnist(filepath, mock)
+    return _format_dataset(datasets, flatten, data_format)
+
+
+def _load_celeba_face(filepath, mock):
+    if mock:
+        _LG.info('Creating mock data')
+        return [
+            (
+                np.random.uniform(size=[n, 3, 64, 64]).astype(np.float32),
+                None
+            )
+            for n in [1000, 100, 100]
+        ]
     _LG.info('Loading %s', filepath)
     with gzip.open(filepath, 'rb') as file_:
-        datasets = pickle.load(file_)
-    reshape = None
-    if flatten:
-        reshape = (-1, 784)
-    elif data_format == 'NCHW':
-        reshape = (-1, 1, 28, 28)
-    elif data_format == 'NHWC':
-        reshape = (-1, 28, 28, 1)
+        return [
+            (data.astype(np.float32) / 255, label)
+            for data, label in pickle.load(file_)
+        ]
 
-    if reshape:
-        datasets = [(data.reshape(*reshape), lbl) for data, lbl in datasets]
 
-    for (data, _), key in zip(datasets, ['Train', 'Test', 'Validation']):
-        _LG.info('  %s Data Statistics', key)
-        _LG.info('    Dtype: %s', data.dtype)
-        _LG.info('    Mean: %s', data.mean())
-        _LG.info('    Max:  %s', data.max())
-        _LG.info('    Min:  %s', data.min())
-    return Datasets(
-        Dataset(*datasets[0]), Dataset(*datasets[1]), Dataset(*datasets[2])
-    )
+def load_celeba_face(filepath, flatten=False, data_format=None, mock=False):
+    """Load preprocessed CelebA dataset
+
+    To prepare dataset, follow the steps.
+    1. Download aligned & cropped face images from CelebA project.
+    http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html
+    2. Use the following to preprocess the images and pickle them.
+    https://s3.amazonaws.com/luchador/dataset/celeba/create_celeba_face_dataset.py
+    3. Provide the resulting filepath to this function.
+
+    Parameters
+    ----------
+    filepath : str
+        Path to the pickled CelebA dataset.
+
+    flatten : Boolean
+        If True each image is flattened to 1D vector.
+
+    data_format : str
+        Either 'NCHW' or 'NHWC'.
+
+    Returns
+    -------
+    Datasets
+    """
+    datasets = _load_celeba_face(filepath, mock)
+    return _format_dataset(datasets, flatten, data_format)
