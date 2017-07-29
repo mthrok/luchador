@@ -1,7 +1,7 @@
 """Utility functions related to YAML, used throughout luchador"""
 from __future__ import absolute_import
 
-import StringIO
+from six import StringIO
 import ruamel.yaml as yaml
 
 from .misc import is_iteratable
@@ -65,7 +65,7 @@ def load_config(filepath, **parameters):
             for key, val in parameters.items()
         })
 
-    model_text = StringIO.StringIO(model_text)
+    model_text = StringIO(model_text)
     return yaml.safe_load(model_text)
 
 

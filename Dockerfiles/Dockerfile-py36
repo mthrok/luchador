@@ -1,0 +1,12 @@
+FROM continuumio/anaconda3:4.4.0
+
+RUN apt-get update && \
+    apt-get -y install \
+    g++ \
+    git \
+    libhdf5-serial-dev
+RUN conda install libgcc numpy scipy mkl coverage flake8 && \
+    pip install codacy-coverage Sphinx sphinx_rtd_theme && \
+    pip install git+git://github.com/Theano/theano.git@743f7aa9c477e2c7fcee17cbc5e3c03fb455e5a6 && \
+    pip install tensorflow
+CMD ["bash"]
