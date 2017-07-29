@@ -1,7 +1,7 @@
 #!/bin/bash
 # This script runs the initialization of tensorflow and theano backend separately and write the result to files.
 # Then check if the difference between the results are within threshold
-set -eu
+set -eux
 
 CONFIG=$1
 if [[ ! -f "${CONFIG}" ]]; then
@@ -10,7 +10,7 @@ if [[ ! -f "${CONFIG}" ]]; then
 fi
 
 if [ "${COUNT_INTEGRATION_COVERAGE:-false}" = true ]; then
-    TEST_COMMAND="coverage run --parallel-mode"
+    TEST_COMMAND="coverage run"
 else
     TEST_COMMAND="python"
 fi

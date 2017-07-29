@@ -7,7 +7,7 @@
 # --optimizer: Name of optimizer configurations. See optimizer directory for the list of valid configurations.
 # --iterations: #parameter updates to execute before comparing the parameters. Default: 1000
 # --threshold: Maximum relative diff to allow
-set -eu
+set -eux
 
 while [[ $# -gt 0 ]]
 do
@@ -49,7 +49,7 @@ FILE1="tmp/test_optimizer_numerical_comparitbility/${FORMULA}_${OPTIMIZER_NAME}/
 FILE2="tmp/test_optimizer_numerical_comparitbility/${FORMULA}_${OPTIMIZER_NAME}/tensorflow.csv"
 
 if [ "${COUNT_INTEGRATION_COVERAGE:-false}" = true ]; then
-    TEST_COMMAND="coverage run --parallel-mode"
+    TEST_COMMAND="coverage run"
 else
     TEST_COMMAND="python"
 fi
